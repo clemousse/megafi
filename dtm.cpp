@@ -1,9 +1,10 @@
 #include "dtm.h"
+
 #include <QFile>
-#include <QList>
 #include <QDebug>
-using namespace std;
-QVector<Point> readDTM(QString path)
+
+
+QVector<Point> readDTM(const QString &path)
 {
     QFile file(path);
     bool resultat;
@@ -12,20 +13,15 @@ QVector<Point> readDTM(QString path)
     {
         QTextStream filestream(&file);
         QString line;
-        QStringList nb;
+        QStringList coordinates;
 
         while(!filestream.atEnd())
         {
-            line=filestream.readLine();
-            //qDebug() << "Ligne lue : " << line;
-            nb=line.split(' ');
-            for (int i=0;i<3;i++)
+            line = filestream.readLine();
+            coordinates = line.split(' ');
+            for (int i=0 ; i<3 ; i++)
             {
-                nb[i];
-                //qDebug() << "Element " << i << " est " << nb[i] << endl;
-                double a = nb[i].toDouble();
-                //qDebug() << "l element de la liste numero "<<i<< " est:"<<a<<endl;
-
+                double a = coordinates[i].toDouble();
             }
         }
         file.close();

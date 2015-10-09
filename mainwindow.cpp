@@ -1,7 +1,7 @@
-#include <QFile>
+#include <QFileDialog>
 #include <QString>
-#include <vector>
-using namespace std;
+
+#include <QMessageBox>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -24,6 +24,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::openDialog() // Open a dialog to choose a file
 {
-        QString file = QFileDialog::getOpenFileName(this,"Open a file",QString(),"*.xyz");
-        QMessageBox::information(this, "File","You selected : \n" + file);
+    QString file = QFileDialog::getOpenFileName(this,"Open a file",QString(),"*.xyz");
+    QMessageBox::information(this, "File","You selected : \n" + file);
 }

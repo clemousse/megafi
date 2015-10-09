@@ -10,9 +10,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
+    readDTM("C:\\Qt\\Tools\\QtCreator\\bin\\Projet\\Ecrins2.xyz");
 
-    //w.openDialog();
-
-    readDTM("C:\\Qt\\Tools\\QtCreator\\bin\\Projet\\Ecrins2.xyz") ;
     return a.exec();
 }

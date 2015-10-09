@@ -1,12 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QApplication>
-#include <QAction>
 #include <QMainWindow>
-#include <QFileDialog>
-#include <QMessageBox>
-#include <QObject>
 
 
 namespace Ui {
