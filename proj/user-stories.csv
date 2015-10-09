@@ -1,15 +1,6 @@
 Priorité,Feature,"User story : En tant qu'utilisateur, je voudrais",User stories détaillées,Notes,Points,Tâche,Points,Ressource,Temps estimé,Temps,Statut,Remarque
 1,Interface graphique,Dessiner la fenêtre principale du programme,Dessiner la fenêtre,,8,Dessiner,4,"A, I, C","0,75","0,75",OK,
-1,Interface graphique,Dessiner la fenêtre principale du programme,Dessiner la fenêtre,,,Traduire,4,,"0,25",0,Reporté,
 2,Afficher le MNT,"Ouvrir le fichier de coordonnées (X, Y, Z)",Appuyer sur un bouton pour ouvrir une boîte de dialogue fichier,Type de fichier ? Quelles bibliothèques ? Projection ? Structure de donnée ?,8,FileDialog,1,C,"0,25","0,25",OK,
-2,Afficher le MNT,"Ouvrir le fichier de coordonnées (X, Y, Z)",Appuyer sur un bouton pour ouvrir une boîte de dialogue fichier,,,Lier au menu,1,C,"0,25","0,25",OK,
-2,Afficher le MNT,"Ouvrir le fichier de coordonnées (X, Y, Z)",Appuyer sur un bouton pour ouvrir une boîte de dialogue fichier,,,Passer le nom,1,C,"0,25","0,25",,
-2,Afficher le MNT,"Ouvrir le fichier de coordonnées (X, Y, Z)",Appuyer sur un bouton pour ouvrir une boîte de dialogue fichier,,,Lire/Qfile,1,I,"0,25","0,25",OK,Pas de bibliothèque
-2,Afficher le MNT,"Ouvrir le fichier de coordonnées (X, Y, Z)",Appuyer sur un bouton pour ouvrir une boîte de dialogue fichier,,,Lire un double,1,I,"0,25","0,25",OK,
-2,Afficher le MNT,"Ouvrir le fichier de coordonnées (X, Y, Z)",Appuyer sur un bouton pour ouvrir une boîte de dialogue fichier,,,Lire 3 doubles,1,I,"0,25","0,125",EC,
-2,Afficher le MNT,"Ouvrir le fichier de coordonnées (X, Y, Z)",Appuyer sur un bouton pour ouvrir une boîte de dialogue fichier,,,Passer le vecteur,1,I,0,0,KO,
-2,Afficher le MNT,"Ouvrir le fichier de coordonnées (X, Y, Z)",,,,Encadrement,1,A,"0,25","0,25",OK,
-2,Afficher le MNT,"Ouvrir le fichier de coordonnées (X, Y, Z)",,,,Serveur Git,0,A,"0,25","0,25",,
 3,Afficher le MNT,Voir le MNT,Je veux voir le MNT,OpenGL (imposé),13,,,,,,,
 4,Lâcher la goutte,Paramétrer le point de départ,je clique sur le MNT,Récupérer les coordonnées du curseur,3,,,,,,,
 5,Créer le chemin,Calculer le chemin suivi,,Stocker les coordonnées : tableau ou liste ?,21,,,,,,,
