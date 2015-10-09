@@ -13,9 +13,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+        dtm.cpp
 
 HEADERS  += mainwindow.h \
-    openf.h
+            openf.h \
+            dtm.h
 
 FORMS    += mainwindow.ui

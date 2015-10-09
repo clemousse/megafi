@@ -1,4 +1,6 @@
 #include "mainwindow.h"
+#include "dtm.h"
+#include <QApplication>
 
 int main(int argc, char *argv[])
 {
@@ -10,6 +12,6 @@ int main(int argc, char *argv[])
 
     //w.openDialog();
 
-
+    readDTM("C:\\Qt\\Tools\\QtCreator\\bin\\Projet\\Ecrins2.xyz") ;
     return a.exec();
 }
