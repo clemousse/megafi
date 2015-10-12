@@ -4,7 +4,7 @@
 #include <QDebug>
 
 
-QVector<Point> readDTM(const QString &path)
+QVector<Point> readDTM(QString path)
 {
     QFile file(path);
     bool resultat;
