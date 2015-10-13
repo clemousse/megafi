@@ -2,6 +2,10 @@ Open GL et Qt :
 
 http://guillaume.belz.free.fr/doku.php?id=qt_opengl_-_introduction
 
+
+Tutoriel officiel (donc mal fait :P )
+http://doc.qt.io/qt-5/examples-widgets-opengl.html
+
 MNT en openGL (sans Qt par contre, mais code simple)
 http://www.codeproject.com/Articles/14154/OpenGL-Terrain-Generation-An-Introduction
 
