@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include"dtm.h"
 
 
 namespace Ui {
@@ -12,6 +13,12 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+private:
+    Ui::MainWindow *ui;
+
+protected:
+    QVector <Point> m_vector;
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -19,8 +26,7 @@ public:
 public slots:
     void openDialog();
 
-private:
-    Ui::MainWindow *ui;
+
 };
 
 #endif // MAINWINDOW_H

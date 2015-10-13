@@ -10,8 +10,5 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    QVector<Point> result;
-    readDTM("/home/gtsi/ecoulement/data/Ecrins2.xyz", result);
-
     return a.exec();
 }
