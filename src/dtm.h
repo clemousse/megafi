@@ -8,7 +8,7 @@ struct Point {
     double x,y,z;
 };
 
-QVector<Point> readDTM(QString path);
+void readDTM(const QString& path, QVector<Point>& vector);
 
 
 

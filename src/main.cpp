@@ -10,7 +10,8 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    readDTM("C:\\Qt\\Tools\\QtCreator\\bin\\Projet\\Ecrins2.xyz");
+    QVector<Point> result;
+    readDTM("/home/gtsi/ecoulement/data/Ecrins2.xyz", result);
 
     return a.exec();
 }
