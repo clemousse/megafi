@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>590</width>
-    <height>620</height>
+    <width>400</width>
+    <height>293</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>338</width>
+      <width>400</width>
       <height>225</height>
      </rect>
     </property>
@@ -31,49 +31,39 @@
       <enum>QLayout::SetNoConstraint</enum>
      </property>
      <item>
-      <widget class="QGraphicsView" name="graphicsView">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="locale">
-        <locale language="French" country="France"/>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QHBoxLayout" name="hlCoordinatesLayout">
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="lblX">
          <property name="text">
           <string>X</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+        <widget class="QDoubleSpinBox" name="bxXcoord"/>
        </item>
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="lblY">
          <property name="text">
           <string>Y</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+        <widget class="QDoubleSpinBox" name="bxYcoord"/>
        </item>
        <item>
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="lblZ">
          <property name="text">
           <string>Z</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+        <widget class="QDoubleSpinBox" name="bxZcoord"/>
        </item>
        <item>
-        <spacer name="horizontalSpacer">
+        <spacer name="spcrCoords">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -86,13 +76,30 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="btnComputation">
          <property name="text">
           <string>PushButton</string>
          </property>
         </widget>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QScrollArea" name="scrollArea">
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="scrollAreaWidgetContents">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>396</width>
+          <height>182</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -102,8 +109,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>532</width>
-     <height>21</height>
+     <width>400</width>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -119,6 +126,8 @@
     <property name="title">
      <string>View</string>
     </property>
+    <addaction name="actionNew_DTM_Window"/>
+    <addaction name="separator"/>
     <addaction name="actionDTM"/>
     <addaction name="actionPath"/>
     <addaction name="separator"/>
@@ -169,12 +178,12 @@
   </action>
   <action name="actionDTM">
    <property name="text">
-    <string>DTM</string>
+    <string>Customize DTM</string>
    </property>
   </action>
   <action name="actionPath">
    <property name="text">
-    <string>Path</string>
+    <string>Customize Path</string>
    </property>
   </action>
   <action name="actionView_legend">
@@ -211,6 +220,11 @@
   <action name="actionSave">
    <property name="text">
     <string>Save</string>
+   </property>
+  </action>
+  <action name="actionNew_DTM_Window">
+   <property name="text">
+    <string>New DTM Window</string>
    </property>
   </action>
  </widget>

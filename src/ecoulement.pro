@@ -14,10 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-        dtm.cpp
+        dtm.cpp \
+    gldisplay.cpp
 
 HEADERS  += mainwindow.h \
             openf.h \
-            dtm.h
+            dtm.h \
+    gldisplay.h
 
 FORMS    += mainwindow.ui

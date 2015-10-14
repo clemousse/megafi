@@ -10,6 +10,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    m_glDisplay(new glDisplay(this)),
     m_vector()
 {
     //load interface .ui created  with QT Designer
@@ -21,7 +22,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    delete m_glDisplay;
     delete ui;
+}
+
+void MainWindow::show()
+{
+    QMainWindow::show();
+    m_glDisplay->show();
 }
 
 void MainWindow::openDialog() // Open a dialog to choose a file
