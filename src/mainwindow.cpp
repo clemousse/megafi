@@ -20,10 +20,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //create a connexion on the menu File-> Open DTM File via openDialog slot
     connect(ui->actionOpen_DTM_file, SIGNAL(triggered()), this, SLOT(openDialog()));
+    connect(ui->actionNew_DTM_Window, SIGNAL(triggered()), m_glDisplay, SLOT(show()));
 }
 
 MainWindow::~MainWindow()
 {
+
     delete m_glDisplay;
     delete ui;
 }
@@ -31,7 +33,6 @@ MainWindow::~MainWindow()
 void MainWindow::show()
 {
     QMainWindow::show();
-    m_glDisplay->show();
 }
 
 void MainWindow::openDialog() // Open a dialog to choose a file
@@ -41,4 +42,5 @@ void MainWindow::openDialog() // Open a dialog to choose a file
     // Read the file with the coordinates
     readDTM(file,m_vector);
 }
+
 

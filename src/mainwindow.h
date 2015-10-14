@@ -13,13 +13,13 @@ class MainWindow : public QMainWindow
 
 private:
     Ui::MainWindow *ui;
-    glDisplay * const m_glDisplay;
+    glDisplay* const m_glDisplay;
 
 protected:
     QVector<Point> m_vector;
 
 public:
-    explicit MainWindow(QWidget* parent = NULL);
+     explicit MainWindow(QWidget* parent = NULL);
     ~MainWindow();
 
 public slots:
