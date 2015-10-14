@@ -3,25 +3,37 @@
 #include <QFile>
 #include <QDebug>
 
-void testOnreadDTM(QVector<Point>& m_vector)
+bool runTests()
 {
+    testOnreadDTM(TEST_DTM_FILE);
+    return true;
+}
 
-if (m_vector[51].x == 901275 && m_vector[51].y == 1944975 && m_vector[51].z == 1228.50)
+void testOnreadDTM(const QString& dtmFileName)
+{
+    QVector<Point> result;
+    readDTM(dtmFileName, result);
+
+    if (result[51].x == 901275 && result[51].y == 1944975 && result[51].z == 1228.50)
     {
-        qDebug()  << "OK - La 50ème ligne du tableau contient bien X = " << m_vector[51].x << " Y = " << m_vector[51].y << " Z = " << m_vector[51].z << endl;
+        qDebug()  << "OK - La 50ème ligne du tableau contient bien X = " << result[51].x
+                  << " Y = " << result[51].y
+                  << " Z = " << result[51].z << endl;
     }
-else
+    else
     {
         qDebug()  << "Le tableau ne correspond pas au fichier d'entrée" << endl;
     }
 
-//dernière ligne : 999975.00 1900025.00 515.20
-if (m_vector[7195999].x == 999975 && m_vector[7195999].y  == 1900025 && m_vector[7195999].z == 515.2)
+    //dernière ligne : 999975.00 1900025.00 515.20
+    if (result[7195999].x == 999975 && result[7195999].y  == 1900025 && result[7195999].z == 515.2)
     {
-        qDebug()  << "OK - La dernière ligne du tableau contient bien X = " << m_vector[7195999].x << " Y = " << m_vector[7195999].y << " Z = " << m_vector[7195999].z << endl;
+        qDebug()  << "OK - La dernière ligne du tableau contient bien X = " << result[7195999].x
+                  << " Y = " << result[7195999].y
+                  << " Z = " << result[7195999].z << endl;
     }
 
-else
+    else
      {
         qDebug()  << "Le tableau ne correspond pas au fichier d'entrée" << endl;
      }
