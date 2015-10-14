@@ -15,11 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
         dtm.cpp \
-    gldisplay.cpp
+        gldisplay.cpp \
+        tests.cpp
+
 
 HEADERS  += mainwindow.h \
             openf.h \
             dtm.h \
-    gldisplay.h
+            gldisplay.h \
+            tests.h
 
 FORMS    += mainwindow.ui
