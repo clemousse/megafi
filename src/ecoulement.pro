@@ -14,10 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-        dtm.cpp
+        dtm.cpp \
+    tests.cpp
 
 HEADERS  += mainwindow.h \
             openf.h \
-            dtm.h
+            dtm.h \
+    tests.h
 
 FORMS    += mainwindow.ui

@@ -5,7 +5,9 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "tests.h"
 
+using namespace std;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -26,10 +28,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::openDialog() // Open a dialog to choose a file
 {
-
     QString file = QFileDialog::getOpenFileName(this,"Open a file",QString(),"*.xyz");
 
-
+    // Read the file with the coordinates
     readDTM(file,m_vector);
-    qDebug() << "La troisième ligne du tableau contient X = " << m_vector[2].x << " Y = " << m_vector[2].y << " Z = " << m_vector[3].z << endl;
+
+    testOnreadDTM(m_vector);
+
 }
+
