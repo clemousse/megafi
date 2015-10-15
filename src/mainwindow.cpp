@@ -12,7 +12,7 @@ using namespace std;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    m_glDisplay(new glDisplay(this)),
+    m_glDisplay(new glDisplay(this, m_vector)),
     m_vector()
 {
     //load interface .ui created  with QT Designer
