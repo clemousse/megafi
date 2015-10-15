@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //create a connexion on the menu File-> Open DTM File via openDialog slot
     connect(ui->actionOpen_DTM_file, SIGNAL(triggered()), this, SLOT(openDialog()));
     connect(ui->actionNew_DTM_Window, SIGNAL(triggered()), m_glDisplay, SLOT(show()));
+    connect(ui->actionQuit, SIGNAL(triggered()),m_glDisplay, SLOT(close()));
+    connect(ui->actionQuit, SIGNAL(triggered()),this, SLOT(close()));
 }
 
 MainWindow::~MainWindow()
@@ -34,6 +36,10 @@ void MainWindow::show()
 {
     QMainWindow::show();
 }
+
+
+
+
 
 void MainWindow::openDialog() // Open a dialog to choose a file
 {
