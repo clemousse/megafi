@@ -27,6 +27,7 @@ public slots:
     void openDialog();
 
 
+
 };
 
 #endif // MAINWINDOW_H
