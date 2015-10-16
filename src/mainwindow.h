@@ -5,7 +5,7 @@
 #include "gldisplay.h"
 #include "ui_mainwindow.h"
 #include <QMainWindow>
-
+#include <QGraphicsSceneMouseEvent>
 
 
 class MainWindow : public QMainWindow
@@ -18,6 +18,8 @@ private:
 
 protected:
     QVector<Point> m_vector;
+    void closeEvent(QCloseEvent* event);
+
 
 public:
      explicit MainWindow(QWidget* parent = NULL);
