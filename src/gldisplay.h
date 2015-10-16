@@ -1,8 +1,11 @@
 #ifndef GL_H
 #define GL_H
 
+#include "dtm.h"
+
 #include <stdexcept>
 
+#include <QVector>
 #include <QWindow>
 #include <QOpenGLFunctions>
 #include <QOpenGLContext>
@@ -30,13 +33,14 @@ public:
 private:
     MainWindow * const m_mainW; // A pointer in order to communicate with main window
     QOpenGLContext * const m_context; // The context responsible for the drawing
+    const QVector<Point>& m_vertices;
 
 protected:
     QSize m_windowSize;
     bool m_initOK; // OpenGL has (or not) been initialized
 
 public:
-    explicit glDisplay(MainWindow *mainW);
+    explicit glDisplay(MainWindow *mainW, const QVector<Point>& vertices);
     ~glDisplay();
 
     // Contains initialization code which cannot be executed before the window has been shown
