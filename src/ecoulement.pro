@@ -4,12 +4,14 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui xml opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = ecoulement
 TEMPLATE = app
+
+LIBS += -lQGLViewer
 
 
 SOURCES += main.cpp\
