@@ -1,5 +1,10 @@
 #include <QFileDialog>
 #include <QString>
+#include <QMessageBox>
+#include <QtWidgets>
+#include <QGraphicsSceneMouseEvent>
+#include <iostream>
+#include <QKeySequence>
 
 #include <QDebug>
 
@@ -23,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionNew_DTM_Window, SIGNAL(triggered()), m_glDisplay, SLOT(show()));
     connect(ui->actionQuit, SIGNAL(triggered()),m_glDisplay, SLOT(close()));
     connect(ui->actionQuit, SIGNAL(triggered()),this, SLOT(close()));
+
 }
 
 MainWindow::~MainWindow()
@@ -36,6 +42,25 @@ void MainWindow::show()
 {
     QMainWindow::show();
 }
+
+
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+       int rep = QMessageBox::question(this,"Quitter?","Voulez-vous vraiment quitter?",QMessageBox::Yes | QMessageBox::No);
+       if (rep == QMessageBox::Yes)
+       {
+               event->accept();
+               m_glDisplay->close();
+       }
+
+       else
+       {
+               event->ignore();
+       }
+}
+
+
+
 
 
 
