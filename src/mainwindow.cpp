@@ -20,9 +20,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //create a connexion on the menu File-> Open DTM File via openDialog slot
     connect(ui->actionOpen_DTM_file, SIGNAL(triggered()), this, SLOT(openDialog()));
+    //create a connexion on the menu View-> New DTM Path via show slot
     connect(ui->actionNew_DTM_Window, SIGNAL(triggered()), m_glDisplay, SLOT(show()));
+    //create a connexion on the menu File-> Quit via close slot (or cross)
     connect(ui->actionQuit, SIGNAL(triggered()),m_glDisplay, SLOT(close()));
-    connect(ui->actionQuit, SIGNAL(triggered()),this, SLOT(close()));
+    //create a connexion on the menu View-> Legend via showLeg slot
+    connect(ui->actionView_legend, SIGNAL(triggered()),ui->dockWidget_Leg, SLOT(show()));
+    //create a connexion on the menu View-> History via showHis slot
+    connect(ui->actionView_history, SIGNAL(triggered()),ui->dockWidget_His, SLOT(show()));
 }
 
 MainWindow::~MainWindow()
@@ -36,9 +41,6 @@ void MainWindow::show()
 {
     QMainWindow::show();
 }
-
-
-
 
 
 void MainWindow::openDialog() // Open a dialog to choose a file
