@@ -41,6 +41,9 @@ MainWindow::~MainWindow()
 void MainWindow::show()
 {
     QMainWindow::show();
+
+    // debug
+    m_glDisplay->show();
 }
 
 
