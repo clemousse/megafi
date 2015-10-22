@@ -17,6 +17,8 @@ void glDisplay::reshapeWindow(int width, int height)
 {
     m_windowSize.setWidth(width);
     m_windowSize.setHeight(height);
+
+    glViewport(0, 0, m_windowSize.width(), m_windowSize.height()); // Set the viewport size to fill the window
 }
 
 void glDisplay::init()
@@ -27,15 +29,13 @@ void glDisplay::init()
 void glDisplay::draw()
 {
     // I can begin to draw
-    glViewport(0, 0, m_windowSize.width(), m_windowSize.height()); // Set the viewport size to fill the window
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear screen
-    glNormal3f(1, 1, 1);
 
     glBegin(GL_TRIANGLES);
-    glColor3ui(255, 255, 255);
-    glVertex2d(0.5, 0.5);
-    glVertex2d(0.5, -0.5);
-    glVertex2d(-0.5, -0.5);
+        glColor3ub(255,255,255);
+        glVertex2d(-1,-1);
+        glVertex2d(-1,1);
+        glVertex2d(1,1);
     glEnd();
 }
 
