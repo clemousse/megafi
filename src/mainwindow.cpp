@@ -17,8 +17,8 @@ using namespace std;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    m_glDisplay(new glDisplay(this, m_vector)),
-    m_vector()
+    m_vector(),
+    m_glDisplay(new glDisplay(this, m_vector))
 {
     //load interface .ui created  with QT Designer
     ui->setupUi(this);
@@ -41,6 +41,9 @@ MainWindow::~MainWindow()
 void MainWindow::show()
 {
     QMainWindow::show();
+
+    // debug
+    m_glDisplay->show();
 }
 
 
@@ -72,6 +75,7 @@ void MainWindow::openDialog() // Open a dialog to choose a file
 
     // Read the file with the coordinates
     readDTM(file,m_vector);
+    m_glDisplay->computeDataSize();
 }
 
 
