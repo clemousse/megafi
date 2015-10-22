@@ -22,7 +22,7 @@ void glDisplay::reshapeWindow(int width, int height)
     m_windowSize.setWidth(width);
     m_windowSize.setHeight(height);
 
-    glViewport(0, 0, m_windowSize.width(), m_windowSize.height()); // Set the viewport size to fill the window
+    init();
 }
 
 void glDisplay::init()
@@ -36,22 +36,23 @@ void glDisplay::init()
     setBackgroundColor(bg);
     QColor fg(255, 255, 255);
     setForegroundColor(fg);
+
+    glViewport(0, 0, m_windowSize.width(), m_windowSize.height()); // Set the viewport size to fill the window
+
+    // Move camera
+    setSceneBoundingBox(m_dataSizeMin, m_dataSizeMax);
+    showEntireScene();
 }
 
 #include <QDebug>
 
 void glDisplay::draw()
 {
-    // Move camera
-    setSceneBoundingBox(m_dataSizeMin, m_dataSizeMax);
-    showEntireScene();
-
     // I can begin to draw
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear screen
 
     glBegin(GL_LINES);
-    glLineWidth(5);
-        glColor3ub(255,255,255); // may be quite useless (because of foreground color)
+        glLineWidth(5);
         for(long i = 0 ; i < m_vertices.length() ; ++i)
         {
             glVertex3d(m_vertices[i].x, m_vertices[i].y, m_vertices[i].z);
