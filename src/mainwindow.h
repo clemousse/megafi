@@ -14,10 +14,11 @@ class MainWindow : public QMainWindow
 
 private:
     Ui::MainWindow *ui;
-    glDisplay* const m_glDisplay;
 
 protected:
     QVector<Point> m_vector;
+    glDisplay* const m_glDisplay;
+
     void closeEvent(QCloseEvent* event);
 
 
