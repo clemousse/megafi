@@ -27,6 +27,10 @@ private:
 protected:
     QSize m_windowSize;
 
+    // data bounding rectangle
+    qglviewer::Vec m_dataSizeMin;
+    qglviewer::Vec m_dataSizeMax;
+
 public:
     explicit glDisplay(MainWindow *mainW, const QVector<Point>& vertices);
     ~glDisplay();
@@ -38,6 +42,7 @@ public:
 public slots:
     void draw(); // drawing function
     void reshapeWindow(int width, int height);
+    void computeDataSize();
 };
 
 #endif // GL_H
