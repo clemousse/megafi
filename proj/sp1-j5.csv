@@ -1,0 +1,5 @@
+Priorité,Feature,"User story : En tant qu'utilisateur, je voudrais",User stories détaillées,Notes,Tâche,Points,Ressource,Temps estimé,Temps,Statut,Remarque
+3,Afficher le MNT,Voir le MNT,Je veux voir le MNT,OpenGL (imposé),Choix et installation de la version,1,AIC,"0,75","0,75",OK,libQGLViewer
+3,Afficher le MNT,Voir le MNT,Je veux voir le MNT,OpenGL (imposé),"Documentation, Afficher",2,AIC,"2,25","2,25",OK,
+3,Afficher le MNT,Voir le MNT,Je veux voir le MNT,OpenGL (imposé),Documentation,8,,,,Reporté,
+4,Lâcher la goutte,Paramétrer le point de départ,je clique sur le MNT,,Récupérer les coordonnées du curseur,3,,,,Reporté,
