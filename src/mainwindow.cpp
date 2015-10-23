@@ -50,7 +50,6 @@ void MainWindow::show()
     QMainWindow::show();
 }
 
-
 void MainWindow::closeEvent(QCloseEvent* event)
 {
        int rep = QMessageBox::question(this,"Quit ?","Do you really want to quit ?",QMessageBox::Yes | QMessageBox::No);
@@ -65,7 +64,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
                event->ignore();
        }
 }
-
 
 void MainWindow::openDialog() // Open a dialog to choose a file
 {

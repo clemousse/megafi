@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>516</width>
+    <width>674</width>
     <height>492</height>
    </rect>
   </property>
@@ -40,7 +40,7 @@
            </font>
           </property>
           <property name="decimals">
-           <number>5</number>
+           <number>2</number>
           </property>
          </widget>
         </item>
@@ -59,7 +59,7 @@
            </font>
           </property>
           <property name="decimals">
-           <number>5</number>
+           <number>2</number>
           </property>
          </widget>
         </item>
@@ -78,7 +78,7 @@
            </font>
           </property>
           <property name="decimals">
-           <number>5</number>
+           <number>2</number>
           </property>
          </widget>
         </item>
@@ -119,13 +119,10 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>264</width>
+           <width>421</width>
            <height>367</height>
           </rect>
          </property>
-         <zorder></zorder>
-         <zorder>btnComputation</zorder>
-         <zorder></zorder>
         </widget>
        </widget>
       </item>
@@ -138,7 +135,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>516</width>
+     <width>674</width>
      <height>29</height>
     </rect>
    </property>
@@ -303,8 +300,6 @@
       </item>
      </layout>
     </widget>
-    <zorder>label_5</zorder>
-    <zorder>horizontalLayoutWidget_2</zorder>
    </widget>
   </widget>
   <action name="actionOpen_DTM_file">
