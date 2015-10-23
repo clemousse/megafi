@@ -156,17 +156,15 @@
      <property name="title">
       <string>Customize DTM</string>
      </property>
-     <addaction name="action3D"/>
-     <addaction name="action2D"/>
      <addaction name="actionColored_3D"/>
-     <addaction name="actionColored_2D"/>
     </widget>
     <widget class="QMenu" name="menuCustomize_Path">
      <property name="title">
-      <string>Customize Path</string>
+      <string>Customize path</string>
      </property>
      <addaction name="actionColored"/>
      <addaction name="actionAnimated"/>
+     <addaction name="actionColored_Animated"/>
     </widget>
     <addaction name="actionNew_DTM_Window"/>
     <addaction name="separator"/>
@@ -175,7 +173,6 @@
     <addaction name="separator"/>
     <addaction name="actionView_legend"/>
     <addaction name="actionView_history"/>
-    <addaction name="actionFullscreen_mode"/>
    </widget>
    <widget class="QMenu" name="menuCalcul">
     <property name="title">
@@ -294,7 +291,7 @@
       <item>
        <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>HISTORY</string>
+         <string>HISTORIC</string>
         </property>
        </widget>
       </item>
@@ -309,12 +306,12 @@
   </action>
   <action name="actionExport_coordinates">
    <property name="text">
-    <string>Export coordinates</string>
+    <string>Export path coordinates</string>
    </property>
   </action>
   <action name="actionExport_picture">
    <property name="text">
-    <string>Export picture</string>
+    <string>Export path picture</string>
    </property>
   </action>
   <action name="actionQuit">
@@ -338,7 +335,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>History</string>
+    <string>Historic</string>
    </property>
   </action>
   <action name="actionFullscreen_mode">
@@ -383,7 +380,7 @@
   </action>
   <action name="actionColored_3D">
    <property name="text">
-    <string>3D colored</string>
+    <string>Colored</string>
    </property>
   </action>
   <action name="actionColored_2D">
@@ -394,6 +391,11 @@
   <action name="actionAnimated">
    <property name="text">
     <string>Animated</string>
+   </property>
+  </action>
+  <action name="actionColored_Animated">
+   <property name="text">
+    <string>Colored and animated</string>
    </property>
   </action>
  </widget>
