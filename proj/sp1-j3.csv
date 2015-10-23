@@ -1,0 +1,8 @@
+Priorité,Feature,User story : En tant qu'utilisateur je voudrais,User stories détaillées,Notes,Tâche,Points,Ressource,Temps estimé,Temps,Statut,Remarque
+3,Afficher le MNT,Voir le MNT,Je veux voir le MNT,OpenGL (imposé),Choix et installation de la version,1,AIC,"0,125","1,5",EC,Voir avec Emmanuel / Installer un driver
+3,Afficher le MNT,Voir le MNT,Je veux voir le MNT,OpenGL (imposé),Documentation,1,AIC,"0,125",1,OK,
+3,Interface graphique,Connecter les fenêtres,La sous-fenêtre s'ouvre quand je clique sur le menu correspondant et se ferme quand je ferme l'application principale,,Connecter le signal quit,1,I,"0,125",,KO,
+3,Interface graphique,Connecter les fenêtres,La sous-fenêtre s'ouvre quand je clique sur le menu correspondant et se ferme quand je ferme l'application principale,,Connecter le signal Qaction,1,I,"0,125","0,25",OK,
+3,Afficher le MNT,Voir le MNT,Je veux voir le MNT,OpenGL (imposé),Base d'openGL : effacer l'écran,1,A,"0,25","0,25",OK,
+3,Afficher le MNT,Voir le MNT,Je veux voir le MNT,OpenGL (imposé),Documentation,8,,,,EC,
+4,Lâcher la goutte,Paramétrer le point de départ,je clique sur le MNT,Récupérer les coordonnées du curseur,,3,,"0,25",,Reporté,
