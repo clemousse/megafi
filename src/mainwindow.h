@@ -7,6 +7,7 @@
 #include <QMainWindow>
 #include <QGraphicsSceneMouseEvent>
 
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -28,8 +29,6 @@ public:
 public slots:
     void show();
     void openDialog();
-
-
 
 };
 

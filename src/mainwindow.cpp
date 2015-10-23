@@ -25,8 +25,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //create a connexion on the menu File-> Open DTM File via openDialog slot
     connect(ui->actionOpen_DTM_file, SIGNAL(triggered()), this, SLOT(openDialog()));
+    //create a connexion on the menu View-> New DTM Path via show slot
     connect(ui->actionNew_DTM_Window, SIGNAL(triggered()), m_glDisplay, SLOT(show()));
+    //create a connexion on the cross of the m_gl_display window to close it
     connect(ui->actionQuit, SIGNAL(triggered()),m_glDisplay, SLOT(close()));
+    //create a connexion on the menu View-> Legend via showLeg slot
+    connect(ui->actionView_legend, SIGNAL(triggered()),ui->dockWidget_Leg, SLOT(show()));
+    //create a connexion on the menu View-> History via showHis slot
+    connect(ui->actionView_history, SIGNAL(triggered()),ui->dockWidget_His, SLOT(show()));
+    //create a connexion on the menu File-> Quit via close slot (or cross)
     connect(ui->actionQuit, SIGNAL(triggered()),this, SLOT(close()));
 
 }
@@ -43,10 +50,9 @@ void MainWindow::show()
     QMainWindow::show();
 }
 
-
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-       int rep = QMessageBox::question(this,"Quitter?","Voulez-vous vraiment quitter?",QMessageBox::Yes | QMessageBox::No);
+       int rep = QMessageBox::question(this,"Quit ?","Do you really want to quit ?",QMessageBox::Yes | QMessageBox::No);
        if (rep == QMessageBox::Yes)
        {
                event->accept();
@@ -58,13 +64,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
                event->ignore();
        }
 }
-
-
-
-
-
-
-
 
 void MainWindow::openDialog() // Open a dialog to choose a file
 {
