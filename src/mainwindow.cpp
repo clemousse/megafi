@@ -67,11 +67,32 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
 void MainWindow::openDialog() // Open a dialog to choose a file
 {
-    QString file = QFileDialog::getOpenFileName(this,"Open a file",QString(),"*.xyz");
+    QString file;
 
-    // Read the file with the coordinates
-    readDTM(file,m_vector);
-    m_glDisplay->computeDataSize();
+    // Actions related to the dialog window
+    {
+        QFileDialog fDlg;
+
+        // Don't accept empty file or directory; only one file
+        fDlg.setFileMode(QFileDialog::ExistingFile);
+        fDlg.setWindowTitle("Choose the DTM file");
+
+        if(fDlg.exec())
+        {
+            QStringList selectedFiles;
+            // Get the list of selected files
+            selectedFiles = fDlg.selectedFiles();
+            if(selectedFiles.length() == 1)
+                file = selectedFiles.first();
+        }
+    }
+
+    if(!file.isEmpty())
+    {
+        // Read the file with the coordinates
+        readDTM(file,m_vector);
+        m_glDisplay->computeDataSize();
+    }
 }
 
 
