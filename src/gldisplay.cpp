@@ -49,25 +49,28 @@ void glDisplay::init()
 
 void glDisplay::draw()
 {
+    QVector<unsigned int> indices;
+
     // I can begin to draw
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear screen
 
     glLineWidth(1);
 
-    for(long i = m_lineLength ; i < m_vertices.length() ; ++i)
+    for(unsigned int i = m_lineLength ; i < static_cast<unsigned int>(m_vertices.length()) ; ++i)
     {
         if(i % m_lineLength)
         {
-            glBegin(GL_LINE_STRIP);
-            const Point& p1 = m_vertices[i],
-                    p2 = m_vertices[i - m_lineLength],
-                    p3 = m_vertices[i - m_lineLength -1];
-            glVertex3d(p1.x, p1.y, p1.z);
-            glVertex3d(p2.x, p2.y, p2.z);
-            glVertex3d(p3.x, p3.y, p3.z);
-            glEnd();
+            indices.push_back(i);
+            indices.push_back(i - m_lineLength);
+            indices.push_back(i - m_lineLength);
+            indices.push_back(i - m_lineLength -1);
         }
     }
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(3, GL_FLOAT, 0, m_vertices.constData());
+    glDrawElements(GL_LINES, indices.length(), GL_UNSIGNED_INT, indices.constData());
+    glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 void glDisplay::computeDataSize()
