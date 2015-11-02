@@ -54,16 +54,19 @@ void glDisplay::draw()
 
     glLineWidth(1);
 
-    for(long i = m_lineLength +1 ; i < m_vertices.length() ; ++i)
+    for(long i = m_lineLength ; i < m_vertices.length() ; ++i)
     {
-        glBegin(GL_LINE_STRIP);
-        const Point& p1 = m_vertices[i],
-                p2 = m_vertices[i - m_lineLength],
-                p3 = m_vertices[i - m_lineLength -1];
-        glVertex3d(p1.x, p1.y, p1.z);
-        glVertex3d(p2.x, p2.y, p2.z);
-        glVertex3d(p3.x, p3.y, p3.z);
-        glEnd();
+        if(i % m_lineLength)
+        {
+            glBegin(GL_LINE_STRIP);
+            const Point& p1 = m_vertices[i],
+                    p2 = m_vertices[i - m_lineLength],
+                    p3 = m_vertices[i - m_lineLength -1];
+            glVertex3d(p1.x, p1.y, p1.z);
+            glVertex3d(p2.x, p2.y, p2.z);
+            glVertex3d(p3.x, p3.y, p3.z);
+            glEnd();
+        }
     }
 }
 
