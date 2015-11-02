@@ -5,7 +5,8 @@ glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
     m_mainW(mainW),
     m_vertices(vertices),
     m_windowSize(400, 300),
-    m_dataSizeMin(), m_dataSizeMax()
+    m_dataSizeMin(), m_dataSizeMax(),
+    m_lineLength(1000)
 {
     setBaseSize(m_windowSize);
 
@@ -51,13 +52,19 @@ void glDisplay::draw()
     // I can begin to draw
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear screen
 
-    glBegin(GL_LINES);
-        glLineWidth(5);
-        for(long i = 0 ; i < m_vertices.length() ; ++i)
-        {
-            glVertex3d(m_vertices[i].x, m_vertices[i].y, m_vertices[i].z);
-        }
-    glEnd();
+    glLineWidth(1);
+
+    for(long i = m_lineLength +1 ; i < m_vertices.length() ; ++i)
+    {
+        glBegin(GL_LINE_STRIP);
+        const Point& p1 = m_vertices[i],
+                p2 = m_vertices[i - m_lineLength],
+                p3 = m_vertices[i - m_lineLength -1];
+        glVertex3d(p1.x, p1.y, p1.z);
+        glVertex3d(p2.x, p2.y, p2.z);
+        glVertex3d(p3.x, p3.y, p3.z);
+        glEnd();
+    }
 }
 
 void glDisplay::computeDataSize()
