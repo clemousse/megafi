@@ -6,14 +6,16 @@ glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
     m_vertices(vertices),
     m_windowSize(400, 300),
     m_dataSizeMin(), m_dataSizeMax(),
-    m_lineLength(1000)
+    m_lineLength(4000),
+    //m_min_vertices(vertices),
+    m_minIndices()
+
 {
     setBaseSize(m_windowSize);
 
     // dataset size
     computeDataSize();
     lin ();
-
 }
 
 glDisplay::~glDisplay()
@@ -114,5 +116,31 @@ void glDisplay::lin()
 
             }
      }
+
+}
+
+
+void glDisplay::PointN()
+{
+    /*
+     *  Il faut stocker les INDICES des points minimaux :
+     *      m_minIndices[0] contiendra l'indice du point de départ. Le point de départ sera alors m_vertices[m_minIndices[0]]
+     *      À la fin des quatre tests, m_minIndices[1] contiendra l'indice du point suivant.
+     *      On recommence avec m_minIndices[1].
+     */
+    long currentStep = 0;
+
+    do
+    {
+        long i = m_minIndices[currentStep];
+        if(m_vertices[i-1].z < m_vertices[i].z) m_minIndices.push_back(i-1);
+        if(m_vertices[i+1].z < m_vertices[i].z) m_minIndices.push_back(i+1);
+        if(m_vertices[i-m_lineLength].z < m_vertices[i].z) m_minIndices.push_back(i-m_lineLength);
+        if(m_vertices[i+m_lineLength].z < m_vertices[i].z) m_minIndices.push_back(i+m_lineLength);
+        qDebug() << "le point suivant est avec les coordonnnées suivantes:  z=" << m_vertices[i].z << ',y=' << m_vertices[i].y <<','<< m_vertices[i].x ;
+        ++currentStep;
+    } while(m_minIndices[currentStep-1] == m_minIndices[currentStep]);
+
+
 
 }

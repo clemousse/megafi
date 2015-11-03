@@ -23,6 +23,8 @@ class glDisplay : public QGLViewer
 private:
     MainWindow * const m_mainW; // A pointer in order to communicate with main window
     const QVector<Point>& m_vertices;
+   // const QVector<Point>& m_min_vertices;
+     QVector<int>  m_minIndices;
 
 protected:
     QSize m_windowSize;
@@ -32,6 +34,7 @@ protected:
     qglviewer::Vec m_dataSizeMax;
 
     long m_lineLength;
+
 
 public:
     explicit glDisplay(MainWindow *mainW, const QVector<Point>& vertices);
@@ -46,6 +49,7 @@ public slots:
     void reshapeWindow(int width, int height);
     void computeDataSize();
     void lin();
+    void PointN();
 };
 
 #endif // GL_H
