@@ -11,6 +11,8 @@ glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
 
     // dataset size
     computeDataSize();
+    lin ();
+
 }
 
 glDisplay::~glDisplay()
@@ -69,6 +71,7 @@ void glDisplay::computeDataSize()
     m_dataSizeMax.y = 0;
     m_dataSizeMax.z = 0;
 
+
     for(long i = 0 ; i < m_vertices.length() ; ++i)
     {
         if(m_vertices[i].x < m_dataSizeMin.x) m_dataSizeMin.x = m_vertices[i].x;
@@ -83,3 +86,23 @@ void glDisplay::computeDataSize()
              << ") and (" << m_dataSizeMax.x << ',' << m_dataSizeMax.y << ',' << m_dataSizeMax.z << ")";
 }
 
+
+void glDisplay::lin()
+{
+    int count=0;
+    for(long i = 0 ; i < m_vertices.length()-1; ++i)
+    {
+         if (m_vertices[i].y == m_vertices[i+1].y)
+            {
+             count++;
+            }
+        else
+            {
+
+             qDebug() << "La longueur de la ligne est " << count << "points";
+             count=0;
+
+            }
+     }
+
+}

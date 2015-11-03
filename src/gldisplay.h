@@ -43,6 +43,7 @@ public slots:
     void draw(); // drawing function
     void reshapeWindow(int width, int height);
     void computeDataSize();
+    void lin();
 };
 
 #endif // GL_H
