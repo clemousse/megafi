@@ -1,4 +1,5 @@
 #include "gldisplay.h"
+#include <QDebug>
 
 glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
     QGLViewer(), // on appelle toujours le constructeur de la classe parente en premier
@@ -11,6 +12,9 @@ glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
 
     // dataset size
     computeDataSize();
+
+    //In order to make MouseGrabber react to mouse events
+    setMouseTracking(true);
 }
 
 glDisplay::~glDisplay()
@@ -43,8 +47,6 @@ void glDisplay::init()
     setSceneBoundingBox(m_dataSizeMin, m_dataSizeMax);
     showEntireScene();
 }
-
-#include <QDebug>
 
 void glDisplay::draw()
 {
@@ -82,4 +84,22 @@ void glDisplay::computeDataSize()
     qDebug() << "MNT is between (" << m_dataSizeMin.x << ',' << m_dataSizeMin.y << ',' << m_dataSizeMin.z
              << ") and (" << m_dataSizeMax.x << ',' << m_dataSizeMax.y << ',' << m_dataSizeMax.z << ")";
 }
+
+
+void glDisplay::mousePressEvent(QMouseEvent* const event)
+{
+    event->accept();
+
+    const int positionX = event->x();
+    const int positionY = event->y();
+
+    qDebug () << "position x : " << positionX << endl << "position y : " << positionY << endl;
+
+    //release the curseur of the mouse to the parent class
+    QGLViewer::mousePressEvent(event);
+}
+
+
+
+
 
