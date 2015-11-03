@@ -23,6 +23,7 @@ class glDisplay : public QGLViewer
 private:
     MainWindow * const m_mainW; // A pointer in order to communicate with main window
     const QVector<Point>& m_vertices;
+    QVector<unsigned int> m_indices;
 
 protected:
     QSize m_windowSize;

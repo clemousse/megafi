@@ -3,7 +3,7 @@
 glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
     QGLViewer(), // on appelle toujours le constructeur de la classe parente en premier
     m_mainW(mainW),
-    m_vertices(vertices),
+    m_vertices(vertices), m_indices(),
     m_windowSize(400, 300),
     m_dataSizeMin(), m_dataSizeMax(),
     m_lineLength(1000)
@@ -49,10 +49,9 @@ void glDisplay::init()
 
 void glDisplay::draw()
 {
-    QVector<unsigned int> indices;
-
     // I can begin to draw
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear screen
+    m_indices.clear();
 
     glLineWidth(1);
 
@@ -60,16 +59,16 @@ void glDisplay::draw()
     {
         if(i % m_lineLength)
         {
-            indices.push_back(i);
-            indices.push_back(i - m_lineLength);
-            indices.push_back(i - m_lineLength);
-            indices.push_back(i - m_lineLength -1);
+            m_indices.push_back(i);
+            m_indices.push_back(i - m_lineLength);
+            m_indices.push_back(i - m_lineLength);
+            m_indices.push_back(i - m_lineLength -1);
         }
     }
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, 0, m_vertices.constData());
-    glDrawElements(GL_LINES, indices.length(), GL_UNSIGNED_INT, indices.constData());
+    glDrawElements(GL_LINES, m_indices.length(), GL_UNSIGNED_INT, m_indices.constData());
     glDisableClientState(GL_VERTEX_ARRAY);
 }
 
