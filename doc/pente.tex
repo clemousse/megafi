@@ -1,0 +1,107 @@
+% © 2015 (November 1st) alkra
+% alban.kraus@ensg.eu
+
+\documentclass[a4paper, 11pt, twocolumn]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+
+\usepackage{array}
+\usepackage{tikz}
+
+\makeatletter
+\newcommand\@point[2]{\fill[#1] #2 circle [radius=2pt]}
+\newcommand\point[4][black]{%
+  \def\pt{#2}
+  \ifx \pt\@arrivee
+  \@point{red}{(#2)}%
+  \else
+  \@point{#1}{(#2)}
+  \fi
+  node[black, anchor=#3]{#4};
+  
+  \ifnum \@min > #4
+  \@min=#4
+  \global\def\@argmin{#2}
+  \fi
+}
+\newcommand\@carre[6]{
+  \coordinate (a) at (0,1);
+  \coordinate (b) at (1,1);
+  \coordinate (c) at (1,0);
+  \coordinate (d) at (0,0);
+
+  \def\@arrivee{#5}
+  \global\newcount\@min
+  \@min=#1
+  \global\def\@argmin{a}
+
+  \point[blue]{a}{south east}{#1}
+  \point{b}{south west}{#2}
+  \point{c}{north west}{#3}
+  \point{d}{north east}{#4}
+
+  \draw (a) -- (b) -- (c) -- (d) -- cycle;  
+
+  #6
+
+  \draw[%
+  \ifx \@argmin\@arrivee
+  green%
+  \else
+  red%
+  \fi
+  , thick] (a) -- (\@arrivee);
+}
+\newcommand\carre[6]{%
+  \begin{tikzpicture}
+    \@carre{#1}{#2}{#3}{#4}{#5}{%
+      \draw (a) -- (c);%
+    }
+  \end{tikzpicture} &
+  \begin{tikzpicture}
+    \@carre{#1}{#2}{#3}{#4}{#6}{%
+      \draw (b) -- (d);%
+    }
+  \end{tikzpicture}
+}
+\makeatother
+
+\newlength\colonneD
+\setlength\colonneD{\linewidth}
+\addtolength\colonneD{-2.5cm}
+
+\begin{document}
+
+\section*{0 plus petits}
+
+\begin{tabular}{p{0.45\linewidth} p{0.45\linewidth}}
+  \carre{5}{8}{9}{8}{a}{a}
+\end{tabular}
+
+\section*{1 plus petit}
+
+\begin{tabular}{p{0.45\linewidth} p{0.45\linewidth}}
+  \carre{5}{3}{9}{8}{b}{b}\\
+  \carre{5}{8}{3}{8}{c}{a}
+\end{tabular}
+
+\section*{2 plus petits}
+
+\begin{tabular}{p{0.45\linewidth} p{0.45\linewidth}}
+  \carre{5}{3}{9}{2}{d}{d}\\
+  \carre{5}{8}{3}{2}{d}{d}\\
+  \carre{5}{8}{2}{3}{c}{d}
+\end{tabular}
+
+\section*{3 plus petits}
+
+Idem qu'avec deux plus petits
+
+\section*{Conclusion}
+
+Raisonner par triangle
+
+\end{document}
