@@ -7,7 +7,7 @@ glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
     m_vertices(vertices),
     m_windowSize(400, 300),
     m_dataSizeMin(), m_dataSizeMax(),
-    m_lineLength(1000)
+    m_lineLength(4000)
 {
     setBaseSize(m_windowSize);
 
@@ -51,7 +51,7 @@ void glDisplay::init()
 
 void glDisplay::draw()
 {
-    // I can begin to draw
+    // I can begin to drawgl_quad_strip
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear screen
 
     glLineWidth(1);
@@ -63,11 +63,26 @@ void glDisplay::draw()
             glBegin(GL_LINE_STRIP);
             const Point& p1 = m_vertices[i],
                     p2 = m_vertices[i - m_lineLength],
-                    p3 = m_vertices[i - m_lineLength -1];
-            glVertex3d(p1.x, p1.y, p1.z);
-            glVertex3d(p2.x, p2.y, p2.z);
-            glVertex3d(p3.x, p3.y, p3.z);
+                    p3 = m_vertices[i - m_lineLength -1];// p3 = m_vertices[i-1]
+                glVertex3d(p1.x, p1.y, p1.z);
+                glVertex3d(p2.x, p2.y, p2.z);
+                glVertex3d(p3.x, p3.y, p3.z);
             glEnd();
+
+            /*glBegin(GL_TRIANGLE_STRIP);//GL_TRIANGLE_STRIP
+            glColor3d (0, 0, 0);
+                glVertex3d(p1.x, p1.y, p1.z);
+                glVertex3d(p2.x, p2.y, p2.z);
+                glVertex3d(p3.x, p3.y, p3.z);
+            glEnd();
+
+            glBegin(GL_LINE_STRIP);
+            glColor3d (255, 255, 255);
+                glVertex3d(p1.x, p1.y, p1.z);
+                glVertex3d(p2.x, p2.y, p2.z);
+                glVertex3d(p3.x, p3.y, p3.z);
+            glEnd();*/
+
         }
     }
 }
@@ -100,10 +115,25 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
 {
     event->accept();
 
-    const int positionX = event->x();
-    const int positionY = event->y();
+    const qglviewer::Camera* const camera = this->camera();
 
-    qDebug () << "position x : " << positionX << endl << "position y : " << positionY << endl;
+    //const float z = 1;
+
+    QPoint mouse_scr;
+    mouse_scr.setX(event->x());
+    mouse_scr.setY(event->y());
+
+    qDebug () << "ecran x : " << mouse_scr.x() << endl
+              << "ecran y : " << mouse_scr.y() << endl;
+    bool found;
+    const qglviewer::Vec mouse_world = camera->pointUnderPixel(mouse_scr, found);
+
+    if(found)
+        qDebug () << "position x : " << mouse_world.x << endl
+                  << "position y : " << mouse_world.y << endl
+                  << "position z : " << mouse_world.z << endl;
+    else
+        qDebug() << "Not found";
 
     //release the curseur of the mouse to the parent class
     QGLViewer::mousePressEvent(event);
