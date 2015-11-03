@@ -31,6 +31,8 @@ protected:
     qglviewer::Vec m_dataSizeMin;
     qglviewer::Vec m_dataSizeMax;
 
+    long m_lineLength;
+
 public:
     explicit glDisplay(MainWindow *mainW, const QVector<Point>& vertices);
     ~glDisplay();
