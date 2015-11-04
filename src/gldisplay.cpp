@@ -1,4 +1,8 @@
 #include "gldisplay.h"
+#include <QDebug>
+
+#define MODE GL_VERTEX_ARRAY
+#define PRIMIT GL_LINES
 
 glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
     QGLViewer(), // on appelle toujours le constructeur de la classe parente en premier
@@ -6,12 +10,15 @@ glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
     m_vertices(vertices), m_indices(),
     m_windowSize(400, 300),
     m_dataSizeMin(), m_dataSizeMax(),
-    m_lineLength(1000)
+    m_lineLength(7)
 {
     setBaseSize(m_windowSize);
 
     // dataset size
     computeDataSize();
+
+    //In order to make MouseGrabber react to mouse events
+    setMouseTracking(true);
 }
 
 glDisplay::~glDisplay()
@@ -45,8 +52,6 @@ void glDisplay::init()
     showEntireScene();
 }
 
-#include <QDebug>
-
 void glDisplay::draw()
 {
     // I can begin to draw
@@ -59,17 +64,38 @@ void glDisplay::draw()
     {
         if(i % m_lineLength)
         {
+#if MODE == GL_VERTEX_ARRAY
             m_indices.push_back(i);
             m_indices.push_back(i - m_lineLength);
+#if PRIMIT == GL_LINES
             m_indices.push_back(i - m_lineLength);
+#endif
             m_indices.push_back(i - m_lineLength -1);
+
+            glEnableClientState(GL_VERTEX_ARRAY);
+            glVertexPointer(3, GL_FLOAT, 0, m_vertices.constData());
+            glDrawElements(PRIMIT, m_indices.length(), GL_UNSIGNED_INT, m_indices.constData());
+            glDisableClientState(GL_VERTEX_ARRAY);
+#else
+            const Point& p1 = m_vertices[i],
+                    p2 = m_vertices[i - m_lineLength],
+                    p3 = m_vertices[i - m_lineLength -1];
+#if PRIMIT = GL_LINE_STRIP
+            glBegin(GL_LINE_STRIP);
+                glVertex3d(p1.x, p1.y, p1.z);
+                glVertex3d(p2.x, p2.y, p2.z);
+                glVertex3d(p3.x, p3.y, p3.z);
+            glEnd();
+#elif PRIMIT = GL_TRIANGLE_STRIP
+            glBegin(GL_TRIANGLE_STRIP);
+                glVertex3d(p1.x, p1.y, p1.z);
+                glVertex3d(p2.x, p2.y, p2.z);
+                glVertex3d(p3.x, p3.y, p3.z);
+            glEnd();
+#endif // PRIMIT
+#endif // MODE
         }
     }
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(3, GL_FLOAT, 0, m_vertices.constData());
-    glDrawElements(GL_LINES, m_indices.length(), GL_UNSIGNED_INT, m_indices.constData());
-    glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 void glDisplay::computeDataSize()
@@ -94,4 +120,37 @@ void glDisplay::computeDataSize()
     qDebug() << "MNT is between (" << m_dataSizeMin.x << ',' << m_dataSizeMin.y << ',' << m_dataSizeMin.z
              << ") and (" << m_dataSizeMax.x << ',' << m_dataSizeMax.y << ',' << m_dataSizeMax.z << ")";
 }
+
+
+void glDisplay::mousePressEvent(QMouseEvent* const event)
+{
+    event->accept();
+
+    const qglviewer::Camera* const camera = this->camera();
+
+    //const float z = 1;
+
+    QPoint mouse_scr;
+    mouse_scr.setX(event->x());
+    mouse_scr.setY(event->y());
+
+    qDebug () << "ecran x : " << mouse_scr.x() << endl
+              << "ecran y : " << mouse_scr.y() << endl;
+    bool found;
+    const qglviewer::Vec mouse_world = camera->pointUnderPixel(mouse_scr, found);
+
+    if(found)
+        qDebug () << "position x : " << mouse_world.x << endl
+                  << "position y : " << mouse_world.y << endl
+                  << "position z : " << mouse_world.z << endl;
+    else
+        qDebug() << "Not found";
+
+    //release the curseur of the mouse to the parent class
+    QGLViewer::mousePressEvent(event);
+}
+
+
+
+
 
