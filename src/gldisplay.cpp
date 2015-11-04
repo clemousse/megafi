@@ -7,12 +7,15 @@ glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
     m_vertices(vertices),
     m_windowSize(400, 300),
     m_dataSizeMin(), m_dataSizeMax(),
-    m_lineLength(4000)
+    m_lineLength(4000),
+    //m_min_vertices(vertices),
+    m_minIndices()
 {
     setBaseSize(m_windowSize);
 
     // dataset size
     computeDataSize();
+    lin ();
 
     //In order to make MouseGrabber react to mouse events
     setMouseTracking(true);
@@ -98,6 +101,7 @@ void glDisplay::computeDataSize()
     m_dataSizeMax.y = 0;
     m_dataSizeMax.z = 0;
 
+
     for(long i = 0 ; i < m_vertices.length() ; ++i)
     {
         if(m_vertices[i].x < m_dataSizeMin.x) m_dataSizeMin.x = m_vertices[i].x;
@@ -112,6 +116,52 @@ void glDisplay::computeDataSize()
              << ") and (" << m_dataSizeMax.x << ',' << m_dataSizeMax.y << ',' << m_dataSizeMax.z << ")";
 }
 
+
+void glDisplay::lin()
+{
+    int count=0;
+    for(long i = 0 ; i < m_vertices.length()-1; ++i)
+    {
+         if (m_vertices[i].y == m_vertices[i+1].y)
+            {
+             count++;
+            }
+        else
+            {
+
+             qDebug() << "La longueur de la ligne est " << count << "points";
+             count=0;
+
+            }
+     }
+
+}
+
+
+void glDisplay::PointN()
+{
+    /*
+     *  Il faut stocker les INDICES des points minimaux :
+     *      m_minIndices[0] contiendra l'indice du point de départ. Le point de départ sera alors m_vertices[m_minIndices[0]]
+     *      À la fin des quatre tests, m_minIndices[1] contiendra l'indice du point suivant.
+     *      On recommence avec m_minIndices[1].
+     */
+    long currentStep = 0;
+
+    do
+    {
+        long i = m_minIndices[currentStep];
+        if(m_vertices[i-1].z < m_vertices[i].z) m_minIndices.push_back(i-1);
+        if(m_vertices[i+1].z < m_vertices[i].z) m_minIndices.push_back(i+1);
+        if(m_vertices[i-m_lineLength].z < m_vertices[i].z) m_minIndices.push_back(i-m_lineLength);
+        if(m_vertices[i+m_lineLength].z < m_vertices[i].z) m_minIndices.push_back(i+m_lineLength);
+        qDebug() << "le point suivant est avec les coordonnnées suivantes:  z=" << m_vertices[i].z << ',y=' << m_vertices[i].y <<','<< m_vertices[i].x ;
+        ++currentStep;
+    } while(m_minIndices[currentStep-1] == m_minIndices[currentStep]);
+
+
+
+}
 
 void glDisplay::mousePressEvent(QMouseEvent* const event)
 {
@@ -140,8 +190,3 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
     //release the curseur of the mouse to the parent class
     QGLViewer::mousePressEvent(event);
 }
-
-
-
-
-
