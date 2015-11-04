@@ -6,6 +6,9 @@
 #include <stdexcept>
 
 #include <QGLViewer/qglviewer.h>
+#include <QGLViewer/mouseGrabber.h>
+#include <QGLViewer/manipulatedFrame.h>
+#include <QMouseEvent>
 
 
 // Declare a class MainWindow to resolve circular inclusion
@@ -43,6 +46,7 @@ public:
     // Contains initialization code which cannot be executed before the window has been shown
     virtual void init();
 
+    void mousePressEvent(QMouseEvent* const event);
 
 public slots:
     void draw(); // drawing function

@@ -97,4 +97,3 @@ void MainWindow::openDialog() // Open a dialog to choose a file
     }
 }
 
-
