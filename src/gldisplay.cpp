@@ -63,28 +63,30 @@ void glDisplay::draw()
     {
         if(i % m_lineLength)
         {
-            glBegin(GL_LINE_STRIP);
-            const Point& p1 = m_vertices[i],
-                    p2 = m_vertices[i - m_lineLength],
-                    p3 = m_vertices[i - m_lineLength -1];// p3 = m_vertices[i-1]
-                glVertex3d(p1.x, p1.y, p1.z);
-                glVertex3d(p2.x, p2.y, p2.z);
-                glVertex3d(p3.x, p3.y, p3.z);
-            glEnd();
+            //glBegin(GL_LINE_STRIP);
+            const Point& p1 = m_vertices[i-1],
+                    p2 = m_vertices[i - m_lineLength -1],
+                    p3 = m_vertices[i],
+                    p4 = m_vertices[i-m_lineLength];
+            //glEnd();
 
-            /*glBegin(GL_TRIANGLE_STRIP);//GL_TRIANGLE_STRIP
-            glColor3d (0, 0, 0);
+            glBegin(GL_QUADS);
+            glColor3d (255, 0, 255);
                 glVertex3d(p1.x, p1.y, p1.z);
                 glVertex3d(p2.x, p2.y, p2.z);
                 glVertex3d(p3.x, p3.y, p3.z);
+                glVertex3d(p4.x, p4.y, p4.z);
             glEnd();
 
             glBegin(GL_LINE_STRIP);
             glColor3d (255, 255, 255);
-                glVertex3d(p1.x, p1.y, p1.z);
-                glVertex3d(p2.x, p2.y, p2.z);
+            glLineWidth(10);
                 glVertex3d(p3.x, p3.y, p3.z);
-            glEnd();*/
+                glVertex3d(p4.x, p4.y, p4.z);
+                //glVertex3d(p1.x, p1.y, p1.z);
+                glVertex3d(p2.x, p2.y, p2.z);
+
+            glEnd();
 
         }
     }
