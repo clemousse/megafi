@@ -1,8 +1,6 @@
 #include "gldisplay.h"
+#include "draw.h"
 #include <QDebug>
-
-#define MODE GL_VERTEX_ARRAY
-#define PRIMIT GL_LINES
 
 glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
     QGLViewer(), // on appelle toujours le constructeur de la classe parente en premier
@@ -45,6 +43,8 @@ void glDisplay::init()
     QColor fg(255, 255, 255);
     setForegroundColor(fg);
 
+    glLineWidth(1);
+
     glViewport(0, 0, m_windowSize.width(), m_windowSize.height()); // Set the viewport size to fill the window
 
     // Move camera
@@ -52,50 +52,44 @@ void glDisplay::init()
     showEntireScene();
 }
 
+
+inline void glDisplay::draw_function(unsigned int index) {
+#if MODE == MODE_VERTEX_INDICES
+    m_indices.push_back(index);
+#else
+    glVertex3d(m_vertices[index].x, m_vertices[index].y, m_vertices[index].z);
+#endif
+}
+
 void glDisplay::draw()
 {
     // I can begin to draw
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear screen
+
+#if MODE == MODE_VERTEX_INDICES
     m_indices.clear();
+#endif
 
-    glLineWidth(1);
+    draw_init<PRIM>();
 
-    for(unsigned int i = m_lineLength ; i < static_cast<unsigned int>(m_vertices.length()) ; ++i)
+    for(unsigned int i = 0 ; i < static_cast<unsigned int>(m_vertices.length()) ; ++i)
     {
         if(i % m_lineLength)
-        {
-#if MODE == GL_VERTEX_ARRAY
-            m_indices.push_back(i);
-            m_indices.push_back(i - m_lineLength);
-#if PRIMIT == GL_LINES
-            m_indices.push_back(i - m_lineLength);
-#endif
-            m_indices.push_back(i - m_lineLength -1);
-
-            glEnableClientState(GL_VERTEX_ARRAY);
-            glVertexPointer(3, GL_FLOAT, 0, m_vertices.constData());
-            glDrawElements(PRIMIT, m_indices.length(), GL_UNSIGNED_INT, m_indices.constData());
-            glDisableClientState(GL_VERTEX_ARRAY);
-#else
-            const Point& p1 = m_vertices[i],
-                    p2 = m_vertices[i - m_lineLength],
-                    p3 = m_vertices[i - m_lineLength -1];
-#if PRIMIT = GL_LINE_STRIP
-            glBegin(GL_LINE_STRIP);
-                glVertex3d(p1.x, p1.y, p1.z);
-                glVertex3d(p2.x, p2.y, p2.z);
-                glVertex3d(p3.x, p3.y, p3.z);
-            glEnd();
-#elif PRIMIT = GL_TRIANGLE_STRIP
-            glBegin(GL_TRIANGLE_STRIP);
-                glVertex3d(p1.x, p1.y, p1.z);
-                glVertex3d(p2.x, p2.y, p2.z);
-                glVertex3d(p3.x, p3.y, p3.z);
-            glEnd();
-#endif // PRIMIT
-#endif // MODE
-        }
+            draw_line<PRIM>(i);
+        else
+            draw_beginline<PRIM>(i);
     }
+
+    draw_end<PRIM>();
+
+#if MODE == MODE_VERTEX_INDICES
+    int glprim = 0;
+    OPENGL(PRIM, glprim)
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(3, GL_FLOAT, 0, m_vertices.constData());
+    glDrawElements(glprim, m_indices.length(), GL_UNSIGNED_INT, m_indices.constData());
+    glDisableClientState(GL_VERTEX_ARRAY);
+#endif
 }
 
 void glDisplay::computeDataSize()
