@@ -117,18 +117,19 @@ void glDisplay::computeDataSize()
 
 void glDisplay::lin()
 {
-    int count=0;
-    for(long i = 0 ; i < m_vertices.length()-1; ++i)
+    m_lineLength=0;
+    for(long i = 0; i < m_vertices.length()-1; ++i)
     {
          if (m_vertices[i].y == m_vertices[i+1].y)
             {
-             count++;
+             m_lineLength++;
             }
         else
             {
 
-             qDebug() << "La longueur de la ligne est " << count << "points";
-             count=0;
+             qDebug() << "La longueur de la ligne est " << m_lineLength << "points";
+             m_lineLength=0;
+
 
             }
      }
@@ -148,18 +149,26 @@ void glDisplay::PointN()
 
     do
     {
+
         long i = m_minIndices[currentStep];
-        if(m_vertices[i-1].z < m_vertices[i].z) m_minIndices.push_back(i-1);
-        if(m_vertices[i+1].z < m_vertices[i].z) m_minIndices.push_back(i+1);
-        if(m_vertices[i-m_lineLength].z < m_vertices[i].z) m_minIndices.push_back(i-m_lineLength);
-        if(m_vertices[i+m_lineLength].z < m_vertices[i].z) m_minIndices.push_back(i+m_lineLength);
+
+
+        if((i%m_lineLength!=0) && (m_vertices[i-1].z < m_vertices[i].z))
+            m_minIndices.push_back(i-1);
+        if((i%m_lineLength!=3999)&& (m_vertices[i+1].z < m_vertices[i].z))
+            m_minIndices.push_back(i+1);
+        if((i>((m_vertices.length()-1)-(m_lineLength))) && (m_vertices[i-m_lineLength].z < m_vertices[i].z))
+            m_minIndices.push_back(i-m_lineLength);
+        if((i<=3999) && (m_vertices[i+m_lineLength].z < m_vertices[i].z))
+            m_minIndices.push_back(i+m_lineLength);
         qDebug() << "le point suivant est avec les coordonnnées suivantes:  z=" << m_vertices[i].z << ',y=' << m_vertices[i].y <<','<< m_vertices[i].x ;
         ++currentStep;
+
     } while(m_minIndices[currentStep-1] == m_minIndices[currentStep]);
 
 
 
-}
+   }
 
 void glDisplay::mousePressEvent(QMouseEvent* const event)
 {
@@ -179,12 +188,64 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
     const qglviewer::Vec mouse_world = camera->pointUnderPixel(mouse_scr, found);
 
     if(found)
+    {
         qDebug () << "position x : " << mouse_world.x << endl
                   << "position y : " << mouse_world.y << endl
                   << "position z : " << mouse_world.z << endl;
+        // Retrouver l'indice du point qui a pour coordonnées mouse_world
+
+        for(long i = 0 ; i < m_lineLength-1; i+=1)
+        {
+            if (m_vertices[i].x == mouse_world.x )
+            {
+                m_minIndices.push_back(i);
+
+            }
+            else if (((m_vertices[i].x < mouse_world.x ) && (mouse_world.x< m_vertices[i+1].x)) && ((m_vertices[i+1].x)-(mouse_world.x) < (mouse_world.x)-(m_vertices[i].x)))
+
+            {
+                m_minIndices.push_back(i+1);
+
+            }
+            else if (((m_vertices[i].x < mouse_world.x ) && (mouse_world.x < m_vertices[i+1].x)) && ((m_vertices[i+1].x)-(mouse_world.x) > (mouse_world.x)-(m_vertices[i].x)))
+
+            {
+                m_minIndices.push_back(i);
+
+            }
+
+        }
+        for(long j = m_minIndices[0] ; j < m_vertices.length()-m_lineLength; j+=m_lineLength)
+        {
+            if (m_vertices[j].y == mouse_world.y )
+            {
+                m_minIndices[0]=j;
+
+
+            }
+            else if (((m_vertices[j].y < mouse_world.y ) && (mouse_world.y< m_vertices[j+m_lineLength].y)) && ((m_vertices[j+m_lineLength].x)-(mouse_world.y) < (mouse_world.y)-(m_vertices[j].y)))
+
+            {
+                m_minIndices[0]=j+m_lineLength;
+
+            }
+            else if (((m_vertices[j].y < mouse_world.y ) && (mouse_world.y < m_vertices[j+m_lineLength].y)) && ((m_vertices[j+m_lineLength].y)-(mouse_world.y) > (mouse_world.y)-(m_vertices[j].y)))
+
+            {
+                m_minIndices[0]=j;
+
+            }
+
+
+        }
+
+           PointN();
+    }
     else
         qDebug() << "Not found";
 
     //release the curseur of the mouse to the parent class
     QGLViewer::mousePressEvent(event);
+
+
 }

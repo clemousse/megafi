@@ -93,7 +93,6 @@ void MainWindow::openDialog() // Open a dialog to choose a file
         readDTM(file,m_vector);
         m_glDisplay->computeDataSize();
         m_glDisplay->lin();
-        m_glDisplay->PointN();
     }
 }
 
