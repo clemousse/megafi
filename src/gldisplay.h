@@ -4,6 +4,7 @@
 #include "dtm.h"
 
 #include <stdexcept>
+#include <vector>
 
 #include <QGLViewer/qglviewer.h>
 #include <QGLViewer/mouseGrabber.h>
@@ -25,22 +26,22 @@
 
 // OpenGL mode than can be used
 #define MODE_LEGACY         0
-//#define MODE_VERTEX_ARRAY   1 // Not implemented
+#define MODE_VERTEX_ARRAY   1
 #define MODE_VERTEX_INDICES 2
 
-// The design that can be used
-#define DESIGN_POINT        0b0110
-#define DESIGN_EDGE         0b0001
-#define DESIGN_SHAPE        0b0011
-
 // The primitive that can be used
-#define PRIM_TRIANGLES      0b0000
-#define PRIM_SQUARES        0b0100
+#define PRIM_TRIANGLES      0b00000000
+#define PRIM_SQUARES        0b00000001
+
+// The design that can be used
+#define THE_DESIGN          0b11111110
+#define DESIGN_POINT        0b00000010
+#define DESIGN_EDGE         0b00000100
+#define DESIGN_SHAPE        0b00001000
 
 // Other implemented primitives
-#define PRIM__LINES         0b1101
-#define PRIM__LINE_LOOP     0b1001
-#define PRIM__TRIANGLES     0b1011
+#define PRIM__LINE_LOOP     0b00010000
+#define PRIM__TRIANGLES     0b00100000
 
 #define OPENGL(choice, dest) switch(choice) { \
     case DESIGN_POINT: \
@@ -48,13 +49,11 @@
     case DESIGN_EDGE | PRIM_TRIANGLES: \
         dest = GL_LINE_STRIP; break; \
     case DESIGN_EDGE | PRIM_SQUARES: \
-        dest = GL_LINE_STRIP; break; \
+        dest = GL_LINES; break; \
     case DESIGN_SHAPE | PRIM_TRIANGLES: \
         dest = GL_TRIANGLE_STRIP; break; \
     case DESIGN_SHAPE | PRIM_SQUARES: \
         dest = GL_QUAD_STRIP; break; \
-    case PRIM__LINES: \
-        dest = GL_LINES; break; \
     case PRIM__LINE_LOOP: \
         dest = GL_LINE_LOOP; break; \
     case PRIM__TRIANGLES: \
@@ -65,7 +64,7 @@
 
 // FINAL CHOICE
 #define MODE MODE_LEGACY
-#define PRIM DESIGN_EDGE | PRIM_SQUARES
+#define PRIM PRIM__TRIANGLES
 
 
 
@@ -82,10 +81,11 @@ class glDisplay : public QGLViewer
     Q_OBJECT
 
 private:
-    MainWindow * const m_mainW;       // A pointer in order to communicate with main window
-    const QVector<Point>& m_vertices; // The vertices array
-    QVector<unsigned int> m_indices;  // Probably useless
-    QVector<int>  m_minIndices;      // Flow path array
+    MainWindow * const m_mainW;         // A pointer in order to communicate with main window
+    const QVector<Point>& m_vertices;   // The vertices array
+    std::vector<Point> m_pointsToDraw;  // A copy of the vertices array (MODE_VERTEX_ARRAY)
+    std::vector<unsigned int> m_indices;// The indices array (MODE_VERTEX_INDICES)
+    QVector<int>  m_minIndices;         // Flow path array
 
 protected:
     QSize m_windowSize;
@@ -95,6 +95,7 @@ protected:
     qglviewer::Vec m_dataSizeMax;
 
     long m_lineLength;
+    long m_nbLines;
 
 public:
     explicit glDisplay(MainWindow *mainW, const QVector<Point>& vertices);
@@ -115,8 +116,8 @@ public slots:
 protected:
     // Drawing functions
     template <int primit> inline void draw_init();
-    template <int primit> inline void draw_line(unsigned int);
-    template <int primit> inline void draw_beginline(unsigned int);
+    template <int primit> inline void draw_line(unsigned int i);
+    template <int primit> inline void draw_back(unsigned int j);
     template <int primit> inline void draw_end();
     void draw_function(unsigned int);
 

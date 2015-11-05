@@ -5,11 +5,11 @@
 glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
     QGLViewer(), // on appelle toujours le constructeur de la classe parente en premier
     m_mainW(mainW),
-    m_vertices(vertices), m_indices(),
+    m_vertices(vertices), m_pointsToDraw(), m_indices(),
     m_minIndices(),
     m_windowSize(400, 300),
     m_dataSizeMin(), m_dataSizeMax(),
-    m_lineLength()
+    m_lineLength(0), m_nbLines(0)
 {
     setBaseSize(m_windowSize);
 
@@ -56,7 +56,9 @@ void glDisplay::init()
 
 
 inline void glDisplay::draw_function(unsigned int index) {
-#if MODE == MODE_VERTEX_INDICES
+#if MODE == MODE_VERTEX_ARRAY
+    m_pointsToDraw.push_back(m_vertices[index]);
+#elif MODE == MODE_VERTEX_INDICES
     m_indices.push_back(index);
 #else
     glVertex3d(m_vertices[index].x, m_vertices[index].y, m_vertices[index].z);
@@ -68,18 +70,33 @@ void glDisplay::draw()
     // I can begin to draw
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear screen
 
-#if MODE == MODE_VERTEX_INDICES
-    m_indices.clear();
+#if MODE == MODE_VERTEX_ARRAY
+    try {
+        m_pointsToDraw.reserve(array_size<PRIM>());
+    } catch(std::bad_alloc) {
+        return;
+    }
+#elif MODE == MODE_VERTEX_INDICES
+    try {
+        m_indices.reserve(array_size<PRIM>());
+    } catch(std::bad_alloc) {
+        return;
+    }
 #endif
 
     draw_init<PRIM>();
 
-    for(unsigned int i = 0 ; i < static_cast<unsigned int>(m_vertices.length()) ; ++i)
+    const unsigned int vLength = static_cast<unsigned int>(m_vertices.length());
+    for(unsigned int i = 0 ; i < vLength ; ++i)
     {
-        if(i % m_lineLength)
-            draw_line<PRIM>(i);
-        else
-            draw_beginline<PRIM>(i);
+        if(i % m_lineLength == 0 // beginning of line
+                && (PRIM) & DESIGN_EDGE) { // only if drawing edges
+            for(unsigned int j = i + m_lineLength-1 ; j >= i && j < vLength ; --j)
+                //                                           ^ security: j is unsigned so 0 - 1 >= 0
+                draw_back<PRIM>(j);
+        }
+
+        draw_line<(PRIM) & THE_DESIGN>(i);
     }
 
     draw_end<PRIM>();
@@ -122,7 +139,8 @@ void glDisplay::computeLineLength()
 {
     const long NOT_COMPUTED = 0;
     long lineLength_prec = NOT_COMPUTED;
-    m_lineLength = 1 ;
+    m_lineLength = 1;
+    m_nbLines = 1;
 
     // at each loop, m_lineLenght takes 1 if "m_vertices[i].y == m_vertices[i+1].y".
     // m_lineLenght begin at 1.
@@ -133,16 +151,16 @@ void glDisplay::computeLineLength()
           if (m_vertices[i].y != m_vertices[i+1].y)
           {
              if(lineLength_prec != NOT_COMPUTED && m_lineLength != lineLength_prec)
-                 qDebug() << "ERREUR";
+                 qWarning() << "Lines" << i << "and" << i+1 << "don't have the same length.";
 
              lineLength_prec = m_lineLength;
              m_lineLength = 0;
-
-             qDebug() << "La longueur de la ligne est m_lineLength_prec " << lineLength_prec << "points";
+             ++m_nbLines;
           }
     }
 
     m_lineLength = lineLength_prec;
+    qDebug() << "Lines are" << m_lineLength << "points long.";
 }
 
 void glDisplay::computePath()
