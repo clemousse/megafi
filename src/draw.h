@@ -37,6 +37,10 @@ template<> inline void glDisplay::draw_line<DESIGN_POINT>(unsigned int i) {
     draw_function(i);
 }
 
+template<> inline void glDisplay::draw_beginline<DESIGN_POINT>(unsigned int i) {
+    draw_line<DESIGN_POINT>(i);
+}
+
 
 
 
@@ -84,8 +88,16 @@ template<> inline void glDisplay::draw_line<DESIGN_SHAPE | PRIM_TRIANGLES>(unsig
 
 template<> inline void glDisplay::draw_beginline<DESIGN_SHAPE | PRIM_TRIANGLES>(unsigned int i) {
     if(i < m_vertices.length() - m_lineLength) { // not at last line
+#if MODE == LEGACY
         glEnd();
         glBegin(GL_TRIANGLE_STRIP);
+#else
+        if(i > 0) {
+            draw_function(i-1);
+            draw_function(i);
+            draw_function(i);
+        }
+#endif
         draw_function(i);
         draw_function(i + m_lineLength);
     }
