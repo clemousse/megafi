@@ -1,21 +1,21 @@
 #include "gldisplay.h"
+#include "draw.h"
 #include <QDebug>
 
 glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
     QGLViewer(), // on appelle toujours le constructeur de la classe parente en premier
     m_mainW(mainW),
-    m_vertices(vertices),
+    m_vertices(vertices), m_indices(),
+    m_minIndices(),
     m_windowSize(400, 300),
     m_dataSizeMin(), m_dataSizeMax(),
-    m_lineLength(),
-    //m_min_vertices(vertices),
-    m_minIndices()
+    m_lineLength()
 {
     setBaseSize(m_windowSize);
 
     // dataset size
     computeDataSize();
-    lin ();
+    computeLineLength();
 
     //In order to make MouseGrabber react to mouse events
     setMouseTracking(true);
@@ -45,6 +45,8 @@ void glDisplay::init()
     QColor fg(255, 255, 255);
     setForegroundColor(fg);
 
+    glLineWidth(1);
+
     glViewport(0, 0, m_windowSize.width(), m_windowSize.height()); // Set the viewport size to fill the window
 
     // Move camera
@@ -52,44 +54,44 @@ void glDisplay::init()
     showEntireScene();
 }
 
+
+inline void glDisplay::draw_function(unsigned int index) {
+#if MODE == MODE_VERTEX_INDICES
+    m_indices.push_back(index);
+#else
+    glVertex3d(m_vertices[index].x, m_vertices[index].y, m_vertices[index].z);
+#endif
+}
+
 void glDisplay::draw()
 {
-    // I can begin to drawgl_quad_strip
+    // I can begin to draw
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear screen
 
-    glLineWidth(1);
+#if MODE == MODE_VERTEX_INDICES
+    m_indices.clear();
+#endif
 
-    for(long i = m_lineLength ; i < m_vertices.length() ; ++i)
+    draw_init<PRIM>();
+
+    for(unsigned int i = 0 ; i < static_cast<unsigned int>(m_vertices.length()) ; ++i)
     {
         if(i % m_lineLength)
-        {
-            //glBegin(GL_LINE_STRIP);
-            const Point& p1 = m_vertices[i-1],
-                    p2 = m_vertices[i - m_lineLength -1],
-                    p3 = m_vertices[i],
-                    p4 = m_vertices[i-m_lineLength];
-            //glEnd();
-
-            glBegin(GL_QUADS);
-            glColor3d (255, 0, 255);
-                glVertex3d(p1.x, p1.y, p1.z);
-                glVertex3d(p2.x, p2.y, p2.z);
-                glVertex3d(p3.x, p3.y, p3.z);
-                glVertex3d(p4.x, p4.y, p4.z);
-            glEnd();
-
-            glBegin(GL_LINE_STRIP);
-            glColor3d (255, 255, 255);
-            glLineWidth(10);
-                glVertex3d(p3.x, p3.y, p3.z);
-                glVertex3d(p4.x, p4.y, p4.z);
-                //glVertex3d(p1.x, p1.y, p1.z);
-                glVertex3d(p2.x, p2.y, p2.z);
-
-            glEnd();
-
-        }
+            draw_line<PRIM>(i);
+        else
+            draw_beginline<PRIM>(i);
     }
+
+    draw_end<PRIM>();
+
+#if MODE == MODE_VERTEX_INDICES
+    int glprim = 0;
+    OPENGL(PRIM, glprim)
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(3, GL_FLOAT, 0, m_vertices.constData());
+    glDrawElements(glprim, m_indices.length(), GL_UNSIGNED_INT, m_indices.constData());
+    glDisableClientState(GL_VERTEX_ARRAY);
+#endif
 }
 
 void glDisplay::computeDataSize()
@@ -116,7 +118,7 @@ void glDisplay::computeDataSize()
              << ") and (" << m_dataSizeMax.x << ',' << m_dataSizeMax.y << ',' << m_dataSizeMax.z << ")";
 }
 
-void glDisplay::lin()
+void glDisplay::computeLineLength()
 {
     const long NOT_COMPUTED = 0;
     long lineLength_prec = NOT_COMPUTED;
@@ -143,7 +145,7 @@ void glDisplay::lin()
     m_lineLength = lineLength_prec;
 }
 
-void glDisplay::PointN()
+void glDisplay::computePath()
 {
     /*
      *
@@ -168,7 +170,7 @@ void glDisplay::PointN()
             m_minIndices.push_back(i-m_lineLength);
         if((i<=3999) && (m_vertices[i+m_lineLength].z < m_vertices[i].z))
             m_minIndices.push_back(i+m_lineLength);
-        qDebug() << "le point suivant est avec les coordonnnées suivantes:  z=" << m_vertices[i].z << ',y=' << m_vertices[i].y <<','<< m_vertices[i].x ;
+        qDebug() << "le point suivant est avec les coordonnnées suivantes:  z=" << m_vertices[i].z << ",y=" << m_vertices[i].y <<','<< m_vertices[i].x ;
         ++currentStep;
 
     }
@@ -198,54 +200,9 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
         qDebug () << "position x : " << mouse_world.x << endl
                   << "position y : " << mouse_world.y << endl
                   << "position z : " << mouse_world.z << endl;
-        // Retrouver l'indice du point qui a pour coordonnées mouse_world
 
-        for(long i = 0 ; i < m_lineLength-1; i+=1)
-        {
-            if (m_vertices[i].x == mouse_world.x )
-            {
-                m_minIndices.push_back(i);
-
-            }
-            else if (((m_vertices[i].x < mouse_world.x ) && (mouse_world.x< m_vertices[i+1].x)) && ((m_vertices[i+1].x)-(mouse_world.x) < (mouse_world.x)-(m_vertices[i].x)))
-
-            {
-                m_minIndices.push_back(i+1);
-
-            }
-            else if (((m_vertices[i].x < mouse_world.x ) && (mouse_world.x < m_vertices[i+1].x)) && ((m_vertices[i+1].x)-(mouse_world.x) > (mouse_world.x)-(m_vertices[i].x)))
-
-            {
-                m_minIndices.push_back(i);
-
-            }
-
-        }
-        for(long j = m_minIndices[0] ; j < m_vertices.length()-m_lineLength; j+=m_lineLength)
-        {
-            if (m_vertices[j].y == mouse_world.y )
-            {
-                m_minIndices[0]=j;
-
-
-            }
-            else if (((m_vertices[j].y < mouse_world.y ) && (mouse_world.y< m_vertices[j+m_lineLength].y)) && ((m_vertices[j+m_lineLength].x)-(mouse_world.y) < (mouse_world.y)-(m_vertices[j].y)))
-
-            {
-                m_minIndices[0]=j+m_lineLength;
-
-            }
-            else if (((m_vertices[j].y < mouse_world.y ) && (mouse_world.y < m_vertices[j+m_lineLength].y)) && ((m_vertices[j+m_lineLength].y)-(mouse_world.y) > (mouse_world.y)-(m_vertices[j].y)))
-
-            {
-                m_minIndices[0]=j;
-
-            }
-
-
-        }
-
-           PointN();
+        computeClickedIndex(mouse_world);
+        computePath();
     }
     else
         qDebug() << "Not found";
@@ -254,4 +211,37 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
     QGLViewer::mousePressEvent(event);
 
 
+}
+
+void glDisplay::computeClickedIndex(const qglviewer::Vec& mouse_world) {
+    // Retrouver l'indice du point qui a pour coordonnées mouse_world
+    for(long i = 0 ; i < m_lineLength-1; i+=1)
+    {
+        if (m_vertices[i].x == mouse_world.x)
+        {
+            m_minIndices.push_back(i);
+        }
+        else if ( (m_vertices[i].x < mouse_world.x) && (mouse_world.x < m_vertices[i+1].x) )
+        {
+            if(m_vertices[i+1].x - mouse_world.x < mouse_world.x - m_vertices[i].x)
+                m_minIndices.push_back(i+1);
+            else if (m_vertices[i+1].x - mouse_world.x > mouse_world.x - m_vertices[i].x)
+                m_minIndices.push_back(i);
+        }
+    }
+
+    for(long j = m_minIndices[0] ; j < m_vertices.length()-m_lineLength; j+=m_lineLength)
+    {
+        if (m_vertices[j].y == mouse_world.y )
+        {
+            m_minIndices[0]=j;
+        }
+        else if ( (m_vertices[j].y < mouse_world.y) && (mouse_world.y < m_vertices[j+m_lineLength].y) )
+        {
+            if ( m_vertices[j+m_lineLength].x - mouse_world.y  <  mouse_world.y - m_vertices[j].y )
+                m_minIndices[0]=j+m_lineLength;
+            else if (m_vertices[j+m_lineLength].y - mouse_world.y >  mouse_world.y - m_vertices[j].y )
+                m_minIndices[0]=j;
+        }
+    }
 }

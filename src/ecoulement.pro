@@ -25,6 +25,7 @@ HEADERS  += mainwindow.h \
             openf.h \
             dtm.h \
             gldisplay.h \
-            tests.h
+            tests.h \
+    draw.h
 
 FORMS    += mainwindow.ui
