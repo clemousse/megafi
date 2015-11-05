@@ -14,6 +14,8 @@
  */
 void readDTM(const QString& path, QVector<Point>& vector)
 {
+    vector.clear();
+
     // Opening the file
     QFile file(path);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
