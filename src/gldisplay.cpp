@@ -149,34 +149,42 @@ void glDisplay::computePath()
 {
     /*
      *
-  Il faut stocker les INDICES des points minimaux :
+     * Il faut stocker les INDICES des points minimaux :
      *      m_minIndices[0] contiendra l'indice du point de départ. Le point de départ sera alors m_vertices[m_minIndices[0]]
      *      À la fin des quatre tests, m_minIndices[1] contiendra l'indice du point suivant.
      *      On recommence avec m_minIndices[1].
      */
-    long currentStep = 0;
-
     do
     {
+        long i = m_minIndices.last();
 
-        long i = m_minIndices[currentStep];
-
-
-        if((i%m_lineLength!=0) && (m_vertices[i-1].z < m_vertices[i].z))
+        if( i%m_lineLength != 0
+                && m_vertices[i-1].z < m_vertices[i].z )
             m_minIndices.push_back(i-1);
-        if((i%m_lineLength!=3999)&& (m_vertices[i+1].z < m_vertices[i].z))
+
+        else if( i%m_lineLength != m_lineLength-1
+                 && m_vertices[i+1].z < m_vertices[i].z)
             m_minIndices.push_back(i+1);
-        if((i>((m_vertices.length()-1)-(m_lineLength))) && (m_vertices[i-m_lineLength].z < m_vertices[i].z))
+
+        else if( i >= m_lineLength
+                 && m_vertices[i-m_lineLength].z < m_vertices[i].z)
             m_minIndices.push_back(i-m_lineLength);
-        if((i<=3999) && (m_vertices[i+m_lineLength].z < m_vertices[i].z))
+
+        else if( i < m_vertices.length()-m_lineLength
+                 && m_vertices[i+m_lineLength].z < m_vertices[i].z)
             m_minIndices.push_back(i+m_lineLength);
-        qDebug() << "le point suivant est avec les coordonnnées suivantes:  z=" << m_vertices[i].z << ",y=" << m_vertices[i].y <<','<< m_vertices[i].x ;
-        ++currentStep;
 
-    }
-    while(m_minIndices[currentStep-1] == m_minIndices[currentStep]);
+        else
+        {
+            qDebug() << "End flow path";
+            break;
+        }
 
-   }
+        qDebug() << "Next point's coordinates : x=" << m_vertices[i].x
+                 << ", y=" << m_vertices[i].y
+                 << ", z=" << m_vertices[i].z;
+    } while(true);
+}
 
 void glDisplay::mousePressEvent(QMouseEvent* const event)
 {
