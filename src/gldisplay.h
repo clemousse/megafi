@@ -68,7 +68,6 @@
 #define PRIM DESIGN_EDGE | PRIM_SQUARES
 
 
-
 // Declare a class MainWindow to resolve circular inclusion
 class MainWindow;
 
@@ -95,6 +94,7 @@ protected:
     qglviewer::Vec m_dataSizeMax;
 
     long m_lineLength;
+    bool m_departureSelection;
 
 public:
     explicit glDisplay(MainWindow *mainW, const QVector<Point>& vertices);
@@ -103,14 +103,15 @@ public:
     // Contains initialization code which cannot be executed before the window has been shown
     virtual void init();
 
-    void mousePressEvent(QMouseEvent* const event);
     void computeLineLength();
     void computePath();
+    void mousePressEvent(QMouseEvent* const event);
 
 public slots:
     void draw(); // drawing function
     void reshapeWindow(int width, int height);
     void computeDataSize();
+    void rbClick(bool chckD);
 
 protected:
     // Drawing functions
@@ -119,6 +120,7 @@ protected:
     template <int primit> inline void draw_beginline(unsigned int);
     template <int primit> inline void draw_end();
     void draw_function(unsigned int);
+
 
 protected:
     void computeClickedIndex(const qglviewer::Vec& mouse_world);

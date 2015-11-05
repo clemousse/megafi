@@ -1,5 +1,6 @@
 #include "gldisplay.h"
 #include "draw.h"
+#include "mainwindow.h"
 #include <QDebug>
 
 glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
@@ -9,7 +10,8 @@ glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
     m_minIndices(),
     m_windowSize(400, 300),
     m_dataSizeMin(), m_dataSizeMax(),
-    m_lineLength()
+    m_lineLength(),
+    m_departureSelection(false)
 {
     setBaseSize(m_windowSize);
 
@@ -87,7 +89,7 @@ void glDisplay::draw()
 #if MODE == MODE_VERTEX_INDICES
     int glprim = 0;
     OPENGL(PRIM, glprim)
-    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);mousePressEvent
     glVertexPointer(3, GL_FLOAT, 0, m_vertices.constData());
     glDrawElements(glprim, m_indices.length(), GL_UNSIGNED_INT, m_indices.constData());
     glDisableClientState(GL_VERTEX_ARRAY);
@@ -138,7 +140,7 @@ void glDisplay::computeLineLength()
              lineLength_prec = m_lineLength;
              m_lineLength = 0;
 
-             qDebug() << "La longueur de la ligne est m_lineLength_prec " << lineLength_prec << "points";
+             qDebug() << "The number of points in a line is " << lineLength_prec << "points";
           }
     }
 
@@ -186,40 +188,51 @@ void glDisplay::computePath()
     } while(true);
 }
 
+
+
+void glDisplay::rbClick (bool chckD)
+{
+    m_departureSelection = chckD;
+}
+
 void glDisplay::mousePressEvent(QMouseEvent* const event)
 {
     event->accept();
 
-    const qglviewer::Camera* const camera = this->camera();
-
-    //const float z = 1;
-
-    QPoint mouse_scr;
-    mouse_scr.setX(event->x());
-    mouse_scr.setY(event->y());
-
-    qDebug () << "ecran x : " << mouse_scr.x() << endl
-              << "ecran y : " << mouse_scr.y() << endl;
-    bool found;
-    const qglviewer::Vec mouse_world = camera->pointUnderPixel(mouse_scr, found);
-
-    if(found)
+    if(m_departureSelection)
     {
-        qDebug () << "position x : " << mouse_world.x << endl
-                  << "position y : " << mouse_world.y << endl
-                  << "position z : " << mouse_world.z << endl;
+        const qglviewer::Camera* const camera = this->camera();
 
-        computeClickedIndex(mouse_world);
-        computePath();
+        //const float z = 1;
+
+        QPoint mouse_scr;
+        mouse_scr.setX(event->x());
+        mouse_scr.setY(event->y());
+
+        qDebug () << "ecran x : " << mouse_scr.x() << endl
+                  << "ecran y : " << mouse_scr.y() << endl;
+        bool found;
+        const qglviewer::Vec mouse_world = camera->pointUnderPixel(mouse_scr, found);
+
+        if(found)
+        {
+            qDebug () << "position x : " << mouse_world.x << endl
+                      << "position y : " << mouse_world.y << endl
+                      << "position z : " << mouse_world.z << endl;
+
+            computeClickedIndex(mouse_world);
+            computePath();
+        }
+        else
+            qDebug() << "Not found";
     }
     else
-        qDebug() << "Not found";
-
-    //release the curseur of the mouse to the parent class
-    QGLViewer::mousePressEvent(event);
-
-
+    {
+        //release the curseur of the mouse to the parent class
+        QGLViewer::mousePressEvent(event);
+    }
 }
+
 
 void glDisplay::computeClickedIndex(const qglviewer::Vec& mouse_world) {
     // Retrouver l'indice du point qui a pour coordonnées mouse_world

@@ -11,6 +11,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "tests.h"
+#include "gldisplay.h"
 
 using namespace std;
 
@@ -35,8 +36,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionView_history, SIGNAL(triggered()),ui->dockWidget_His, SLOT(show()));
     //create a connexion on the menu File-> Quit via close slot (or cross)
     connect(ui->actionQuit, SIGNAL(triggered()),this, SLOT(close()));
-
+    //create a connexion on the radio button in calculating the flow path in mainwindow
+    connect(ui->pushButton_Mouse, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
 }
+
 
 MainWindow::~MainWindow()
 {
@@ -45,10 +48,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+
 void MainWindow::show()
 {
     QMainWindow::show();
 }
+
+
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
@@ -64,6 +71,8 @@ void MainWindow::closeEvent(QCloseEvent* event)
                event->ignore();
        }
 }
+
+
 
 void MainWindow::openDialog() // Open a dialog to choose a file
 {
@@ -95,4 +104,5 @@ void MainWindow::openDialog() // Open a dialog to choose a file
         m_glDisplay->computeLineLength();
     }
 }
+
 
