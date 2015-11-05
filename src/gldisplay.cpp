@@ -7,7 +7,7 @@ glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
     m_vertices(vertices),
     m_windowSize(400, 300),
     m_dataSizeMin(), m_dataSizeMax(),
-    m_lineLength(4000),
+    m_lineLength(),
     //m_min_vertices(vertices),
     m_minIndices()
 {
@@ -116,33 +116,38 @@ void glDisplay::computeDataSize()
              << ") and (" << m_dataSizeMax.x << ',' << m_dataSizeMax.y << ',' << m_dataSizeMax.z << ")";
 }
 
-
 void glDisplay::lin()
 {
-    m_lineLength=0;
-    for(long i = 0; i < m_vertices.length()-1; ++i)
+    const long NOT_COMPUTED = 0;
+    long lineLength_prec = NOT_COMPUTED;
+    m_lineLength = 1 ;
+
+    // at each loop, m_lineLenght takes 1 if "m_vertices[i].y == m_vertices[i+1].y".
+    // m_lineLenght begin at 1.
+    for(long i = 0 ; i < m_vertices.length()-1; ++i, ++m_lineLength)
     {
-         if (m_vertices[i].y == m_vertices[i+1].y)
-            {
-             m_lineLength++;
-            }
-        else
-            {
+          // when "m_vertices[i].y != m_vertices[i+1].y", we compare m_lineLenght and lineLenght_prec
+          // to see if they have the same number of points.
+          if (m_vertices[i].y != m_vertices[i+1].y)
+          {
+             if(lineLength_prec != NOT_COMPUTED && m_lineLength != lineLength_prec)
+                 qDebug() << "ERREUR";
 
-             qDebug() << "La longueur de la ligne est " << m_lineLength << "points";
-             m_lineLength=0;
+             lineLength_prec = m_lineLength;
+             m_lineLength = 0;
 
+             qDebug() << "La longueur de la ligne est m_lineLength_prec " << lineLength_prec << "points";
+          }
+    }
 
-            }
-     }
-
+    m_lineLength = lineLength_prec;
 }
-
 
 void glDisplay::PointN()
 {
     /*
-     *  Il faut stocker les INDICES des points minimaux :
+     *
+  Il faut stocker les INDICES des points minimaux :
      *      m_minIndices[0] contiendra l'indice du point de départ. Le point de départ sera alors m_vertices[m_minIndices[0]]
      *      À la fin des quatre tests, m_minIndices[1] contiendra l'indice du point suivant.
      *      On recommence avec m_minIndices[1].
@@ -166,9 +171,8 @@ void glDisplay::PointN()
         qDebug() << "le point suivant est avec les coordonnnées suivantes:  z=" << m_vertices[i].z << ',y=' << m_vertices[i].y <<','<< m_vertices[i].x ;
         ++currentStep;
 
-    } while(m_minIndices[currentStep-1] == m_minIndices[currentStep]);
-
-
+    }
+    while(m_minIndices[currentStep-1] == m_minIndices[currentStep]);
 
    }
 
