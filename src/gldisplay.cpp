@@ -1,6 +1,7 @@
 #include "gldisplay.h"
 #include "draw.h"
 #include "mainwindow.h"
+#include "math.h"
 #include <QDebug>
 
 glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
@@ -111,6 +112,24 @@ void glDisplay::draw()
     glDrawElements(glprim, m_indices.length(), GL_UNSIGNED_INT, m_indices.constData());
     glDisableClientState(GL_VERTEX_ARRAY);
 #endif
+    glLineWidth(10);
+    glColor3d(0,1,0);
+    for(long i = 0 ; i < m_minIndices.length()-1 ; ++i)
+    {
+
+        glBegin(GL_LINES);
+        glColor3d(1,0,0);
+        const Point& p1 = m_vertices[m_minIndices[i]],
+                p2 = m_vertices[m_minIndices[i+1]];
+
+        glVertex3d(p1.x, p1.y, p1.z);
+        glVertex3d(p2.x, p2.y, p2.z);
+
+        glEnd();
+    }
+
+    glColor3d(1,1,1);
+    glLineWidth(1);
 }
 
 void glDisplay::computeDataSize()
