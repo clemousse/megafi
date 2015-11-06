@@ -1,6 +1,7 @@
 #include "gldisplay.h"
 #include "draw.h"
 #include "mainwindow.h"
+
 #include <QDebug>
 
 glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
@@ -11,7 +12,9 @@ glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
     m_windowSize(400, 300),
     m_dataSizeMin(), m_dataSizeMax(),
     m_lineLength(0), m_nbLines(0),
-    m_departureSelection(false)
+    m_departureSelection(false),
+    endFP("Here the flow path")
+
 {
     setBaseSize(m_windowSize);
 
@@ -197,6 +200,8 @@ void glDisplay::computePath()
 
         else
         {
+            endFP = "End flow path";
+
             qDebug() << "End flow path";
             break;
         }
@@ -208,11 +213,12 @@ void glDisplay::computePath()
 }
 
 
-
+// in order to connect mousePressEvent if the selection mode is checked on mainwindow
 void glDisplay::rbClick (bool chckD)
-{
+{//
     m_departureSelection = chckD;
 }
+
 
 void glDisplay::mousePressEvent(QMouseEvent* const event)
 {
@@ -235,12 +241,19 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
 
         if(found)
         {
+
             qDebug () << "position x : " << mouse_world.x << endl
                       << "position y : " << mouse_world.y << endl
                       << "position z : " << mouse_world.z << endl;
+            
+
+            m_mainW->getUi()->bxXcoord->setValue(mouse_world.x);
+            m_mainW->getUi()->bxYcoord->setValue(mouse_world.y);
+            m_mainW->getUi()->bxZcoord->setValue(mouse_world.z);
 
             computeClickedIndex(mouse_world);
             computePath();
+
         }
         else
             qDebug() << "Not found";

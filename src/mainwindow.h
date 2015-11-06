@@ -13,6 +13,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
+
     Ui::MainWindow *ui;
 
 protected:
@@ -21,16 +22,17 @@ protected:
 
     void closeEvent(QCloseEvent* event);
 
-
 public:
      explicit MainWindow(QWidget* parent = NULL);
     ~MainWindow();
+     void editingPath();
+     Ui::MainWindow* getUi();
 
 public slots:
     void show();
     void openDialog();
 
-
 };
+
 
 #endif // MAINWINDOW_H

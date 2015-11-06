@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     m_vector(),
     m_glDisplay(new glDisplay(this, m_vector))
+
 {
     //load interface .ui created  with QT Designer
     ui->setupUi(this);
@@ -43,7 +44,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-
     delete m_glDisplay;
     delete ui;
 }
@@ -98,11 +98,26 @@ void MainWindow::openDialog() // Open a dialog to choose a file
 
     if(!file.isEmpty())
     {
-        // Read the file with the coordinates
+        // Read the file with the coordinatestextEdit
         readDTM(file,m_vector);
         m_glDisplay->computeDataSize();
         m_glDisplay->computeLineLength();
     }
 }
+
+void MainWindow::editingPath()
+{
+    //QString path_Text;
+
+    //path_Text = "Here the flow path will be displayed";
+
+    ui->textEdit_MW->append(m_glDisplay->endFP);
+}
+
+Ui::MainWindow* MainWindow::getUi()
+{
+    return ui;
+}
+
 
 

@@ -86,6 +86,7 @@ private:
     std::vector<unsigned int> m_indices;// The indices array (MODE_VERTEX_INDICES)
     QVector<int>  m_minIndices;         // Flow path array
 
+
 protected:
     QSize m_windowSize;
 
@@ -107,6 +108,8 @@ public:
     void computeLineLength();
     void computePath();
     void mousePressEvent(QMouseEvent* const event);
+
+    QString endFP;
 
 public slots:
     void draw(); // drawing function

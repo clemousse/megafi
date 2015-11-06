@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>885</width>
-    <height>492</height>
+    <width>679</width>
+    <height>469</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -84,12 +84,13 @@
        <widget class="QLabel" name="label_6">
         <property name="font">
          <font>
-          <pointsize>11</pointsize>
+          <pointsize>9</pointsize>
          </font>
         </property>
         <property name="text">
          <string>Click on this radio button to switch on selection mode :
-then, you will be able to select a point with the mouse directly on the DTM on the screen.</string>
+then, you will be able to select a point with the mouse
+directly on the DTM on the screen.</string>
         </property>
        </widget>
       </item>
@@ -129,7 +130,7 @@ then, you will be able to select a point with the mouse directly on the DTM on t
        <widget class="QLabel" name="label_9">
         <property name="font">
          <font>
-          <pointsize>11</pointsize>
+          <pointsize>9</pointsize>
          </font>
         </property>
         <property name="text">
@@ -150,8 +151,12 @@ then, you will be able to select a point with the mouse directly on the DTM on t
         </property>
        </spacer>
       </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_11">
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="label_3">
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -160,17 +165,8 @@ then, you will be able to select a point with the mouse directly on the DTM on t
         <property name="text">
          <string>X</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QDoubleSpinBox" name="bxXcoord">
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-         </font>
-        </property>
-        <property name="decimals">
-         <number>2</number>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -184,6 +180,43 @@ then, you will be able to select a point with the mouse directly on the DTM on t
         <property name="text">
          <string>Y</string>
         </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="font">
+         <font>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Z</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QDoubleSpinBox" name="bxXcoord">
+        <property name="font">
+         <font>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>1000000.000000000000000</double>
+        </property>
        </widget>
       </item>
       <item>
@@ -196,17 +229,11 @@ then, you will be able to select a point with the mouse directly on the DTM on t
         <property name="decimals">
          <number>2</number>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_3">
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-         </font>
+        <property name="maximum">
+         <double>2000000.000000000000000</double>
         </property>
-        <property name="text">
-         <string>Z</string>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -219,6 +246,12 @@ then, you will be able to select a point with the mouse directly on the DTM on t
         </property>
         <property name="decimals">
          <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>5000.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
         </property>
        </widget>
       </item>
@@ -269,21 +302,7 @@ then, you will be able to select a point with the mouse directly on the DTM on t
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_7">
       <item>
-       <widget class="QScrollArea" name="scrollArea">
-        <property name="widgetResizable">
-         <bool>true</bool>
-        </property>
-        <widget class="QWidget" name="scrollAreaWidgetContents">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>633</width>
-           <height>200</height>
-          </rect>
-         </property>
-        </widget>
-       </widget>
+       <widget class="QTextEdit" name="textEdit_MW"/>
       </item>
      </layout>
     </item>
@@ -294,7 +313,7 @@ then, you will be able to select a point with the mouse directly on the DTM on t
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>885</width>
+     <width>679</width>
      <height>29</height>
     </rect>
    </property>
@@ -404,6 +423,8 @@ then, you will be able to select a point with the mouse directly on the DTM on t
       </item>
      </layout>
     </widget>
+    <zorder>horizontalLayoutWidget</zorder>
+    <zorder>bxXcoord</zorder>
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_His">
