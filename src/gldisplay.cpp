@@ -65,20 +65,48 @@ inline void glDisplay::draw_function(unsigned int index) {
 #endif
 }
 
+size_t glDisplay::array_size(const int primitive) const {
+    const size_t nbPoints = static_cast<size_t>(m_vertices.length());
+    size_t res = 0;
+
+    if(primitive & DESIGN_POINT)
+        res = nbPoints;
+    else if(primitive & DESIGN_EDGE) {
+        res = 2*nbPoints - m_lineLength;
+        if(primitive & PRIM_TRIANGLES)
+            res += m_nbLines * m_lineLength;
+        else if(primitive & PRIM_SQUARES)
+            res += m_nbLines * 2*(m_lineLength -1);
+        else
+            throw new UnknownPrimitive(primitive);
+    }
+    else if(primitive & DESIGN_SHAPE)
+        res = 2*nbPoints;
+    else if(primitive & PRIM__LINE_LOOP)
+        res = 3*nbPoints - m_nbLines - m_lineLength;
+    else if(primitive & PRIM__TRIANGLES)
+        res = 6*nbPoints - m_nbLines - m_lineLength;
+    else
+        throw new UnknownPrimitive(primitive);
+
+    return res;
+}
+
 void glDisplay::draw()
 {
     // I can begin to draw
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear screen
 
 #if MODE == MODE_VERTEX_ARRAY
+    m_pointsToDraw.clear();
     try {
-        m_pointsToDraw.reserve(array_size<PRIM>());
+        m_pointsToDraw.reserve(array_size(PRIM));
     } catch(std::bad_alloc) {
         return;
     }
 #elif MODE == MODE_VERTEX_INDICES
     try {
-        m_indices.reserve(array_size<PRIM>());
+        m_indices.reserve(array_size(PRIM));
     } catch(std::bad_alloc) {
         return;
     }
@@ -101,11 +129,18 @@ void glDisplay::draw()
 
     draw_end<PRIM>();
 
-#if MODE == MODE_VERTEX_INDICES
+#if MODE != MODE_LEGACY
     int glprim = 0;
     OPENGL(PRIM, glprim)
+#endif
+#if MODE == MODE_VERTEX_ARRAY
     glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(3, GL_FLOAT, 0, m_vertices.constData());
+    glVertexPointer(3, GL_DOUBLE, sizeof(Point), m_pointsToDraw.data());
+    glDrawArrays(glprim, 0, m_pointsToDraw.size());
+    glDisableClientState(GL_VERTEX_ARRAY);
+#elif MODE == MODE_VERTEX_INDICES
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(3, GL_DOUBLE, sizeof(Point), m_vertices.constData());
     glDrawElements(glprim, m_indices.length(), GL_UNSIGNED_INT, m_indices.constData());
     glDisableClientState(GL_VERTEX_ARRAY);
 #endif
