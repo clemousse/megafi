@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "flowpath.h"
 #include "dtm.h"
 #include "gldisplay.h"
 #include "ui_mainwindow.h"
@@ -16,8 +17,9 @@ private:
     Ui::MainWindow *ui;
 
 protected:
-    QVector<Point> m_vector;
-    glDisplay* const m_glDisplay;
+    DTM* m_dtm;
+    QVector<FlowPath*> m_flows;
+    const glDisplay* const m_glDisplay;
 
     void closeEvent(QCloseEvent* event);
 

@@ -17,8 +17,9 @@ using namespace std;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    m_vector(),
-    m_glDisplay(new glDisplay(this, m_vector))
+    m_dtm(NULL),
+    m_flows(),
+    m_glDisplay(new glDisplay(*this), m_dtm, m_flows)
 {
     //load interface .ui created  with QT Designer
     ui->setupUi(this);
@@ -42,27 +43,29 @@ MainWindow::~MainWindow()
 {
 
     delete m_glDisplay;
+    for(QVector<FlowPath*>::iterator it = m_flows.begin();
+        it != m_flows.end();
+        ++it)
+    {
+        delete *it;
+    }
+    if(m_dtm) delete m_dtm;
     delete ui;
-}
-
-void MainWindow::show()
-{
-    QMainWindow::show();
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-       int rep = QMessageBox::question(this,"Quit ?","Do you really want to quit ?",QMessageBox::Yes | QMessageBox::No);
-       if (rep == QMessageBox::Yes)
-       {
-               event->accept();
-               m_glDisplay->close();
-       }
+    int rep = QMessageBox::question(this,"Quit ?","Do you really want to quit ?",QMessageBox::Yes | QMessageBox::No);
+    if (rep == QMessageBox::Yes)
+    {
+        event->accept();
+        m_glDisplay->close();
+    }
 
-       else
-       {
-               event->ignore();
-       }
+    else
+    {
+        event->ignore();
+    }
 }
 
 void MainWindow::openDialog() // Open a dialog to choose a file
@@ -89,10 +92,16 @@ void MainWindow::openDialog() // Open a dialog to choose a file
 
     if(!file.isEmpty())
     {
-        // Read the file with the coordinates
-        readDTM(file,m_vector);
-        m_glDisplay->computeDataSize();
-        m_glDisplay->computeLineLength();
+        if(m_dtm)
+            delete m_dtm;
+        try
+        {
+            m_dtm = new DTM(file);
+        }
+        catch(const std::bad_alloc&)
+        {
+            m_dtm = NULL;
+        }
     }
 }
 

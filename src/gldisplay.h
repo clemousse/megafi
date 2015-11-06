@@ -1,10 +1,12 @@
 #ifndef GL_H
 #define GL_H
 
+#include "flowpath.h"
 #include "dtm.h"
 
 #include <stdexcept>
-#include <vector>
+
+#include <QVector>
 
 #include <QGLViewer/qglviewer.h>
 #include <QGLViewer/mouseGrabber.h>
@@ -26,37 +28,26 @@ class glDisplay : public QGLViewer
     Q_OBJECT
 
 private:
-    MainWindow * const m_mainW;         // A pointer in order to communicate with main window
-    const QVector<Point>& m_vertices;   // The vertices array
-    std::vector<Point> m_pointsToDraw;  // A copy of the vertices array (MODE_VERTEX_ARRAY)
-    std::vector<unsigned int> m_indices;// The indices array (MODE_VERTEX_INDICES)
-    QVector<int>  m_minIndices;         // Flow path array
+    const MainWindow& m_mainW; // A pointer in order to communicate with main window
+    const DTM* const *m_dtm;   // The data
+    const QVector<FlowPath*> * const m_flows;
 
 protected:
     QSize m_windowSize;
 
-    // data bounding rectangle
-    qglviewer::Vec m_dataSizeMin;
-    qglviewer::Vec m_dataSizeMax;
-
-    long m_lineLength;
-    long m_nbLines;
 
 public:
-    explicit glDisplay(MainWindow *mainW, const QVector<Point>& vertices);
+    glDisplay(const MainWindow& mainW, const DTM* const *data, const QVector<FlowPath*> * const flows);
     ~glDisplay();
 
     // Contains initialization code which cannot be executed before the window has been shown
     virtual void init();
 
     void mousePressEvent(QMouseEvent* const event);
-    void computeLineLength();
-    void computePath();
 
 public slots:
     void draw(); // drawing function
     void reshapeWindow(int width, int height);
-    void computeDataSize();
 
 protected:
     // Drawing functions

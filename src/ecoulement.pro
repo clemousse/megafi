@@ -20,7 +20,8 @@ SOURCES += main.cpp\
         mainwindow.cpp \
         dtm.cpp \
         gldisplay.cpp \
-        tests.cpp
+        tests.cpp \
+    flowpath.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -28,6 +29,7 @@ HEADERS  += mainwindow.h \
             dtm.h \
             gldisplay.h \
             tests.h \
-    draw.h
+    draw.h \
+    flowpath.h
 
 FORMS    += mainwindow.ui

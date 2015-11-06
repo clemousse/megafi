@@ -2,20 +2,14 @@
 #include "draw.h"
 #include <QDebug>
 
-glDisplay::glDisplay(MainWindow * mainW, const QVector<Point> &vertices) :
+glDisplay::glDisplay(const MainWindow& mainW, const DTM* const *data, const QVector<FlowPath*> * const flows) :
     QGLViewer(), // on appelle toujours le constructeur de la classe parente en premier
     m_mainW(mainW),
-    m_vertices(vertices), m_pointsToDraw(), m_indices(),
-    m_minIndices(),
-    m_windowSize(400, 300),
-    m_dataSizeMin(), m_dataSizeMax(),
-    m_lineLength(0), m_nbLines(0)
+    m_dtm(data),
+    m_flows(flows),
+    m_windowSize(400, 300)
 {
     setBaseSize(m_windowSize);
-
-    // dataset size
-    computeDataSize();
-    computeLineLength();
 
     //In order to make MouseGrabber react to mouse events
     setMouseTracking(true);
@@ -45,13 +39,15 @@ void glDisplay::init()
     QColor fg(255, 255, 255);
     setForegroundColor(fg);
 
-    glLineWidth(1);
 
     glViewport(0, 0, m_windowSize.width(), m_windowSize.height()); // Set the viewport size to fill the window
 
     // Move camera
-    setSceneBoundingBox(m_dataSizeMin, m_dataSizeMax);
-    showEntireScene();
+    if(*m_dtm)
+    {
+        setSceneBoundingBox((*m_dtm)->getLL(), (*m_dtm)->getUR());
+        showEntireScene();
+    }
 }
 
 
@@ -94,6 +90,7 @@ size_t glDisplay::array_size(const int primitive) const {
 
 void glDisplay::draw()
 {
+    glLineWidth(1);
     // I can begin to draw
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear screen
 
@@ -144,58 +141,6 @@ void glDisplay::draw()
     glDrawElements(glprim, m_indices.length(), GL_UNSIGNED_INT, m_indices.constData());
     glDisableClientState(GL_VERTEX_ARRAY);
 #endif
-}
-
-void glDisplay::computeDataSize()
-{
-    m_dataSizeMin.x = INFINITY;
-    m_dataSizeMin.y = INFINITY;
-    m_dataSizeMin.z = INFINITY;
-    m_dataSizeMax.x = 0;
-    m_dataSizeMax.y = 0;
-    m_dataSizeMax.z = 0;
-
-
-    for(long i = 0 ; i < m_vertices.length() ; ++i)
-    {
-        if(m_vertices[i].x < m_dataSizeMin.x) m_dataSizeMin.x = m_vertices[i].x;
-        if(m_vertices[i].x > m_dataSizeMax.x) m_dataSizeMax.x = m_vertices[i].x;
-        if(m_vertices[i].y < m_dataSizeMin.y) m_dataSizeMin.y = m_vertices[i].y;
-        if(m_vertices[i].y > m_dataSizeMax.y) m_dataSizeMax.y = m_vertices[i].y;
-        if(m_vertices[i].z < m_dataSizeMin.z) m_dataSizeMin.z = m_vertices[i].z;
-        if(m_vertices[i].z > m_dataSizeMax.z) m_dataSizeMax.z = m_vertices[i].z;
-    }
-
-    qDebug() << "MNT is between (" << m_dataSizeMin.x << ',' << m_dataSizeMin.y << ',' << m_dataSizeMin.z
-             << ") and (" << m_dataSizeMax.x << ',' << m_dataSizeMax.y << ',' << m_dataSizeMax.z << ")";
-}
-
-void glDisplay::computeLineLength()
-{
-    const long NOT_COMPUTED = 0;
-    long lineLength_prec = NOT_COMPUTED;
-    m_lineLength = 1;
-    m_nbLines = 1;
-
-    // at each loop, m_lineLenght takes 1 if "m_vertices[i].y == m_vertices[i+1].y".
-    // m_lineLenght begin at 1.
-    for(long i = 0 ; i < m_vertices.length()-1; ++i, ++m_lineLength)
-    {
-          // when "m_vertices[i].y != m_vertices[i+1].y", we compare m_lineLenght and lineLenght_prec
-          // to see if they have the same number of points.
-          if (m_vertices[i].y != m_vertices[i+1].y)
-          {
-             if(lineLength_prec != NOT_COMPUTED && m_lineLength != lineLength_prec)
-                 qWarning() << "Lines" << i << "and" << i+1 << "don't have the same length.";
-
-             lineLength_prec = m_lineLength;
-             m_lineLength = 0;
-             ++m_nbLines;
-          }
-    }
-
-    m_lineLength = lineLength_prec;
-    qDebug() << "Lines are" << m_lineLength << "points long.";
 }
 
 void glDisplay::computePath()
