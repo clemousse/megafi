@@ -4,7 +4,7 @@
 #include <QVector>
 #include <QString>
 
-#include <QGLViewer/qglviewer.h>
+#include <QGLViewer/vec.h>
 
 class DTM {
     // Data types
@@ -16,7 +16,7 @@ protected:
 
     // Members
 private:
-    QVector<Point> m_vertices;         // The vertices array
+    QVector<Point> m_vertices; // The vertices array
 
     // data bounding rectangle
     Point m_dataSizeMin;

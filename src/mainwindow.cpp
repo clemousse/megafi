@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     m_dtm(NULL),
     m_flows(),
-    m_glDisplay(new glDisplay(*this), m_dtm, m_flows)
+    m_glDisplay(new glDisplay(*this, &m_dtm, m_flows))
 {
     //load interface .ui created  with QT Designer
     ui->setupUi(this);
@@ -43,12 +43,6 @@ MainWindow::~MainWindow()
 {
 
     delete m_glDisplay;
-    for(QVector<FlowPath*>::iterator it = m_flows.begin();
-        it != m_flows.end();
-        ++it)
-    {
-        delete *it;
-    }
     if(m_dtm) delete m_dtm;
     delete ui;
 }
@@ -93,7 +87,10 @@ void MainWindow::openDialog() // Open a dialog to choose a file
     if(!file.isEmpty())
     {
         if(m_dtm)
+        {
             delete m_dtm;
+            m_dtm = NULL;
+        }
         try
         {
             m_dtm = new DTM(file);

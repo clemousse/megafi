@@ -2,7 +2,7 @@
 #include "draw.h"
 #include <QDebug>
 
-glDisplay::glDisplay(const MainWindow& mainW, const DTM* const *data, const QVector<FlowPath*> * const flows) :
+glDisplay::glDisplay(const MainWindow& mainW, const DTM* const *data, const QList<FlowPath>& flows) :
     QGLViewer(), // on appelle toujours le constructeur de la classe parente en premier
     m_mainW(mainW),
     m_dtm(data),

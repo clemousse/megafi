@@ -6,7 +6,7 @@
 
 #include <stdexcept>
 
-#include <QVector>
+#include <QList>
 
 #include <QGLViewer/qglviewer.h>
 #include <QGLViewer/mouseGrabber.h>
@@ -30,14 +30,14 @@ class glDisplay : public QGLViewer
 private:
     const MainWindow& m_mainW; // A pointer in order to communicate with main window
     const DTM* const *m_dtm;   // The data
-    const QVector<FlowPath*> * const m_flows;
+    const QList<FlowPath>& m_flows;
 
 protected:
     QSize m_windowSize;
 
 
 public:
-    glDisplay(const MainWindow& mainW, const DTM* const *data, const QVector<FlowPath*> * const flows);
+    glDisplay(const MainWindow& mainW, const DTM* const *data, const QList<FlowPath>& flows);
     ~glDisplay();
 
     // Contains initialization code which cannot be executed before the window has been shown

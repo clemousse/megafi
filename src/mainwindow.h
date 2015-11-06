@@ -5,6 +5,7 @@
 #include "dtm.h"
 #include "gldisplay.h"
 #include "ui_mainwindow.h"
+#include <QList>
 #include <QMainWindow>
 #include <QGraphicsSceneMouseEvent>
 
@@ -17,9 +18,9 @@ private:
     Ui::MainWindow *ui;
 
 protected:
-    DTM* m_dtm;
-    QVector<FlowPath*> m_flows;
-    const glDisplay* const m_glDisplay;
+    const DTM* m_dtm;
+    QList<FlowPath> m_flows;
+    glDisplay* const m_glDisplay;
 
     void closeEvent(QCloseEvent* event);
 
@@ -31,7 +32,6 @@ public:
 public slots:
     void show();
     void openDialog();
-
 };
 
 #endif // MAINWINDOW_H
