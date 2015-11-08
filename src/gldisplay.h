@@ -25,7 +25,7 @@ class glDisplay : public QGLViewer
 
 private:
     MainWindow& m_mainW;        // A pointer in order to communicate with main window
-    const megafi::DTM* const& m_dtm;  // The data
+    const megafi::DTM* const* const m_dtm;  // The data
     const QList<const megafi::FlowPath*>& m_flows;
 
 protected:
@@ -34,7 +34,7 @@ protected:
 
 public:
     glDisplay(MainWindow& mainW,
-              const megafi::DTM* const& dtm,
+              const megafi::DTM* const* dtm,
               const QList<const megafi::FlowPath*>& flows);
     ~glDisplay();
 

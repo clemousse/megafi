@@ -3,7 +3,6 @@
 #include <QFileDialog>
 #include <QString>
 #include <QMessageBox>
-#include <QtWidgets>
 #include <QGraphicsSceneMouseEvent>
 #include <iostream>
 #include <QKeySequence>
@@ -15,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     m_dtm(NULL),
     m_flows(),
-    m_glDisplay(new glDisplay(*this, m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>& >(m_flows)))
+    m_glDisplay(new glDisplay(*this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>& >(m_flows)))
 {
     connect(m_glDisplay, SIGNAL(needsRebuild()), this, SLOT(rebuildArrays()));
 

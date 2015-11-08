@@ -5,7 +5,7 @@
 #include <QDebug>
 
 glDisplay::glDisplay(MainWindow& mainW,
-                     const megafi::DTM* const& dtm,
+                     const megafi::DTM* const* dtm,
                      const QList<const megafi::FlowPath*>& flows)
     : m_mainW(mainW),
     m_dtm(dtm),
@@ -46,9 +46,9 @@ void glDisplay::init()
     glViewport(0, 0, m_windowSize.width(), m_windowSize.height()); // Set the viewport size to fill the window
 
     // Move camera
-    if(m_dtm)
+    if(*m_dtm)
     {
-        setSceneBoundingBox(m_dtm->getLL(), m_dtm->getUR());
+        setSceneBoundingBox((*m_dtm)->getLL(), (*m_dtm)->getUR());
         showEntireScene();
     }
 }
@@ -65,7 +65,7 @@ void glDisplay::draw()
 
     // Building DTM
     glLineWidth(1);
-    drawData<megafi::DTM>(*m_dtm);
+    drawData<megafi::DTM>(**m_dtm);
 }
 
 void glDisplay::mousePressEvent(QMouseEvent* const event)
@@ -89,7 +89,7 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
                   << "position y : " << mouse_world.y << endl
                   << "position z : " << mouse_world.z << endl;
 
-        m_mainW.addFlow(m_dtm->computeIndex(mouse_world));
+        m_mainW.addFlow((*m_dtm)->computeIndex(mouse_world));
     }
     else
         qDebug() << "Not found";
