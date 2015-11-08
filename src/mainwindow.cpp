@@ -33,16 +33,19 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionView_history, SIGNAL(triggered()),ui->dockWidget_His, SLOT(show()));
     //create a connexion on the menu File-> Quit via close slot (or cross)
     connect(ui->actionQuit, SIGNAL(triggered()),this, SLOT(close()));
+    //create a connexion on the radio button in calculating the flow path in mainwindow
+    connect(ui->pushButton_Mouse, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
 }
+
 
 MainWindow::~MainWindow()
 {
-
     delete m_glDisplay;
     deleteFlows();
     if(m_dtm) delete m_dtm;
     delete ui;
 }
+
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
@@ -58,6 +61,8 @@ void MainWindow::closeEvent(QCloseEvent* event)
         event->ignore();
     }
 }
+
+
 
 void MainWindow::openDialog() // Open a dialog to choose a file
 {
@@ -131,6 +136,13 @@ void MainWindow::rebuildArrays()
     }
 }
 
+void MainWindow::setClickedCoordinates(const qglviewer::Vec& mouse_world)
+{
+    ui->bxXcoord->setValue(mouse_world.x);
+    ui->bxYcoord->setValue(mouse_world.y);
+    ui->bxZcoord->setValue(mouse_world.z);
+}
+
 void MainWindow::addFlow(unsigned long startIndex)
 {
     if(m_dtm)
@@ -151,3 +163,14 @@ void MainWindow::deleteFlows()
         *flow = NULL;
     }
 }
+
+#if FALSE
+void MainWindow::editingPath()
+{
+    //QString path_Text;
+
+    //path_Text = "Here the flow path will be displayed";
+
+    ui->textEdit_MW->append(m_glDisplay->endFP);
+}
+#endif

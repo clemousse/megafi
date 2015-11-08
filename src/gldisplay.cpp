@@ -10,7 +10,8 @@ glDisplay::glDisplay(MainWindow& mainW,
     : m_mainW(mainW),
     m_dtm(dtm),
     m_flows(flows),
-    m_windowSize(400, 300)
+    m_windowSize(400, 300),
+    m_departureSelection(false)
 {
     setBaseSize(m_windowSize);
 
@@ -68,32 +69,46 @@ void glDisplay::draw()
     drawData<megafi::DTM>(**m_dtm);
 }
 
+
+// in order to connect mousePressEvent if the selection mode is checked on mainwindow
+void glDisplay::rbClick (bool chckD)
+{//
+    m_departureSelection = chckD;
+}
+
+
 void glDisplay::mousePressEvent(QMouseEvent* const event)
 {
     event->accept();
 
-    const qglviewer::Camera* const camera = this->camera();
-
-    QPoint mouse_scr;
-    mouse_scr.setX(event->x());
-    mouse_scr.setY(event->y());
-
-    qDebug () << "ecran x : " << mouse_scr.x() << endl
-              << "ecran y : " << mouse_scr.y() << endl;
-    bool found;
-    const qglviewer::Vec mouse_world = camera->pointUnderPixel(mouse_scr, found);
-
-    if(found)
+    if(m_departureSelection)
     {
-        qDebug () << "position x : " << mouse_world.x << endl
-                  << "position y : " << mouse_world.y << endl
-                  << "position z : " << mouse_world.z << endl;
+        const qglviewer::Camera* const camera = this->camera();
 
-        m_mainW.addFlow((*m_dtm)->computeIndex(mouse_world));
+        QPoint mouse_scr;
+        mouse_scr.setX(event->x());
+        mouse_scr.setY(event->y());
+
+        qDebug () << "ecran x : " << mouse_scr.x() << endl
+                  << "ecran y : " << mouse_scr.y() << endl;
+        bool found;
+        const qglviewer::Vec mouse_world = camera->pointUnderPixel(mouse_scr, found);
+
+        if(found)
+        {
+            qDebug () << "position x : " << mouse_world.x << endl
+                      << "position y : " << mouse_world.y << endl
+                      << "position z : " << mouse_world.z << endl;
+
+            m_mainW.setClickedCoordinates(mouse_world);
+            m_mainW.addFlow((*m_dtm)->computeIndex(mouse_world));
+        }
+        else
+            qDebug() << "Not found";
     }
     else
-        qDebug() << "Not found";
-
-    //release the curseur of the mouse to the parent class
-    QGLViewer::mousePressEvent(event);
+    {
+        //release the curseur of the mouse to the parent class
+        QGLViewer::mousePressEvent(event);
+    }
 }

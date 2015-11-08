@@ -7,6 +7,9 @@ using namespace megafi;
 
 FlowPath::FlowPath(const DTM& dtm, unsigned long origin, Mode mode)
     : Drawable(mode, QUADLINE), m_minIndices()
+#if FALSE
+      , endFP("Here the flow path")
+#endif
 {
     m_minIndices.push_back(origin);
     computePath(dtm);
@@ -51,9 +54,11 @@ void FlowPath::computePath(const DTM& dtm)
         else if( i < vLength-lineLength
                  && vertices[i+lineLength].z < vertices[i].z)
             m_minIndices.push_back(i+lineLength);
-
         else
         {
+#if FALSE
+            endFP = "End flow path";
+#endif
             qDebug() << "End flow path";
             break;
         }
@@ -63,7 +68,7 @@ void FlowPath::computePath(const DTM& dtm)
                  << ", z=" << vertices[i].z;
     }
 
-    for(QList<unsigned long>::const_iterator index = m_minIndices.cbegin();
+    for(QList<unsigned long>::const_iterator index = m_minIndices.cbegin() ;
         index != m_minIndices.cend() ;
         ++index)
     {

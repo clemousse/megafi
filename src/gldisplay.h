@@ -10,7 +10,6 @@
 #include <QGLViewer/qglviewer.h>
 
 
-
 // Declare a class MainWindow to resolve circular inclusion
 class MainWindow;
 
@@ -28,9 +27,10 @@ private:
     const megafi::DTM* const* const m_dtm;  // The data
     const QList<const megafi::FlowPath*>& m_flows;
 
+
 protected:
     QSize m_windowSize;
-
+    bool m_departureSelection;
 
 public:
     glDisplay(MainWindow& mainW,
@@ -43,6 +43,7 @@ public:
 public slots:
     void beginDraw();
     void reshapeWindow(int width, int height);
+    void rbClick(bool chckD);
 
 signals:
     void needsRebuild() const;

@@ -26,10 +26,14 @@ protected:
 public:
      explicit MainWindow(QWidget* parent = NULL);
     ~MainWindow();
+#if FALSE
+     void editingPath();
+#endif
 
 public slots:
     void openDialog();
     void rebuildArrays();
+    void setClickedCoordinates(const qglviewer::Vec& mouse_world);
     void addFlow(unsigned long startIndex);
 
 protected:
@@ -38,5 +42,6 @@ protected:
 private:
     void deleteFlows();
 };
+
 
 #endif // MAINWINDOW_H

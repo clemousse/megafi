@@ -14,6 +14,9 @@ int main(int argc, char *argv[])
 
     MainWindow w;
     w.show();
+#if FALSE
+    w.editingPath();
+#endif
 
     return a.exec();
 #endif
