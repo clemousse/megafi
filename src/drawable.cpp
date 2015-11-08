@@ -80,7 +80,7 @@ Drawable::Drawable(const Drawable& other) throw(const std::bad_alloc&)
 }
 
 
-Drawable::~Drawable() throw()
+Drawable::~Drawable()
 {
     if(m_arrayLength)
     {

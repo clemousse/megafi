@@ -54,7 +54,7 @@ public:
     // Constructors
     Drawable(Mode mode = MODE, Primitive prim = PRIM) throw();
     Drawable(const Drawable& other) throw(const std::bad_alloc&);
-    virtual ~Drawable() throw();
+    virtual ~Drawable();
 
     // Getters
     Mode                  getMode       () const throw();
