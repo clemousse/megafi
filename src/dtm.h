@@ -37,6 +37,7 @@ public:
 
     unsigned long computeIndex(const qglviewer::Vec& mouse_world) const;
 
+public slots:
     void buildArrays();
     void buildLegacy() const;
 

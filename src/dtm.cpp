@@ -1,4 +1,5 @@
 #include "dtm.h"
+#include "dtm.inl"
 
 #include <QFile>
 #include <QDebug>
@@ -22,7 +23,6 @@ DTM::DTM(const QString &filePath, Mode mode, Primitive prim)
     {
         computeDataSize();
         computeLineLength();
-        buildArrays();
     }
 }
 
@@ -243,216 +243,49 @@ unsigned long DTM::computeIndex(const qglviewer::Vec& mouse_world) const
     } \
     (this->*end)()
 
+#define NB_CALL_LINE m_vertices.size()
+#define NB_CALL_BACK m_vertices.size()
+
 void DTM::buildArrays()
 {
-    const unsigned long arraySize = array_size(getPrimitive());
-    prepareBuild(arraySize);
+    {
+        const unsigned long arraySize = array_size(getPrimitive());
+        prepareBuild(arraySize);
+    }
 
-    void (DTM::*begin)() = NULL;
-    void (DTM::*line)(unsigned long) = NULL;
-    void (DTM::*back)(unsigned long) = NULL;
-    void (DTM::*end)() = NULL;
+    void (DTM::*begin)() const        = NULL;
+    void (DTM::*line )(unsigned long) = NULL;
+    void (DTM::*back )(unsigned long) = NULL;
+    void (DTM::*end  )() const        = NULL;
 
     SWITCH_PRIM;
     BUILD;
 }
 
-template<class Child>
-void Drawable<Child>::build(Child &ths) const
+void DTM::buildLegacy() const
 {
+    void (DTM::*begin)()              const = NULL;
+    void (DTM::*line) (unsigned long) const = NULL;
+    void (DTM::*back) (unsigned long) const = NULL;
+    void (DTM::*end)  ()              const = NULL;
+
+    SWITCH_PRIM;
+    BUILD;
 }
 
 
-/*
- * GENERAL
- */
-
-template<class Child>
-inline void Drawable<Child>::build_begin()
+inline unsigned long DTM::array_size(Primitive prim) const
 {
-    switch(m_mode)
+    switch(prim)
     {
-    case MODE_LEGACY:
-        glBegin(glPrimitive(m_prim));
-        break;
-    case MODE_VERTEX_ARRAY:
-        break;
-    case MODE_VERTEX_INDICES:
-        break;
+    case POINT    : return ARRAY_SIZE_POINT    ; break;
+    case TRILINE  : return ARRAY_SIZE_TRILINE  ; break;
+    case QUADLINE : return ARRAY_SIZE_QUADLINE ; break;
+    case TRIFILL  : return ARRAY_SIZE_TRIFILL  ; break;
+    case QUADFILL : return ARRAY_SIZE_QUADFILL ; break;
+    case LINELOOP : return ARRAY_SIZE_LINELOOP ; break;
+    case TRIANGLES: return ARRAY_SIZE_TRIANGLES; break;
+    default:
+        throw UnknownPrimitive(prim);
     }
-}
-
-template<class Child>
-inline void Drawable<Child>::build_line(unsigned long) {}
-
-template<class Child>
-inline void Drawable<Child>::build_back(unsigned long) {}
-
-template<class Child>
-inline void Drawable<Child>::build_end()
-{
-    switch(m_mode)
-    {
-    case MODE_LEGACY:
-        glEnd();
-        break;
-    case MODE_VERTEX_ARRAY:
-        break;
-    case MODE_VERTEX_INDICES:
-        break;
-    }
-}
-
-/*
- * POINTS
- */
-
-inline void DTM::build_line_POINT(unsigned long i)
-{
-    buildFunction(i);
-}
-
-inline unsigned long DTM::array_size_POINT() const
-{
-    return m_vertices.size();
-}
-
-
-/*
- * EDGES
- */
-
-inline void DTM::build_line_TRILINE(unsigned long i)
-{
-    buildFunction(i);
-    if(i < m_vertices.size() - m_lineLength) // not at last line
-        buildFunction(i + m_lineLength);
-}
-
-inline void DTM::build_back_TRILINE(unsigned long j)
-{
-    buildFunction(j);
-}
-
-inline unsigned long DTM::array_size_TRILINE() const
-{
-    return m_vertices.size() + (m_vertices.size() - m_lineLength) // line
-            + m_vertices.size();  // back
-}
-
-
-
-inline void DTM::build_line_QUADLINE(unsigned long i)
-{
-    build_line_TRILINE(i);
-}
-
-inline void DTM::build_back_QUADLINE(unsigned long j)
-{
-    if(j % m_lineLength) { // not at beginning of line
-        buildFunction(j);
-        buildFunction(j-1);
-    }
-}
-
-inline unsigned long DTM::array_size_QUADLINE() const
-{
-    return m_vertices.size() + (m_vertices.size() - m_lineLength) // line
-            + 2*(m_vertices.size() - m_nbLines); // back
-}
-
-
-
-/*
- * SHAPES
- */
-
-inline void DTM::build_line_TRIFILL(unsigned long i)
-{
-    buildFunction(i);
-    if(i < m_vertices.size() - m_lineLength) // not at last line
-        buildFunction(i + m_lineLength);
-    else
-        buildFunction(i);
-}
-
-inline unsigned long DTM::array_size_TRIFILL() const
-{
-    return 2 * m_vertices.size();
-}
-
-
-inline void DTM::build_line_QUADFILL(unsigned long i)
-{
-    build_line_TRIFILL(i);
-}
-
-inline unsigned long DTM::array_size_QUADFILL() const
-{
-    return array_size_TRIFILL();
-}
-
-
-
-
-/*
- * LINE LOOPS
- */
-
-// Line loops are opened and closed at each time
-inline void DTM::build_begin_LINELOOP() {}
-inline void DTM::build_end_LINELOOP  () {}
-
-inline void DTM::build_line_LINELOOP(unsigned long i)
-{
-    if(getMode() == MODE_LEGACY)
-    {
-        glBegin(GL_LINE_LOOP);
-
-        buildFunction(i);
-
-        if(i % m_lineLength != m_lineLength-1) { // not at end of line
-            if(i < m_vertices.size())
-                buildFunction(i+1);
-        }
-
-        if(i < m_vertices.size() - m_lineLength) // not at last line
-            buildFunction(i + m_lineLength);
-
-        glEnd();
-    }
-}
-
-inline unsigned long DTM::array_size_LINELOOP() const
-{
-    if(getMode() == MODE_LEGACY)
-        return m_vertices.size()
-                + (m_vertices.size() - m_nbLines)
-                + (m_vertices.size() - m_lineLength);
-    else
-        return 0;
-}
-
-
-
-/*
- * TRIANGLES
- */
-
-inline void DTM::build_line_TRIANGLES(unsigned long i)
-{
-    if(i % m_lineLength && i < m_vertices.size() - m_lineLength) { // not at beginning nor last line
-        buildFunction(i-1);
-        buildFunction(i-1 + m_lineLength);
-        buildFunction(i);
-
-        buildFunction(i);
-        buildFunction(i + m_lineLength);
-        buildFunction(i-1 + m_lineLength);
-    }
-}
-
-inline unsigned long DTM::array_size_TRIANGLES() const
-{
-    return 6*(m_vertices.size() - m_lineLength - (m_nbLines-1));
 }

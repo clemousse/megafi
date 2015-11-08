@@ -1,13 +1,14 @@
 #include "gldisplay.h"
+#include "gldisplay.inl"
 #include "mainwindow.h"
-#include "dtm.h"
+
 #include <QDebug>
 
-glDisplay::glDisplay(MainWindow &mainW,
-                     const DTM* const *data,
-                     const QList<const FlowPath*> &flows)
+glDisplay::glDisplay(MainWindow& mainW,
+                     const megafi::DTM* const& dtm,
+                     const QList<const megafi::FlowPath*>& flows)
     : m_mainW(mainW),
-    m_dtm(data),
+    m_dtm(dtm),
     m_flows(flows),
     m_windowSize(400, 300)
 {
@@ -45,11 +46,16 @@ void glDisplay::init()
     glViewport(0, 0, m_windowSize.width(), m_windowSize.height()); // Set the viewport size to fill the window
 
     // Move camera
-    if(*m_dtm)
+    if(m_dtm)
     {
-        setSceneBoundingBox((*m_dtm)->getLL(), (*m_dtm)->getUR());
+        setSceneBoundingBox(m_dtm->getLL(), m_dtm->getUR());
         showEntireScene();
     }
+}
+
+void glDisplay::beginDraw()
+{
+    draw();
 }
 
 void glDisplay::draw()
@@ -59,36 +65,7 @@ void glDisplay::draw()
 
     // Building DTM
     glLineWidth(1);
-    drawData<DTM>(**m_dtm);
-}
-
-template<class Child>
-void glDisplay::drawData(const Child &data)
-{
-    switch(data.getMode())
-    {
-    case MODE_LEGACY:
-    {
-        Child& unconstData = const_cast<Child&>(data);
-        data.buildLegacy(unconstData);
-    }
-        break;
-    case MODE_VERTEX_ARRAY:
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glVertexPointer(3, GL_DOUBLE, sizeof(qglviewer::Vec), data.getVertexArray());
-        glDrawArrays(glPrimitive(data.getPrimitive()), 0, data.getArrayLength());
-        glDisableClientState(GL_VERTEX_ARRAY);
-        break;
-    case MODE_VERTEX_INDICES:
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glVertexPointer(3, GL_DOUBLE, sizeof(qglviewer::Vec), data.getVertices());
-        glDrawElements(glPrimitive(data.getPrimitive()),
-                       data.getArrayLength(),
-                       GL_UNSIGNED_INT,
-                       data.getIndiceArray());
-        glDisableClientState(GL_VERTEX_ARRAY);
-        break;
-    }
+    drawData<megafi::DTM>(*m_dtm);
 }
 
 void glDisplay::mousePressEvent(QMouseEvent* const event)
@@ -112,13 +89,11 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
                   << "position y : " << mouse_world.y << endl
                   << "position z : " << mouse_world.z << endl;
 
-        m_mainW.addFlow((*m_dtm)->computeIndex(mouse_world));
+        m_mainW.addFlow(m_dtm->computeIndex(mouse_world));
     }
     else
         qDebug() << "Not found";
 
     //release the curseur of the mouse to the parent class
     QGLViewer::mousePressEvent(event);
-
-
 }

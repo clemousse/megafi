@@ -157,50 +157,6 @@ void Drawable::deleteArrays() throw()
     }
 }
 
-inline void Drawable::build_function_legacy(unsigned long i) const
-{
-    glVertex3d(m_vertices[i].x, m_vertices[i].y, m_vertices[i].z);
-}
-
-inline void Drawable::build_function_va(unsigned long i)
-{
-    m_vertexArray[m_arrayCurrent] = m_vertices[i];
-    ++m_arrayCurrent;
-}
-
-inline void Drawable::build_function_vi(unsigned long i)
-{
-    m_indicesArray[m_arrayCurrent] = i;
-    ++m_arrayCurrent;
-}
-
-inline void Drawable::buildFunction(unsigned long i)
-throw(const Drawable::IncoherentMode&)
-{
-    switch(m_mode)
-    {
-    case MODE_LEGACY:
-        throw IncoherentMode("buildFunction", MODE_VERTEX_ARRAY, MODE_LEGACY);
-    case MODE_VERTEX_ARRAY:
-        build_function_va(i); break;
-    case MODE_VERTEX_INDICES:
-        build_function_vi(i); break;
-    }
-}
-
-inline void Drawable::buildFunction(unsigned long i) const
-throw(const Drawable::IncoherentMode&)
-{
-    switch(m_mode)
-    {
-    case MODE_LEGACY:
-        build_function_legacy(i); break;
-    case MODE_VERTEX_ARRAY:
-        throw IncoherentMode("buildFunction", MODE_LEGACY, MODE_VERTEX_ARRAY);
-    case MODE_VERTEX_INDICES:
-        throw IncoherentMode("buildFunction", MODE_LEGACY, MODE_VERTEX_INDICES);
-    }
-}
 
 void Drawable::prepareBuild(unsigned long arrayLength)
 throw(const std::bad_alloc&)

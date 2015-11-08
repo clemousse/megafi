@@ -47,6 +47,7 @@ inline std::string mode2str(Mode m)
     case MODE_LEGACY: return "MODE_LEGACY"; break;
     case MODE_VERTEX_ARRAY: return "MODE_VERTEX_ARRAY"; break;
     case MODE_VERTEX_INDICES: return "MODE_VERTEX_INDICES"; break;
+    default: return ""; break;
     }
 }
 

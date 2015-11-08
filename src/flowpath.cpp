@@ -4,21 +4,16 @@
 
 using namespace megafi;
 
-FlowPath::FlowPath(const DTM& dtm, unsigned long origin) : m_dtm(dtm), m_minIndices()
+
+FlowPath::FlowPath(const DTM& dtm, unsigned long origin, Mode mode)
+    : Drawable(mode, QUADLINE), m_minIndices()
 {
     m_minIndices.push_back(origin);
-    m_vertices.push_back(m_dtm.getVertices()[origin]);
-
-    qDebug() << "First point's coordinates : x=" << m_vertices.back().x
-             << ", y=" << m_vertices.back().y
-             << ", z=" << m_vertices.back().z;
-
-    computePath();
+    computePath(dtm);
 }
 
 FlowPath::FlowPath(const FlowPath &other)
-    : Drawable<FlowPath>(other),
-      m_dtm(other.m_dtm), m_minIndices(other.m_minIndices)
+    : Drawable(other), m_minIndices(other.m_minIndices)
 {
 }
 
@@ -26,15 +21,20 @@ FlowPath::~FlowPath()
 {
 }
 
-void FlowPath::computePath()
+void FlowPath::computePath(const DTM& dtm)
 {
-    const qglviewer::Vec* const vertices   = m_dtm.getVertices();
-    const unsigned long         vLength    = m_dtm.getNbVertices();
-    const unsigned long         lineLength = m_dtm.getLineLength();
+    const qglviewer::Vec* const vertices   = dtm.getVertices();
+    const unsigned long         vLength    = dtm.getNbVertices();
+    const unsigned long         lineLength = dtm.getLineLength();
 
-    do
+    qDebug() << "First point's coordinates : x="
+             << vertices[m_minIndices.first()].x
+             << ", y=" << vertices[m_minIndices.first()].y
+             << ", z=" << vertices[m_minIndices.first()].z;
+
+    while(true)
     {
-        unsigned long i = m_minIndices.last();
+        const unsigned long i = m_minIndices.last();
 
         if( i%lineLength != 0
                 && vertices[i-1].z < vertices[i].z )
@@ -61,22 +61,41 @@ void FlowPath::computePath()
         qDebug() << "Next point's coordinates : x=" << vertices[i].x
                  << ", y=" << vertices[i].y
                  << ", z=" << vertices[i].z;
+    }
 
-        m_vertices.push_back(vertices[i]);
-    } while(true);
+    for(QList<unsigned long>::const_iterator index = m_minIndices.cbegin();
+        index != m_minIndices.cend() ;
+        ++index)
+    {
+        m_vertices.push_back(vertices[*index]);
+    }
 }
 
-inline void FlowPath::build_line_TRILINE(unsigned long i)
+
+#define BUILD for(unsigned long i = 0; \
+                  i < static_cast<unsigned long>(m_minIndices.size()) ;\
+                  ++i) \
+              { \
+                  buildFunction(i); \
+              }
+
+void FlowPath::buildArrays()
 {
-    buildFunction(i);
+    {
+        const unsigned long size =
+                static_cast<unsigned long>(m_minIndices.size());
+        prepareBuild(size);
+    }
+
+    BUILD
 }
 
-inline unsigned long FlowPath::array_size_TRILINE() const
+void FlowPath::buildLegacy() const
 {
-    return m_vertices.size();
-}
-
-inline void FlowPath::buildInternal(unsigned int i)
-{
-    buildLine(i);
+    if(getMode() == MODE_LEGACY)
+    {
+        glBegin(GL_LINE_STRIP);
+        BUILD
+        glEnd();
+    }
 }

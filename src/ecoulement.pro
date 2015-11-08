@@ -8,7 +8,7 @@ QT       += core gui xml opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++11
+CONFIG += qt c++11
 
 TARGET = ecoulement
 TEMPLATE = app
@@ -19,10 +19,12 @@ LIBS += -lQGLViewer
 SOURCES += main.cpp\
         mainwindow.cpp \
         dtm.cpp \
+        dtm.inl \
         gldisplay.cpp \
         tests.cpp \
         drawable.cpp \
-        flowpath.cpp
+        flowpath.cpp \
+    gldisplay.inl
 
 
 HEADERS  += mainwindow.h \

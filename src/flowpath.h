@@ -4,26 +4,24 @@
 #include "drawable.h"
 #include "dtm.h"
 
-#include <QList>
-
 namespace megafi
 {
 
-class FlowPath : public Drawable<FlowPath>
+class FlowPath : public Drawable
 {
-    const DTM& m_dtm;
     QList<unsigned long> m_minIndices;
 
 public:
-    FlowPath(const DTM& m_dtm, unsigned long origin);
+    FlowPath(const DTM& dtm, unsigned long origin, Mode mode = MODE);
     FlowPath(const FlowPath& other);
     ~FlowPath();
 
+public slots:
+    void buildArrays();
+    void buildLegacy() const;
+
 protected:
-    void computePath();
-    inline void build_line_TRILINE(unsigned long i);
-    inline unsigned long array_size_TRILINE() const;
-    inline void buildInternal(unsigned int i);
+    void computePath(const DTM& dtm);
 };
 
 }

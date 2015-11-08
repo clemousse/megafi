@@ -13,7 +13,7 @@ bool runTests()
 
 void testOnreadDTM(const QString& dtmFileName)
 {
-    const DTM testObj(dtmFileName);
+    const megafi::DTM testObj(dtmFileName);
     const qglviewer::Vec* const result = testObj.getVertices();
 
     if (result[51].x == 901275 && result[51].y == 1944975 && result[51].z == 1228.50)

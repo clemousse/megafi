@@ -8,8 +8,6 @@
 #include <QMouseEvent>
 
 #include <QGLViewer/qglviewer.h>
-#include <QGLViewer/mouseGrabber.h>
-#include <QGLViewer/manipulatedFrame.h>
 
 
 
@@ -26,30 +24,34 @@ class glDisplay : public QGLViewer
     Q_OBJECT
 
 private:
-    MainWindow& m_mainW;      // A pointer in order to communicate with main window
-    const DTM* const *m_dtm;        // The data
-    const QList<const FlowPath*>& m_flows;
+    MainWindow& m_mainW;        // A pointer in order to communicate with main window
+    const megafi::DTM* const& m_dtm;  // The data
+    const QList<const megafi::FlowPath*>& m_flows;
 
 protected:
     QSize m_windowSize;
 
 
 public:
-    glDisplay(MainWindow& mainW, const DTM* const *data, const QList<const FlowPath*>& flows);
+    glDisplay(MainWindow& mainW,
+              const megafi::DTM* const& dtm,
+              const QList<const megafi::FlowPath*>& flows);
     ~glDisplay();
-
-    // Contains initialization code which cannot be executed before the window has been shown
-    virtual void init();
 
     void mousePressEvent(QMouseEvent* const event);
 
 public slots:
-    void draw(); // drawing function
+    void beginDraw();
     void reshapeWindow(int width, int height);
 
+signals:
+    void needsRebuild() const;
+
 private:
-    template<class Child>
-    void drawData(const Child&);
+    void init(); // Contains initialization code which cannot be executed before the window has been shown
+    void draw(); // drawing function
+    template<class Datatype>
+    void drawData(const Datatype&) const;
 };
 
 #endif // GLDISPLAY_H

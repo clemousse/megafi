@@ -19,12 +19,9 @@ private:
     Ui::MainWindow *ui;
 
 protected:
-    DTM* m_dtm;
-    QList<const FlowPath*> m_flows;
+    megafi::DTM* m_dtm;
+    QList<megafi::FlowPath*> m_flows;
     glDisplay* const m_glDisplay;
-
-    void closeEvent(QCloseEvent* event);
-
 
 public:
      explicit MainWindow(QWidget* parent = NULL);
@@ -32,7 +29,14 @@ public:
 
 public slots:
     void openDialog();
+    void rebuildArrays();
     void addFlow(unsigned long startIndex);
+
+protected:
+    void closeEvent(QCloseEvent* event);
+
+private:
+    void deleteFlows();
 };
 
 #endif // MAINWINDOW_H

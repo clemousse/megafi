@@ -1,3 +1,5 @@
+#include "mainwindow.h"
+
 #include <QFileDialog>
 #include <QString>
 #include <QMessageBox>
@@ -8,19 +10,15 @@
 
 #include <QDebug>
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "tests.h"
-
-using namespace std;
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     m_dtm(NULL),
     m_flows(),
-    m_glDisplay(new glDisplay(*this, &m_dtm, m_flows))
+    m_glDisplay(new glDisplay(*this, m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>& >(m_flows)))
 {
+    connect(m_glDisplay, SIGNAL(needsRebuild()), this, SLOT(rebuildArrays()));
+
     //load interface .ui created  with QT Designer
     ui->setupUi(this);
 
@@ -36,19 +34,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionView_history, SIGNAL(triggered()),ui->dockWidget_His, SLOT(show()));
     //create a connexion on the menu File-> Quit via close slot (or cross)
     connect(ui->actionQuit, SIGNAL(triggered()),this, SLOT(close()));
-
 }
 
 MainWindow::~MainWindow()
 {
 
     delete m_glDisplay;
-    for(QList<const FlowPath*>::iterator flow = m_flows.begin() ;
-        flow != m_flows.end() ;
-        ++flow)
-    {
-        delete *flow;
-    }
+    deleteFlows();
     if(m_dtm) delete m_dtm;
     delete ui;
 }
@@ -94,19 +86,16 @@ void MainWindow::openDialog() // Open a dialog to choose a file
     {
         if(m_dtm)
         {
+            // Delete DTM
             delete m_dtm;
             m_dtm = NULL;
-            for(QList<const FlowPath*>::iterator flow = m_flows.begin() ;
-                flow != m_flows.end() ;
-                ++flow)
-            {
-                delete *flow;
-            }
+            deleteFlows();
             m_flows.clear();
         }
         try
         {
-            m_dtm = new DTM(file);
+            m_dtm = new megafi::DTM(file);
+            rebuildArrays();
         }
         catch(const std::bad_alloc&)
         {
@@ -115,8 +104,51 @@ void MainWindow::openDialog() // Open a dialog to choose a file
     }
 }
 
+void MainWindow::rebuildArrays()
+{
+    // Rebuild DTM
+    if(m_dtm)
+    {
+        switch(m_dtm->getMode())
+        {
+        case megafi::MODE_LEGACY        :                       break;
+        case megafi::MODE_VERTEX_ARRAY  : m_dtm->buildArrays(); break;
+        case megafi::MODE_VERTEX_INDICES: m_dtm->buildArrays(); break;
+        }
+
+        // Rebuild flows
+        for(QList<megafi::FlowPath*>::iterator flow = m_flows.begin() ;
+            flow != m_flows.end() ;
+            ++flow)
+        {
+            const megafi::Mode mode = (*flow)->getMode();
+            switch(mode)
+            {
+            case megafi::MODE_LEGACY        :                         break;
+            case megafi::MODE_VERTEX_ARRAY  : (*flow)->buildArrays(); break;
+            case megafi::MODE_VERTEX_INDICES: (*flow)->buildArrays(); break;
+            }
+        }
+    }
+}
+
 void MainWindow::addFlow(unsigned long startIndex)
 {
-    const FlowPath* newFP = new FlowPath(*m_dtm, startIndex);
-    m_flows.push_back(newFP);
+    if(m_dtm)
+    {
+        megafi::FlowPath* const newFP =
+                new megafi::FlowPath(*m_dtm, startIndex, m_dtm->getMode());
+        m_flows.push_back(newFP);
+    }
+}
+
+void MainWindow::deleteFlows()
+{
+    for(QList<megafi::FlowPath*>::iterator flow = m_flows.begin() ;
+        flow != m_flows.end() ;
+        ++flow)
+    {
+        delete *flow;
+        *flow = NULL;
+    }
 }

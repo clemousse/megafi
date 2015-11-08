@@ -13,7 +13,7 @@ namespace megafi
 {
 
 
-class Drawable
+class Drawable : public QObject
 {
     Q_OBJECT
 
@@ -73,19 +73,56 @@ public slots:
     void         changePrimitive(Primitive p) throw();
 
     // Building
-    virtual void buildArrays();
-    virtual void buildLegacy() const;
+    virtual void buildArrays() =0;
+    virtual void buildLegacy() const =0;
 
 protected:
-    inline void buildFunction(unsigned long i) throw(const IncoherentMode&);
-    inline void buildFunction(unsigned long i) const throw(const IncoherentMode&);
     void prepareBuild(unsigned long arrayLength) throw(const std::bad_alloc&);
+
+    inline void buildFunction(unsigned long i) throw(const IncoherentMode&)
+    {
+        switch(m_mode)
+        {
+        case MODE_LEGACY:
+            throw IncoherentMode("buildFunction", MODE_VERTEX_ARRAY, MODE_LEGACY);
+        case MODE_VERTEX_ARRAY:
+            build_function_va(i); break;
+        case MODE_VERTEX_INDICES:
+            build_function_vi(i); break;
+        }
+    }
+
+    inline void buildFunction(unsigned long i) const throw(const IncoherentMode&)
+    {
+        switch(m_mode)
+        {
+        case MODE_LEGACY:
+            build_function_legacy(i); break;
+        case MODE_VERTEX_ARRAY:
+            throw IncoherentMode("buildFunction", MODE_LEGACY, MODE_VERTEX_ARRAY);
+        case MODE_VERTEX_INDICES:
+            throw IncoherentMode("buildFunction", MODE_LEGACY, MODE_VERTEX_INDICES);
+        }
+    }
 
 private:
     void deleteArrays() throw();
-    inline void build_function_legacy(unsigned long i) const;
-    inline void build_function_va    (unsigned long i);
-    inline void build_function_vi    (unsigned long i);
+    inline void build_function_legacy(unsigned long i) const
+    {
+        glVertex3d(m_vertices[i].x, m_vertices[i].y, m_vertices[i].z);
+    }
+
+    inline void build_function_va    (unsigned long i)
+    {
+        m_vertexArray[m_arrayCurrent] = m_vertices[i];
+        ++m_arrayCurrent;
+    }
+
+    inline void build_function_vi    (unsigned long i)
+    {
+        m_indicesArray[m_arrayCurrent] = i;
+        ++m_arrayCurrent;
+    }
 };
 
 }
