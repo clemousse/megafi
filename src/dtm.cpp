@@ -22,8 +22,17 @@ DTM::DTM(const QString &filePath, Mode mode, Primitive prim)
     {
         computeDataSize();
         computeLineLength();
-        buildArrays(*this);
+        buildArrays();
     }
+}
+
+DTM::DTM(const DTM &other)
+    : Drawable(other),
+      m_dataSizeMin(other.m_dataSizeMin),
+      m_dataSizeMax(other.m_dataSizeMax),
+      m_lineLength(other.m_lineLength),
+      m_nbLines(other.m_nbLines)
+{
 }
 
 DTM::~DTM()
@@ -192,20 +201,106 @@ unsigned long DTM::computeIndex(const qglviewer::Vec& mouse_world) const
     return index;
 }
 
-void DTM::buildInternal(unsigned int i)
-{
-    if(i % m_lineLength == 0 // beginning of line
-            && getPrimitive() & DESIGN_EDGE) // only if drawing edges
-    {
-        for(unsigned int j = i + m_lineLength-1 ;
-            j >= i && j < m_vertices.size() ; // security: j is unsigned so 0 - 1 >= 0
-            --j)
-        {
-            buildBack(j);
-        }
+#define FUNCTIONS(prim) \
+    begin = &DTM::build_begin<prim>; \
+    line  = &DTM::build_line <prim>; \
+    back  = &DTM::build_back <prim>; \
+    end   = &DTM::build_end  <prim>
+
+#define CASE(prim) case prim: FUNCTIONS(prim); break
+
+#define SWITCH_PRIM \
+    const Primitive primitive = getPrimitive(); \
+    switch(primitive) \
+    { \
+    CASE(POINT); \
+    CASE(TRILINE); \
+    CASE(QUADLINE); \
+    CASE(TRIFILL); \
+    CASE(QUADFILL); \
+    CASE(LINELOOP); \
+    CASE(TRIANGLES); \
+    default: \
+        throw UnknownPrimitive(primitive); \
     }
 
-    buildLine(i);
+#define BUILD \
+    (this->*begin)(); \
+    const unsigned long vLength = m_vertices.size(); \
+    for(unsigned long i = 0 ; i < vLength ; ++i) \
+    { \
+        if(i % m_lineLength == 0 && primitive & DESIGN_EDGE) \
+        /* beginning of line        only if drawing edges */ \
+        { \
+            for(unsigned long j = i + m_lineLength-1 ; \
+                j >= i && j < vLength ; /* security: j is unsigned so 0 - 1 >= 0 */ \
+                --j) \
+            { \
+                (this->*back)(j); \
+            } \
+        } \
+        (this->*line)(i); \
+    } \
+    (this->*end)()
+
+void DTM::buildArrays()
+{
+    const unsigned long arraySize = array_size(getPrimitive());
+    prepareBuild(arraySize);
+
+    void (DTM::*begin)() = NULL;
+    void (DTM::*line)(unsigned long) = NULL;
+    void (DTM::*back)(unsigned long) = NULL;
+    void (DTM::*end)() = NULL;
+
+    SWITCH_PRIM;
+    BUILD;
+}
+
+template<class Child>
+void Drawable<Child>::build(Child &ths) const
+{
+}
+
+
+/*
+ * GENERAL
+ */
+
+template<class Child>
+inline void Drawable<Child>::build_begin()
+{
+    switch(m_mode)
+    {
+    case MODE_LEGACY:
+        glBegin(glPrimitive(m_prim));
+        break;
+    case MODE_VERTEX_ARRAY:
+        break;
+    case MODE_VERTEX_INDICES:
+        break;
+    }
+}
+
+template<class Child>
+inline void Drawable<Child>::build_line(unsigned long) {}
+
+template<class Child>
+inline void Drawable<Child>::build_back(unsigned long) {}
+
+template<class Child>
+inline void Drawable<Child>::build_end()
+{
+    switch(m_mode)
+    {
+    case MODE_LEGACY:
+        glEnd();
+        break;
+    case MODE_VERTEX_ARRAY:
+        break;
+    case MODE_VERTEX_INDICES:
+        break;
+    }
 }
 
 /*

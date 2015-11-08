@@ -21,7 +21,8 @@ SOURCES += main.cpp\
         dtm.cpp \
         gldisplay.cpp \
         tests.cpp \
-    flowpath.cpp
+        drawable.cpp \
+        flowpath.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -29,9 +30,8 @@ HEADERS  += mainwindow.h \
             dtm.h \
             gldisplay.h \
             tests.h \
-    flowpath.h \
-    drawable.h \
-    drawable.cpp \
-    draw.h
+            flowpath.h \
+            drawable.h \
+            draw.h
 
 FORMS    += mainwindow.ui

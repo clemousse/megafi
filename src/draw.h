@@ -40,6 +40,16 @@ enum Primitive
     TRIANGLES= PRIM__TRIANGLES
 };
 
+inline std::string mode2str(Mode m)
+{
+    switch(m)
+    {
+    case MODE_LEGACY: return "MODE_LEGACY"; break;
+    case MODE_VERTEX_ARRAY: return "MODE_VERTEX_ARRAY"; break;
+    case MODE_VERTEX_INDICES: return "MODE_VERTEX_INDICES"; break;
+    }
+}
+
 class UnknownPrimitive : public std::logic_error
 {
 private:

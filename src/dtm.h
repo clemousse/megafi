@@ -10,8 +10,10 @@ namespace megafi
 
 
 
-class DTM : public Drawable<DTM>
+class DTM : public Drawable
 {
+    Q_OBJECT
+
     // Members
 private:
     // data bounding rectangle
@@ -24,6 +26,7 @@ private:
 public:
     DTM();
     DTM(const QString& filePath, Mode mode = MODE, Primitive prim = PRIM);
+    DTM(const DTM& other);
     ~DTM();
 
     qglviewer::Vec getLL() const;
@@ -34,37 +37,23 @@ public:
 
     unsigned long computeIndex(const qglviewer::Vec& mouse_world) const;
 
+    void buildArrays();
+    void buildLegacy() const;
+
 private:
     bool readDTM(const QString& path);
     void computeDataSize();
     void computeLineLength();
 
 protected:
-    void          build_begin_LINELOOP ();
+    template<Primitive prim> inline void build_begin() const;
+    template<Primitive prim> inline void build_line(unsigned long);
+    template<Primitive prim> inline void build_line(unsigned long) const;
+    template<Primitive prim> inline void build_back(unsigned long);
+    template<Primitive prim> inline void build_back(unsigned long) const;
+    template<Primitive prim> inline void build_end() const;
 
-    inline void   build_line_POINT     (unsigned long i);
-    inline void   build_line_TRILINE   (unsigned long i);
-    inline void   build_line_QUADLINE  (unsigned long i);
-    inline void   build_line_TRIFILL   (unsigned long i);
-    inline void   build_line_QUADFILL  (unsigned long i);
-    inline void   build_line_LINELOOP  (unsigned long i);
-    inline void   build_line_TRIANGLES (unsigned long i);
-
-    inline void   build_back_TRILINE   (unsigned long j);
-    inline void   build_back_QUADLINE  (unsigned long j);
-
-    void          build_end_LINELOOP   ();
-
-    inline unsigned long array_size_POINT     () const;
-    inline unsigned long array_size_TRILINE   () const;
-    inline unsigned long array_size_QUADLINE  () const;
-    inline unsigned long array_size_TRIFILL   () const;
-    inline unsigned long array_size_QUADFILL  () const;
-    inline unsigned long array_size_LINELOOP  () const;
-    inline unsigned long array_size_TRIANGLES () const;
-
-public:
-    void buildInternal(unsigned int i);
+    inline unsigned long array_size(Primitive prim) const;
 };
 
 
