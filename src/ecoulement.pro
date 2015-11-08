@@ -29,7 +29,9 @@ HEADERS  += mainwindow.h \
             dtm.h \
             gldisplay.h \
             tests.h \
-    draw.h \
-    flowpath.h
+    flowpath.h \
+    drawable.h \
+    drawable.cpp \
+    draw.h
 
 FORMS    += mainwindow.ui

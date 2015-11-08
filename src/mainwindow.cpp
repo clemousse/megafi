@@ -43,6 +43,12 @@ MainWindow::~MainWindow()
 {
 
     delete m_glDisplay;
+    for(QList<const FlowPath*>::iterator flow = m_flows.begin() ;
+        flow != m_flows.end() ;
+        ++flow)
+    {
+        delete *flow;
+    }
     if(m_dtm) delete m_dtm;
     delete ui;
 }
@@ -90,6 +96,13 @@ void MainWindow::openDialog() // Open a dialog to choose a file
         {
             delete m_dtm;
             m_dtm = NULL;
+            for(QList<const FlowPath*>::iterator flow = m_flows.begin() ;
+                flow != m_flows.end() ;
+                ++flow)
+            {
+                delete *flow;
+            }
+            m_flows.clear();
         }
         try
         {
@@ -102,3 +115,8 @@ void MainWindow::openDialog() // Open a dialog to choose a file
     }
 }
 
+void MainWindow::addFlow(unsigned long startIndex)
+{
+    const FlowPath* newFP = new FlowPath(*m_dtm, startIndex);
+    m_flows.push_back(newFP);
+}

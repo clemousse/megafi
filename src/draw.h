@@ -1,127 +1,94 @@
 #ifndef DRAW_H
 #define DRAW_H
 
-#include "gldisplay.h"
+#include <stdexcept>
+#include <string>
 
-/*
- * GENERAL CASE
- */
+#include <GL/gl.h>
 
-template <int primit> inline void glDisplay::draw_init() {
-#if MODE == MODE_LEGACY
-    int glprim = 0;
-    OPENGL(primit, glprim)
-    glBegin(glprim);
-#endif
-}
+// The primitive that can be used
+#define PRIM_TRIANGLES      0b00000000
+#define PRIM_SQUARES        0b00000001
 
-template <int primit> inline void glDisplay::draw_line(unsigned int) {}
+// The design that can be used
+#define DESIGN_POINT        0b00000010
+#define DESIGN_EDGE         0b00000100
+#define DESIGN_SHAPE        0b00001000
 
-template <int primit> inline void glDisplay::draw_back(unsigned int) {}
-
-template <int primit> inline void glDisplay::draw_end() {
-#if MODE == MODE_LEGACY
-    glEnd();
-#endif
-}
+// Other implemented primitives
+#define PRIM__LINE_LOOP     0b00010000
+#define PRIM__TRIANGLES     0b00100000
 
 
+namespace megafi
+{
 
+enum Mode {
+    MODE_LEGACY,
+    MODE_VERTEX_ARRAY,
+    MODE_VERTEX_INDICES
+};
 
+enum Primitive
+{
+    POINT    = DESIGN_POINT,
+    TRILINE  = DESIGN_EDGE | PRIM_TRIANGLES,
+    QUADLINE = DESIGN_EDGE | PRIM_SQUARES,
+    TRIFILL  = DESIGN_SHAPE | PRIM_TRIANGLES,
+    QUADFILL = DESIGN_SHAPE | PRIM_SQUARES,
+    LINELOOP = PRIM__LINE_LOOP,
+    TRIANGLES= PRIM__TRIANGLES
+};
 
-/*
- * POINTS
- */
-
-template<> inline void glDisplay::draw_line<DESIGN_POINT>(unsigned int i) {
-    draw_function(i);
-}
-
-
-/*
- * EDGES
- */
-
-template<> inline void glDisplay::draw_line<DESIGN_EDGE>(unsigned int i) {
-    draw_function(i);
-    if(i < m_vertices.length() - m_lineLength) // not at last line
-        draw_function(i + m_lineLength);
-}
-
-template<> inline void glDisplay::draw_back<DESIGN_EDGE | PRIM_TRIANGLES>(unsigned int j) {
-    draw_function(j);
-}
-
-template<> inline void glDisplay::draw_back<DESIGN_EDGE | PRIM_SQUARES>(unsigned int j) {
-    if(j % m_lineLength) { // not at beginning of line
-        draw_function(j);
-        draw_function(j-1);
-    }
-}
-
-
-
-
-/*
- * SHAPES
- */
-
-template<> inline void glDisplay::draw_line<DESIGN_SHAPE>(unsigned int i) {
-    draw_function(i);
-    if(i < m_vertices.length() - m_lineLength) // not at last line
-        draw_function(i + m_lineLength);
-    else
-        draw_function(i);
-}
-
-
-
-
-/*
- * LINE LOOPS
- */
-
-// Line loops are opened and closed at each time
-template<> inline void glDisplay::draw_init<PRIM__LINE_LOOP>() {}
-template <> inline void glDisplay::draw_end<PRIM__LINE_LOOP>() {}
-
-template<> inline void glDisplay::draw_line<PRIM__LINE_LOOP>(unsigned int i) {
-    glBegin(GL_LINE_LOOP);
-
-    draw_function(i);
-
-    if(i % m_lineLength != m_lineLength-1) { // not at end of line
-        if(i < static_cast<unsigned int>(m_vertices.length()))
-            draw_function(i+1);
+class UnknownPrimitive : public std::logic_error
+{
+private:
+    inline std::string composeMessage(const int prim, std::string userMessage) const
+    {
+        return std::string("Unknown primitive ") + std::to_string(prim) + (
+                    !userMessage.empty()
+                    ? std::string(" [") + userMessage + std::string("]")
+                    : ""
+                    );
     }
 
-    if(i < m_vertices.length() - m_lineLength) // not at last line
-        draw_function(i + m_lineLength);
+public:
+    UnknownPrimitive() : logic_error("Unknown primitive") {}
+    UnknownPrimitive(const int prim, std::string message = "")
+        : std::logic_error(composeMessage(prim, message)) {}
+};
 
-    glEnd();
-}
+inline int glPrimitive(Primitive p) throw()
+{
+    int ret = 0x000A; // does not exist
 
-
-
-
-/*
- * TRIANGLES
- */
-
-template<> inline void glDisplay::draw_line<PRIM__TRIANGLES>(unsigned int i) {
-    if(i % m_lineLength && i < m_vertices.length() - m_lineLength) { // not at beginning nor last line
-        draw_function(i-1);
-        draw_function(i-1 + m_lineLength);
-        draw_function(i);
-
-        draw_function(i);
-        draw_function(i + m_lineLength);
-        draw_function(i-1 + m_lineLength);
+    switch(p)
+    {
+    case POINT:
+        ret =  GL_POINTS; break;
+    case TRILINE:
+        ret = GL_LINE_STRIP; break;
+    case QUADLINE:
+        ret = GL_LINES; break;
+    case TRIFILL:
+        ret = GL_TRIANGLE_STRIP; break;
+    case QUADFILL:
+        ret = GL_QUAD_STRIP; break;
+    case LINELOOP:
+        ret = GL_LINE_LOOP; break;
+    case TRIANGLES:
+        ret = GL_TRIANGLES; break;
+    default: // Should never happen !
+        throw UnknownPrimitive(p);
     }
+
+    return ret;
 }
 
+}
 
-
-
+// FINAL CHOICE
+#define MODE MODE_VERTEX_ARRAY
+#define PRIM QUADLINE
 
 #endif // DRAW_H

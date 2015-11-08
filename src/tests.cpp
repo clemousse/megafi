@@ -1,5 +1,7 @@
 #include "tests.h"
 
+#include <QGLViewer/vec.h>
+
 #include <QFile>
 #include <QDebug>
 
@@ -11,8 +13,8 @@ bool runTests()
 
 void testOnreadDTM(const QString& dtmFileName)
 {
-    QVector<Point> result;
-    readDTM(dtmFileName, result);
+    const DTM testObj(dtmFileName);
+    const qglviewer::Vec* const result = testObj.getVertices();
 
     if (result[51].x == 901275 && result[51].y == 1944975 && result[51].z == 1228.50)
     {
