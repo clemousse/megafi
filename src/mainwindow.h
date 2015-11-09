@@ -36,6 +36,9 @@ public slots:
     void setClickedCoordinates(const qglviewer::Vec& mouse_world);
     void addFlow(unsigned long startIndex);
 
+signals:
+    void dtmHasChanged(void) const;
+
 protected:
     void closeEvent(QCloseEvent* event);
 

@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_glDisplay(new glDisplay(*this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>& >(m_flows)))
 {
     connect(m_glDisplay, SIGNAL(needsRebuild()), this, SLOT(rebuildArrays()));
+    connect(this, SIGNAL(dtmHasChanged()), m_glDisplay, SLOT(beginDraw()));
 
     //load interface .ui created  with QT Designer
     ui->setupUi(this);
@@ -100,6 +101,7 @@ void MainWindow::openDialog() // Open a dialog to choose a file
         {
             m_dtm = new megafi::DTM(file);
             rebuildArrays();
+            emit dtmHasChanged();
         }
         catch(const std::bad_alloc&)
         {

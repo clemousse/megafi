@@ -56,7 +56,11 @@ void glDisplay::init()
 
 void glDisplay::beginDraw()
 {
-    draw();
+    if(isVisible())
+    {
+        init();
+        draw();
+    }
 }
 
 void glDisplay::draw()
