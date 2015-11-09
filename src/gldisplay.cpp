@@ -69,9 +69,12 @@ void glDisplay::draw()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear screen
 
     // Building DTM
-    glLineWidth(1);
-    glColor3d(1,1,1);
-    drawData<megafi::DTM>(**m_dtm);
+    if(*m_dtm)
+    {
+        glLineWidth(1);
+        glColor3d(1,1,1);
+        drawData<megafi::DTM>(**m_dtm);
+    }
 
     // Building flows
     glLineWidth(10);
