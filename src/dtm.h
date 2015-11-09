@@ -48,10 +48,10 @@ private:
 
 protected:
     template<Primitive prim> inline void build_begin() const;
-    template<Primitive prim> inline void build_line(unsigned long);
-    template<Primitive prim> inline void build_line(unsigned long) const;
-    template<Primitive prim> inline void build_back(unsigned long);
-    template<Primitive prim> inline void build_back(unsigned long) const;
+    template<Primitive prim> inline void build_line(GLuint);
+    template<Primitive prim> inline void build_line(GLuint) const;
+    template<Primitive prim> inline void build_back(GLuint);
+    template<Primitive prim> inline void build_back(GLuint) const;
     template<Primitive prim> inline void build_end() const;
 
     inline unsigned long array_size(Primitive prim) const;

@@ -12,6 +12,16 @@
 namespace megafi
 {
 
+union Point
+{
+    struct
+    {
+        double x;
+        double y;
+        double z;
+    };
+    double v[3];
+};
 
 class Drawable : public QObject
 {
@@ -19,7 +29,7 @@ class Drawable : public QObject
 
 protected:
     // Data
-    std::vector<qglviewer::Vec> m_vertices;
+    std::vector<Point> m_vertices;
 
 private:
     // Members
@@ -29,9 +39,9 @@ private:
     unsigned long m_arrayLength;
     unsigned long m_arrayCurrent;
     // Vertex array
-    qglviewer::Vec *m_vertexArray;
+    Point*        m_vertexArray;
     // Indice array
-    unsigned long  *m_indicesArray;
+    GLuint*       m_indicesArray;
 
 protected:
     class IncoherentMode : public std::logic_error
@@ -57,20 +67,20 @@ public:
     virtual ~Drawable();
 
     // Getters
-    Mode                  getMode       () const throw();
-    Primitive             getPrimitive  () const throw();
+    Mode          getMode       () const throw();
+    Primitive     getPrimitive  () const throw();
 
-    const qglviewer::Vec* getVertices   () const throw();
-    unsigned long         getNbVertices () const throw();
+    const Point*  getVertices   () const throw();
+    unsigned long getNbVertices () const throw();
 
-    unsigned long         getArrayLength() const throw();
-    const qglviewer::Vec* getVertexArray() const throw();
-    const unsigned long * getIndiceArray() const throw();
+    unsigned long getArrayLength() const throw();
+    const Point*  getVertexArray() const throw();
+    const GLuint* getIndiceArray() const throw();
 
 public slots:
     // Setters
-    void         changeMode(Mode m)           throw();
-    void         changePrimitive(Primitive p) throw();
+    void          changeMode(Mode m)           throw();
+    void          changePrimitive(Primitive p) throw();
 
     // Building
     virtual void buildArrays() =0;
@@ -79,7 +89,7 @@ public slots:
 protected:
     void prepareBuild(unsigned long arrayLength) throw(const std::bad_alloc&);
 
-    inline void buildFunction(unsigned long i) throw(const IncoherentMode&)
+    inline void buildFunction(GLuint i) throw(const IncoherentMode&)
     {
         switch(m_mode)
         {
@@ -92,7 +102,7 @@ protected:
         }
     }
 
-    inline void buildFunction(unsigned long i) const throw(const IncoherentMode&)
+    inline void buildFunction(GLuint i) const throw(const IncoherentMode&)
     {
         switch(m_mode)
         {
@@ -107,18 +117,18 @@ protected:
 
 private:
     void deleteArrays() throw();
-    inline void build_function_legacy(unsigned long i) const
+    inline void build_function_legacy(GLuint i) const
     {
         glVertex3d(m_vertices[i].x, m_vertices[i].y, m_vertices[i].z);
     }
 
-    inline void build_function_va    (unsigned long i)
+    inline void build_function_va    (GLuint i)
     {
         m_vertexArray[m_arrayCurrent] = m_vertices[i];
         ++m_arrayCurrent;
     }
 
-    inline void build_function_vi    (unsigned long i)
+    inline void build_function_vi    (GLuint i)
     {
         m_indicesArray[m_arrayCurrent] = i;
         ++m_arrayCurrent;

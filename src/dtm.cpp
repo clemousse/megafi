@@ -82,7 +82,7 @@ bool DTM::readDTM(const QString& path)
         // Declare variables to be used in the loop
         QString line;
         QStringList coordinates;
-        qglviewer::Vec p;
+        Point p;
 
         while(!filestream.atEnd())
         {
@@ -228,13 +228,13 @@ unsigned long DTM::computeIndex(const qglviewer::Vec& mouse_world) const
 
 #define BUILD \
     (this->*begin)(); \
-    const unsigned long vLength = m_vertices.size(); \
-    for(unsigned long i = 0 ; i < vLength ; ++i) \
+    const GLuint vLength = m_vertices.size(); \
+    for(GLuint i = 0 ; i < vLength ; ++i) \
     { \
         if(i % m_lineLength == 0 && primitive & DESIGN_EDGE) \
         /* beginning of line        only if drawing edges */ \
         { \
-            for(unsigned long j = i + m_lineLength-1 ; \
+            for(GLuint j = i + m_lineLength-1 ; \
                 j >= i && j < vLength ; /* security: j is unsigned so 0 - 1 >= 0 */ \
                 --j) \
             { \
@@ -255,10 +255,10 @@ void DTM::buildArrays()
         prepareBuild(arraySize);
     }
 
-    void (DTM::*begin)() const        = NULL;
-    void (DTM::*line )(unsigned long) = NULL;
-    void (DTM::*back )(unsigned long) = NULL;
-    void (DTM::*end  )() const        = NULL;
+    void (DTM::*begin)() const = NULL;
+    void (DTM::*line )(GLuint) = NULL;
+    void (DTM::*back )(GLuint) = NULL;
+    void (DTM::*end  )() const = NULL;
 
     SWITCH_PRIM;
     BUILD;
@@ -266,10 +266,10 @@ void DTM::buildArrays()
 
 void DTM::buildLegacy() const
 {
-    void (DTM::*begin)()              const = NULL;
-    void (DTM::*line) (unsigned long) const = NULL;
-    void (DTM::*back) (unsigned long) const = NULL;
-    void (DTM::*end)  ()              const = NULL;
+    void (DTM::*begin)()       const = NULL;
+    void (DTM::*line) (GLuint) const = NULL;
+    void (DTM::*back) (GLuint) const = NULL;
+    void (DTM::*end)  ()       const = NULL;
 
     SWITCH_PRIM;
     BUILD;

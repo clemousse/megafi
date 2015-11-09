@@ -26,9 +26,9 @@ FlowPath::~FlowPath()
 
 void FlowPath::computePath(const DTM& dtm)
 {
-    const qglviewer::Vec* const vertices   = dtm.getVertices();
-    const unsigned long         vLength    = dtm.getNbVertices();
-    const unsigned long         lineLength = dtm.getLineLength();
+    const Point*  const vertices   = dtm.getVertices();
+    const unsigned long vLength    = dtm.getNbVertices();
+    const unsigned long lineLength = dtm.getLineLength();
 
     qDebug() << "First point's coordinates : x="
              << vertices[m_minIndices.first()].x
