@@ -1,6 +1,8 @@
 #include "dtm.h"
 #include "dtm.inl"
 
+#include <cmath> // std::abs on doubles
+
 #include <QFile>
 #include <QDebug>
 
@@ -189,11 +191,11 @@ unsigned long DTM::computeIndex(const qglviewer::Vec& mouse_world) const
         {
             index=j;
         }
-        else if ( (m_vertices[j].y < mouse_world.y) && (mouse_world.y < m_vertices[j+m_lineLength].y) )
+        else if ( (m_vertices[j+m_lineLength].y < mouse_world.y) && (mouse_world.y < m_vertices[j].y) )
         {
-            if ( m_vertices[j+m_lineLength].x - mouse_world.y  <  mouse_world.y - m_vertices[j].y )
+            if ( std::abs(m_vertices[j+m_lineLength].y - mouse_world.y)  <  std::abs(mouse_world.y - m_vertices[j].y) )
                 index=j+m_lineLength;
-            else if (m_vertices[j+m_lineLength].y - mouse_world.y >  mouse_world.y - m_vertices[j].y )
+            else if (std::abs(m_vertices[j+m_lineLength].y - mouse_world.y) >  std::abs(mouse_world.y - m_vertices[j].y) )
                 index=j;
         }
     }
