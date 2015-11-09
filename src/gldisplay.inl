@@ -40,6 +40,8 @@ void glDisplay::drawData(const Datatype& data) const
                            vi);
             glDisableClientState(GL_VERTEX_ARRAY);
         }
+        else
+            emit needsRebuild();
     }
         break;
     }
