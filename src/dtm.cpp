@@ -136,7 +136,7 @@ void DTM::computeDataSize()
 
 void DTM::computeLineLength()
 {
-    const long NOT_COMPUTED = 0;
+    const unsigned long NOT_COMPUTED = 0;
     unsigned long lineLength_prec = NOT_COMPUTED;
     m_lineLength = 1;
     m_nbLines = 1;
