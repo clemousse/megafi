@@ -24,7 +24,7 @@ class glDisplay : public QGLViewer
 
 private:
     MainWindow& m_mainW;        // A pointer in order to communicate with main window
-    const megafi::DTM* const* const m_dtm;  // The data
+    const megafi::DTM *const *const m_dtm;  // The data
     const QList<const megafi::FlowPath*>& m_flows;
 
 
@@ -51,8 +51,7 @@ signals:
 private:
     void init(); // Contains initialization code which cannot be executed before the window has been shown
     void draw(); // drawing function
-    template<class Datatype>
-    void drawData(const Datatype&) const;
+    template<class Datatype> void drawData(const Datatype&) const;
 };
 
 #endif // GLDISPLAY_H

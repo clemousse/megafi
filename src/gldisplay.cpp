@@ -57,7 +57,11 @@ void glDisplay::init()
 
 void glDisplay::beginDraw()
 {
-    draw();
+    if(isVisible())
+    {
+        init();
+        draw();
+    }
 }
 
 void glDisplay::draw()
@@ -66,8 +70,39 @@ void glDisplay::draw()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear screen
 
     // Building DTM
-    glLineWidth(1);
-    drawData<megafi::DTM>(**m_dtm);
+    if(*m_dtm)
+    {
+        glLineWidth(1);
+        glColor3d(1,1,1);
+        drawData<megafi::DTM>(**m_dtm);
+    }
+
+    // Building flows
+    glLineWidth(10);
+    glColor3d(0,1,0);
+    // For each flow
+    for(QList<const megafi::FlowPath*>::const_iterator flow = m_flows.cbegin() ;
+        flow != m_flows.cend() ;
+        ++flow)
+    {
+        drawData<megafi::FlowPath>(**flow);
+    }
+
+#ifdef IMANE
+    for(long i = 0 ; i < m_minIndices.length()-1 ; ++i)
+    {
+
+        glBegin(GL_LINES);
+        glColor3d(1,0,0);
+        const Point& p1 = m_vertices[m_minIndices[i]],
+                p2 = m_vertices[m_minIndices[i+1]];
+
+        glVertex3d(p1.x, p1.y, p1.z);
+        glVertex3d(p2.x, p2.y, p2.z);
+
+        glEnd();
+    }
+#endif
 }
 
 

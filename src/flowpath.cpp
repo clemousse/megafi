@@ -6,7 +6,7 @@ using namespace megafi;
 
 
 FlowPath::FlowPath(const DTM& dtm, unsigned long origin, Mode mode)
-    : Drawable(mode, QUADLINE), m_minIndices()
+    : Drawable(mode, TRILINE), m_minIndices()
 #if FALSE
       , endFP("Here the flow path")
 #endif
@@ -26,9 +26,9 @@ FlowPath::~FlowPath()
 
 void FlowPath::computePath(const DTM& dtm)
 {
-    const qglviewer::Vec* const vertices   = dtm.getVertices();
-    const unsigned long         vLength    = dtm.getNbVertices();
-    const unsigned long         lineLength = dtm.getLineLength();
+    const Point*  const vertices   = dtm.getVertices();
+    const unsigned long vLength    = dtm.getNbVertices();
+    const unsigned long lineLength = dtm.getLineLength();
 
     qDebug() << "First point's coordinates :"
              << "\nx = " << vertices[m_minIndices.first()].x
@@ -64,9 +64,10 @@ void FlowPath::computePath(const DTM& dtm)
         }
 
         qDebug() << "Next point's coordinates :"
-                 << "\nx = " << vertices[i].x
-                 << "\ny = " << vertices[i].y
-                 << "\nz = " << vertices[i].z << "\n";
+                 << "\nx = " << vertices[m_minIndices.last()].x
+                 << "\ny = " << vertices[m_minIndices.last()].y
+                 << "\nz = " << vertices[m_minIndices.last()].z;
+
     }
 
     for(QList<unsigned long>::const_iterator index = m_minIndices.cbegin() ;

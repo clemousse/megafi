@@ -31,7 +31,7 @@ Drawable::Drawable(const Drawable& other) throw(const std::bad_alloc&)
         m_arrayLength = other.m_arrayLength;
         if(other.m_vertexArray)
         {
-            m_vertexArray = new Vec[m_arrayLength];
+            m_vertexArray = new Point[m_arrayLength];
             for(unsigned long i = 0; i < m_arrayLength; ++i)
             {
                 m_vertexArray[i] = other.m_vertexArray[i];
@@ -42,7 +42,7 @@ Drawable::Drawable(const Drawable& other) throw(const std::bad_alloc&)
         {
             if(other.m_indicesArray)
             {
-                m_indicesArray = new unsigned long[m_arrayLength];
+                m_indicesArray = new GLuint[m_arrayLength];
                 for(unsigned long i = 0; i < m_arrayLength; ++i)
                 {
                     m_indicesArray[i] = other.m_indicesArray[i];
@@ -100,7 +100,7 @@ Primitive Drawable::getPrimitive() const throw()
     return m_prim;
 }
 
-const Vec* Drawable::getVertices() const throw()
+const Point* Drawable::getVertices() const throw()
 {
     return m_vertices.data();
 }
@@ -115,12 +115,12 @@ unsigned long Drawable::getArrayLength() const throw()
     return m_arrayLength;
 }
 
-const Vec* Drawable::getVertexArray() const throw()
+const Point* Drawable::getVertexArray() const throw()
 {
     return m_vertexArray;
 }
 
-const unsigned long* Drawable::getIndiceArray() const throw()
+const GLuint* Drawable::getIndiceArray() const throw()
 {
     return m_indicesArray;
 }
@@ -175,7 +175,7 @@ throw(const std::bad_alloc&)
         {
             try
             {
-                m_vertexArray = new Vec[m_arrayLength];
+                m_vertexArray = new Point[m_arrayLength];
             }
             catch(const std::bad_alloc&)
             {
@@ -192,7 +192,7 @@ throw(const std::bad_alloc&)
         {
             try
             {
-                m_indicesArray = new unsigned long[m_arrayLength];
+                m_indicesArray = new GLuint[m_arrayLength];
             }
             catch(const std::bad_alloc&)
             {

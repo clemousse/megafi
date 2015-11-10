@@ -41,6 +41,9 @@ public slots:
     void addFlow(unsigned long startIndex);
     void qdClick(bool qdbg);
 
+signals:
+    void dtmHasChanged(void) const;
+
 protected:
     void closeEvent(QCloseEvent* event);
 
