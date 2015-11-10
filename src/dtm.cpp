@@ -10,6 +10,7 @@ using namespace megafi;
 
 DTM::DTM()
     : m_dataSizeMin(), m_dataSizeMax(),
+      m_colorInterv(0),
       m_lineLength(0),
       m_nbLines(0)
 {
@@ -18,12 +19,14 @@ DTM::DTM()
 DTM::DTM(const QString &filePath, Mode mode, Primitive prim)
     : Drawable(mode, prim),
       m_dataSizeMin(), m_dataSizeMax(),
+      m_colorInterv(0),
       m_lineLength(0),
       m_nbLines(0)
 {
     if(readDTM(filePath))
     {
         computeDataSize();
+        m_colorInterv = (m_dataSizeMax.z-m_dataSizeMin.z)/3;
         computeLineLength();
     }
 }
@@ -203,6 +206,31 @@ unsigned long DTM::computeIndex(const qglviewer::Vec& mouse_world) const
     return index;
 }
 
+megafi::Color DTM::computeColor(unsigned long index) const
+{
+    megafi::Color ret = {1, 1, 1};
+
+    if(m_vertices[index].z <= (m_colorInterv+m_dataSizeMin.z) && m_vertices[index].z >= m_dataSizeMin.z)
+    {
+        ret.b =((m_vertices[index].z-m_dataSizeMin.z)/((m_colorInterv+m_dataSizeMin.z)-m_dataSizeMin.z));
+        ret.g = 1 - ret.b;
+    }
+
+    else if(interv+m_dataSizeMin.z < m_vertices[index].z  && m_vertices[index].z <= (2*m_colorInterv)+m_dataSizeMin.z )
+    {
+        ret.g =((m_vertices[index].z-(m_colorInterv+m_dataSizeMin.z))/((2*m_colorInterv)+m_dataSizeMin.z-interv+m_dataSizeMin.z));
+        ret.b = 1 - ret.g;
+    }
+
+    else if(m_vertices[index].z <= m_dataSizeMax.z && m_vertices[index].z > (2*m_colorInterv)+m_dataSizeMin.z)
+    {
+        ret.r =((m_vertices[index].z-(2*m_colorInterv)+m_dataSizeMin.z)/(m_dataSizeMax.z-(2*m_colorInterv)+m_dataSizeMin.z));
+        ret.g = 1 - ret.r;
+    }
+
+    return ret;
+}
+
 #define FUNCTIONS(prim) \
     begin = &DTM::build_begin<prim>; \
     line  = &DTM::build_line <prim>; \
@@ -238,10 +266,12 @@ unsigned long DTM::computeIndex(const qglviewer::Vec& mouse_world) const
                 j >= i && j < vLength ; /* security: j is unsigned so 0 - 1 >= 0 */ \
                 --j) \
             { \
-                (this->*back)(j); \
+                const Color color = computeColor(j); \
+                (this->*back)(j, color.r, color.g, color.b); \
             } \
         } \
-        (this->*line)(i); \
+        const Color color = computeColor(j); \
+        (this->*line)(i, color.r, color.g, color.b); \
     } \
     (this->*end)()
 
@@ -256,8 +286,8 @@ void DTM::buildArrays()
     }
 
     void (DTM::*begin)() const = NULL;
-    void (DTM::*line )(GLuint) = NULL;
-    void (DTM::*back )(GLuint) = NULL;
+    void (DTM::*line )(GLuint, double, double, double) = NULL;
+    void (DTM::*back )(GLuint, double, double, double) = NULL;
     void (DTM::*end  )() const = NULL;
 
     SWITCH_PRIM;
@@ -267,8 +297,8 @@ void DTM::buildArrays()
 void DTM::buildLegacy() const
 {
     void (DTM::*begin)()       const = NULL;
-    void (DTM::*line) (GLuint) const = NULL;
-    void (DTM::*back) (GLuint) const = NULL;
+    void (DTM::*line) (GLuint, double, double, double) const = NULL;
+    void (DTM::*back) (GLuint, double, double, double) const = NULL;
     void (DTM::*end)  ()       const = NULL;
 
     SWITCH_PRIM;
