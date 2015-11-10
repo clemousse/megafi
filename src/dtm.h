@@ -20,6 +20,8 @@ private:
     qglviewer::Vec m_dataSizeMin;
     qglviewer::Vec m_dataSizeMax;
 
+    double m_colorInterv;
+
     unsigned long m_lineLength;
     unsigned long m_nbLines;
 
@@ -47,11 +49,13 @@ private:
     void computeLineLength();
 
 protected:
+    Color DTM::computeColor(unsigned long index) const;
+
     template<Primitive prim> inline void build_begin() const;
-    template<Primitive prim> inline void build_line(GLuint);
-    template<Primitive prim> inline void build_line(GLuint) const;
-    template<Primitive prim> inline void build_back(GLuint);
-    template<Primitive prim> inline void build_back(GLuint) const;
+    template<Primitive prim> inline void build_line(GLuint, double, double, double);
+    template<Primitive prim> inline void build_line(GLuint, double, double, double) const;
+    template<Primitive prim> inline void build_back(GLuint, double, double, double);
+    template<Primitive prim> inline void build_back(GLuint, double, double, double) const;
     template<Primitive prim> inline void build_end() const;
 
     inline unsigned long array_size(Primitive prim) const;
