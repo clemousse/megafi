@@ -5,11 +5,9 @@
 #include <QDebug>
 
 glDisplay::glDisplay(MainWindow& mainW,
-                     const FlowPathView* const flowPathDefaults,
                      const megafi::DTM* const* dtm,
                      const QList<const megafi::FlowPath*>& flows)
     : m_mainW(mainW),
-      m_flowPathDefaults(flowPathDefaults),
     m_dtm(dtm),
     m_flows(flows),
     m_windowSize(400, 300),
@@ -78,13 +76,6 @@ void glDisplay::draw()
         drawData<megafi::DTM>(**m_dtm);
     }
 
-    // Building flows
-    {
-        FlowPathProps flowProps(m_flowPathDefaults->getProperties());
-        QColor defaultColor(flowProps.color);
-        glLineWidth(flowProps.lineWidth);
-        glColor3d(defaultColor.redF(), defaultColor.greenF(), defaultColor.blueF());
-    }
     // For each flow
     for(QList<const megafi::FlowPath*>::const_iterator flow = m_flows.cbegin() ;
         flow != m_flows.cend() ;

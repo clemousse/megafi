@@ -28,6 +28,9 @@ protected:
     FlowPathView* const m_flowPathViewDefaultWindow;
     glDisplay*    const m_glDisplay;
 
+    // Properties
+    FlowPathProps m_flowPathDefaults;
+
 public:
      explicit MainWindow(QWidget* parent = NULL);
     ~MainWindow();
@@ -40,6 +43,7 @@ public slots:
     void rebuildArrays();
     void setClickedCoordinates(const qglviewer::Vec& mouse_world);
     void addFlow(unsigned long startIndex);
+    void changeFlowPathProperties();
 
 signals:
     void dtmHasChanged(void) const;

@@ -19,18 +19,18 @@ class FlowPathView : public QDialog
     Q_OBJECT
 
 private:
-    FlowPathProps m_properties;
     QColor m_chosen;
 
 public:
     explicit FlowPathView(QWidget *parent = 0);
     ~FlowPathView();
 
-    const FlowPathProps& getProperties() const;
-
 public slots:
-    void changeColor();
     int exec() override;
+    DialogCode changeProps(FlowPathProps& props);
+
+protected slots:
+    void changeColor();
 
 private:
     Ui::FlowPathView *ui;

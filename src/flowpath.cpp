@@ -5,8 +5,11 @@
 using namespace megafi;
 
 
-FlowPath::FlowPath(const DTM& dtm, unsigned long origin, Mode mode)
-    : Drawable(mode, TRILINE), m_minIndices()
+FlowPath::FlowPath(const DTM& dtm, unsigned long origin, const FlowPathProps* defaultProps, Mode mode)
+    : Drawable(mode, TRILINE),
+      m_minIndices(),
+      m_defaultProps(defaultProps),
+      m_props(m_defaultProps)
 #if FALSE
       , endFP("Here the flow path")
 #endif
@@ -16,12 +19,18 @@ FlowPath::FlowPath(const DTM& dtm, unsigned long origin, Mode mode)
 }
 
 FlowPath::FlowPath(const FlowPath &other)
-    : Drawable(other), m_minIndices(other.m_minIndices)
+    : Drawable(other),
+      m_minIndices(other.m_minIndices),
+      m_defaultProps(other.m_defaultProps)
 {
+    if(other.m_props != m_defaultProps)
+        m_props = new FlowPathProps(*other.m_props);
 }
 
 FlowPath::~FlowPath()
 {
+    if(m_props != m_defaultProps)
+        delete m_props;
 }
 
 void FlowPath::computePath(const DTM& dtm)

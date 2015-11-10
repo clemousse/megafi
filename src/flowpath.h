@@ -3,6 +3,7 @@
 
 #include "drawable.h"
 #include "dtm.h"
+#include "flowpathview.h"
 
 namespace megafi
 {
@@ -10,13 +11,16 @@ namespace megafi
 class FlowPath : public Drawable
 {
     QList<unsigned long> m_minIndices;
+    const FlowPathProps* const m_defaultProps;
+    const FlowPathProps* m_props;
+
 #if FALSE
 public:
     QString endFP;
 #endif
 
 public:
-    FlowPath(const DTM& dtm, unsigned long origin, Mode mode = MODE);
+    FlowPath(const DTM& dtm, unsigned long origin, const FlowPathProps* defaultProps, Mode mode = MODE);
     FlowPath(const FlowPath& other);
     ~FlowPath();
 

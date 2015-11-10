@@ -9,18 +9,8 @@ FlowPathView::FlowPathView(QWidget *parent) :
     m_chosen(),
     ui(new Ui::FlowPathView)
 {
-    // Fill the default line width and colors
-    m_properties.lineWidth = 5;
-    m_properties.color.setRgb(0, 255, 0);
-    m_chosen = m_properties.color;
-
     // UI setup :
     ui->setupUi(this);
-    // - default line width
-    ui->lineWidthSB->setValue(m_properties.lineWidth);
-
-    // - default color
-    ui->colorButton->setStyleSheet(QString("background-color: %1;").arg(m_properties.color.name()));
 
     connect(ui->colorButton, SIGNAL(clicked()), this, SLOT(changeColor()));
 
@@ -33,14 +23,10 @@ FlowPathView::~FlowPathView()
     delete ui;
 }
 
-const FlowPathProps& FlowPathView::getProperties() const
-{
-    return m_properties;
-}
 
 void FlowPathView::changeColor()
 {
-    m_chosen = QColorDialog::getColor(m_properties.color, this);
+    m_chosen = QColorDialog::getColor(m_chosen, this);
     if(m_chosen.isValid())
     {
         ui->colorButton->setStyleSheet(QString("background-color: %1;").arg(m_chosen.name()));
@@ -49,12 +35,25 @@ void FlowPathView::changeColor()
 
 int FlowPathView::exec()
 {
+    throw "Exec should not be called";
+}
+
+QDialog::DialogCode FlowPathView::changeProps(FlowPathProps &props)
+{
+    // Initialization
+    // - default line width
+    ui->lineWidthSB->setValue(props.lineWidth);
+    // - default color
+    m_chosen = props.color;
+    ui->colorButton->setStyleSheet(QString("background-color: %1;").arg(m_chosen.name()));
+
+    // Open dialog
     DialogCode ret = static_cast<DialogCode>(QDialog::exec());
     switch(ret)
     {
     case QDialog::Accepted:
-        m_properties.color     = m_chosen;
-        m_properties.lineWidth = ui->lineWidthSB->value();
+        props.color     = m_chosen;
+        props.lineWidth = ui->lineWidthSB->value();
         break;
     default: break;
     }

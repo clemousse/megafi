@@ -25,7 +25,6 @@ class glDisplay : public QGLViewer
 
 private:
     MainWindow& m_mainW;        // A pointer in order to communicate with main window
-    const FlowPathView *const m_flowPathDefaults;
     const megafi::DTM *const *const m_dtm;  // The data
     const QList<const megafi::FlowPath*>& m_flows;
 
@@ -36,7 +35,6 @@ protected:
 
 public:
     glDisplay(MainWindow& mainW,
-              const FlowPathView *const flowPathDefaults,
               const megafi::DTM* const* dtm,
               const QList<const megafi::FlowPath*>& flows);
     ~glDisplay();
