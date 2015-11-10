@@ -49,16 +49,26 @@ private:
     void computeLineLength();
 
 protected:
-    Color DTM::computeColor(unsigned long index) const;
+    Color computeColor(unsigned long index) const;
 
     template<Primitive prim> inline void build_begin() const;
-    template<Primitive prim> inline void build_line(GLuint, double, double, double);
-    template<Primitive prim> inline void build_line(GLuint, double, double, double) const;
-    template<Primitive prim> inline void build_back(GLuint, double, double, double);
-    template<Primitive prim> inline void build_back(GLuint, double, double, double) const;
+    template<Primitive prim> inline void build_line(GLuint);
+    template<Primitive prim> inline void build_line(GLuint) const;
+    template<Primitive prim> inline void build_back(GLuint);
+    template<Primitive prim> inline void build_back(GLuint) const;
     template<Primitive prim> inline void build_end() const;
 
     inline unsigned long array_size(Primitive prim) const;
+    inline virtual void buildFunction(GLuint i) throw(const IncoherentMode&) override
+    {
+        buildColor(computeColor(i));
+        Drawable::buildFunction(i);
+    }
+    inline virtual void buildFunction(GLuint i) const throw(const IncoherentMode&) override
+    {
+        buildColor(computeColor(i));
+        Drawable::buildFunction(i);
+    }
 };
 
 

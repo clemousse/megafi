@@ -29,7 +29,7 @@ protected:
     glDisplay*    const m_glDisplay;
 
     // Properties
-    FlowPathProps m_flowPathDefaults;
+    megafi::FlowPathProps m_flowPathDefaults;
 
 public:
      explicit MainWindow(QWidget* parent = NULL);

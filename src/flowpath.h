@@ -3,10 +3,15 @@
 
 #include "drawable.h"
 #include "dtm.h"
-#include "flowpathview.h"
 
 namespace megafi
 {
+
+struct FlowPathProps
+{
+    float lineWidth;
+    Color color;
+};
 
 class FlowPath : public Drawable
 {
@@ -30,6 +35,18 @@ public slots:
 
 protected:
     void computePath(const DTM& dtm);
+
+private:
+    inline virtual void buildFunction(GLuint i) throw(const IncoherentMode&) override
+    {
+        buildColor(m_props->color);
+        Drawable::buildFunction(i);
+    }
+    inline virtual void buildFunction(GLuint i) const throw(const IncoherentMode&) override
+    {
+        buildColor(m_props->color);
+        Drawable::buildFunction(i);
+    }
 };
 
 }

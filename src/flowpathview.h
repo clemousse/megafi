@@ -1,18 +1,14 @@
 #ifndef FLOWPATHVIEW_H
 #define FLOWPATHVIEW_H
 
+#include "flowpath.h"
+
 #include <QDialog>
 #include <QColor>
 
 namespace Ui {
 class FlowPathView;
 }
-
-struct FlowPathProps
-{
-    float lineWidth;
-    QColor color;
-};
 
 class FlowPathView : public QDialog
 {
@@ -27,7 +23,7 @@ public:
 
 public slots:
     int exec() override;
-    DialogCode changeProps(FlowPathProps& props);
+    DialogCode changeProps(megafi::FlowPathProps& props);
 
 protected slots:
     void changeColor();

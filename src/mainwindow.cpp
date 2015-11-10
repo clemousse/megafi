@@ -18,7 +18,9 @@ MainWindow::MainWindow(QWidget *parent) :
     m_glDisplay(new glDisplay(*this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>& >(m_flows)))
 {
     m_flowPathDefaults.lineWidth = 5;
-    m_flowPathDefaults.color     = QColor(0, 255, 0);
+    m_flowPathDefaults.color.r   = 0;
+    m_flowPathDefaults.color.g   = 1;
+    m_flowPathDefaults.color.b   = 0;
 
     connect(m_glDisplay, SIGNAL(needsRebuild()), this, SLOT(rebuildArrays()));
     connect(this, SIGNAL(dtmHasChanged()), m_glDisplay, SLOT(beginDraw()));

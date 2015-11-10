@@ -6,7 +6,7 @@ using namespace qglviewer;
 Drawable::Drawable(Mode mode, Primitive prim) throw()
     : m_vertices(),
       m_mode(mode), m_prim(prim),
-      m_arrayLength(0), m_arrayCurrent(0),
+      m_arrayLength(0), m_arrayCurrent(0), m_arrayColorCurrent(0),
       m_vertexArray(NULL),
       m_indicesArray(NULL),
       m_colorArray(NULL)
@@ -214,7 +214,7 @@ throw(const std::bad_alloc&)
 
                 try
                 {
-                    m_colorArray = new Point[m_arrayLength];
+                    m_colorArray = new Color[m_arrayLength];
                 }
                 catch(const std::bad_alloc&)
                 {
@@ -231,6 +231,7 @@ throw(const std::bad_alloc&)
             }
         }
         m_arrayCurrent = 0;
+        m_arrayColorCurrent = 0;
         break;
 
     case MODE_VERTEX_INDICES:
@@ -242,7 +243,7 @@ throw(const std::bad_alloc&)
 
                 try
                 {
-                    m_colorArray = new Point[m_arrayLength];
+                    m_colorArray = new Color[m_arrayLength];
                 }
                 catch(const std::bad_alloc&)
                 {
@@ -259,6 +260,7 @@ throw(const std::bad_alloc&)
             }
         }
         m_arrayCurrent = 0;
+        m_arrayColorCurrent = 0;
         break;
     }
 }

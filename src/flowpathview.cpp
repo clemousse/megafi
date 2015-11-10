@@ -38,13 +38,13 @@ int FlowPathView::exec()
     throw "Exec should not be called";
 }
 
-QDialog::DialogCode FlowPathView::changeProps(FlowPathProps &props)
+QDialog::DialogCode FlowPathView::changeProps(megafi::FlowPathProps &props)
 {
     // Initialization
     // - default line width
     ui->lineWidthSB->setValue(props.lineWidth);
     // - default color
-    m_chosen = props.color;
+    m_chosen = QColor(props.color.r *255, props.color.g *255, props.color.b *255);
     ui->colorButton->setStyleSheet(QString("background-color: %1;").arg(m_chosen.name()));
 
     // Open dialog
@@ -52,7 +52,9 @@ QDialog::DialogCode FlowPathView::changeProps(FlowPathProps &props)
     switch(ret)
     {
     case QDialog::Accepted:
-        props.color     = m_chosen;
+        props.color.r   = m_chosen.redF();
+        props.color.g   = m_chosen.greenF();
+        props.color.b   = m_chosen.blueF();
         props.lineWidth = ui->lineWidthSB->value();
         break;
     default: break;
