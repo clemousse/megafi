@@ -131,7 +131,7 @@ void DTM::computeDataSize()
     }
 
     qDebug() << "MNT is between (" << m_dataSizeMin.x << ',' << m_dataSizeMin.y << ',' << m_dataSizeMin.z
-             << ") and (" << m_dataSizeMax.x << ',' << m_dataSizeMax.y << ',' << m_dataSizeMax.z << ")";
+             << ") and (" << m_dataSizeMax.x << ',' << m_dataSizeMax.y << ',' << m_dataSizeMax.z << ")\n";
 }
 
 void DTM::computeLineLength()
@@ -150,7 +150,7 @@ void DTM::computeLineLength()
           if (m_vertices[i].y != m_vertices[i+1].y)
           {
              if(lineLength_prec != NOT_COMPUTED && m_lineLength != lineLength_prec)
-                 qWarning() << "Lines" << i << "and" << i+1 << "don't have the same length.";
+                 qWarning() << "Lines" << i << "and" << i+1 << "don't have the same length.\n";
 
              lineLength_prec = m_lineLength;
              m_lineLength = 0;
@@ -159,7 +159,7 @@ void DTM::computeLineLength()
     }
 
     m_lineLength = lineLength_prec;
-    qDebug() << "Lines are" << m_lineLength << "points long.";
+    qDebug() << "Lines are" << m_lineLength << "points long.\n";
 }
 
 unsigned long DTM::computeIndex(const qglviewer::Vec& mouse_world) const
