@@ -7,17 +7,17 @@
 #include <GL/gl.h>
 
 // The primitive that can be used
-#define PRIM_TRIANGLES      0b00000000
-#define PRIM_SQUARES        0b00000001
+#define PRIM_TRIANGLES      0b00000001
+#define PRIM_SQUARES        0b00000010
 
 // The design that can be used
-#define DESIGN_POINT        0b00000010
-#define DESIGN_EDGE         0b00000100
-#define DESIGN_SHAPE        0b00001000
+#define DESIGN_POINT        0b00000100
+#define DESIGN_EDGE         0b00001000
+#define DESIGN_SHAPE        0b00010000
 
 // Other implemented primitives
-#define PRIM__LINE_LOOP     0b00010000
-#define PRIM__TRIANGLES     0b00100000
+#define PRIM__LINE_LOOP     0b00100000
+#define PRIM__TRIANGLES     0b01000000
 
 
 namespace megafi
@@ -99,7 +99,7 @@ inline int glPrimitive(Primitive p) throw()
 }
 
 // FINAL CHOICE
-#define MODE MODE_VERTEX_ARRAY
+#define MODE MODE_VERTEX_INDICES
 #define PRIM QUADLINE
 
 #endif // DRAW_H

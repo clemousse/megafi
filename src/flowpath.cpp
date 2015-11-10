@@ -29,32 +29,58 @@ void FlowPath::computePath(const DTM& dtm)
     const Point*  const vertices   = dtm.getVertices();
     const unsigned long vLength    = dtm.getNbVertices();
     const unsigned long lineLength = dtm.getLineLength();
+    const Primitive     prim       = dtm.getPrimitive();
 
     qDebug() << "First point's coordinates : x="
              << vertices[m_minIndices.first()].x
              << ", y=" << vertices[m_minIndices.first()].y
              << ", z=" << vertices[m_minIndices.first()].z;
 
+    m_vertices.push_back(vertices[m_minIndices.first()]);
+
     while(true)
     {
         const unsigned long i = m_minIndices.last();
+        double zMin = vertices[i].z;
+        unsigned long argMin = i;
 
-        if( i%lineLength != 0
-                && vertices[i-1].z < vertices[i].z )
-            m_minIndices.push_back(i-1);
+        if( i%lineLength != 0 && vertices[i-1].z < zMin )
+        {
+            argMin = i-1;
+            zMin   = vertices[i-1].z;
+        }
+        if( i%lineLength != lineLength-1 && vertices[i+1].z < zMin )
+        {
+            argMin = i+1;
+            zMin   = vertices[i+1].z;
+        }
+        if( i >= lineLength && vertices[i-lineLength].z < zMin )
+        {
+            argMin = i - lineLength;
+            zMin   = vertices[i-lineLength].z;
+        }
+        if( i < vLength-lineLength && vertices[i+lineLength].z < zMin)
+        {
+            argMin = i + lineLength;
+            zMin   = vertices[i+lineLength].z;
+        }
+        if( prim & PRIM_TRIANGLES )
+        {
+            if( i%lineLength != 0 && i < vLength-lineLength
+                 && vertices[i -1 +lineLength].z < zMin )
+            {
+                argMin = i -1 +lineLength;
+                zMin   = vertices[i -1 +lineLength].z;
+            }
+            if( i%lineLength != lineLength-1 && i >= lineLength
+                 && vertices[i +1 -lineLength].z < zMin )
+            {
+                argMin = i +1 -lineLength;
+                zMin   = vertices[i +1 -lineLength].z;
+            }
+        }
 
-        else if( i%lineLength != lineLength-1
-                 && vertices[i+1].z < vertices[i].z)
-            m_minIndices.push_back(i+1);
-
-        else if( i >= lineLength
-                 && vertices[i-lineLength].z < vertices[i].z)
-            m_minIndices.push_back(i-lineLength);
-
-        else if( i < vLength-lineLength
-                 && vertices[i+lineLength].z < vertices[i].z)
-            m_minIndices.push_back(i+lineLength);
-        else
+        if(argMin == i)
         {
 #if FALSE
             endFP = "End flow path";
@@ -63,17 +89,16 @@ void FlowPath::computePath(const DTM& dtm)
             break;
         }
 
-        qDebug() << "Next point's coordinates : x="
-                 << vertices[m_minIndices.last()].x
-                 << ", y=" << vertices[m_minIndices.last()].y
-                 << ", z=" << vertices[m_minIndices.last()].z;
-    }
+        else
+        {
+            m_minIndices.push_back(argMin);
+            m_vertices.push_back(vertices[argMin]);
 
-    for(QList<unsigned long>::const_iterator index = m_minIndices.cbegin() ;
-        index != m_minIndices.cend() ;
-        ++index)
-    {
-        m_vertices.push_back(vertices[*index]);
+            qDebug() << "Next point's coordinates"
+                     << ": x=" << m_vertices.back().x
+                     << ", y=" << m_vertices.back().y
+                     << ", z=" << m_vertices.back().z;
+        }
     }
 }
 
