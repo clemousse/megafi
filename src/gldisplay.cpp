@@ -12,6 +12,7 @@ glDisplay::glDisplay(MainWindow& mainW,
     m_flows(flows),
     m_windowSize(400, 300),
     m_departureSelection(false)
+
 {
     setBaseSize(m_windowSize);
 
@@ -72,7 +73,7 @@ void glDisplay::draw()
 
 // in order to connect mousePressEvent if the selection mode is checked on mainwindow
 void glDisplay::rbClick (bool chckD)
-{//
+{
     m_departureSelection = chckD;
 }
 
@@ -89,6 +90,7 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
         mouse_scr.setX(event->x());
         mouse_scr.setY(event->y());
 
+
         qDebug () << "ecran x : " << mouse_scr.x() << endl
                   << "ecran y : " << mouse_scr.y() << endl;
         bool found;
@@ -104,7 +106,7 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
             m_mainW.addFlow((*m_dtm)->computeIndex(mouse_world));
         }
         else
-            qDebug() << "Not found";
+            qDebug() << "Not found\n";
     }
     else
     {
@@ -112,3 +114,5 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
         QGLViewer::mousePressEvent(event);
     }
 }
+
+

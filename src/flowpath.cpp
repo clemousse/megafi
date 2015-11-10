@@ -30,10 +30,10 @@ void FlowPath::computePath(const DTM& dtm)
     const unsigned long         vLength    = dtm.getNbVertices();
     const unsigned long         lineLength = dtm.getLineLength();
 
-    qDebug() << "First point's coordinates : x="
-             << vertices[m_minIndices.first()].x
-             << ", y=" << vertices[m_minIndices.first()].y
-             << ", z=" << vertices[m_minIndices.first()].z;
+    qDebug() << "First point's coordinates :"
+             << "\nx = " << vertices[m_minIndices.first()].x
+             << "\ny = " << vertices[m_minIndices.first()].y
+             << "\nz = " << vertices[m_minIndices.first()].z << "\n";
 
     while(true)
     {
@@ -57,15 +57,16 @@ void FlowPath::computePath(const DTM& dtm)
         else
         {
 #if FALSE
-            endFP = "End flow path";
+            endFP = "End flow path\n";
 #endif
-            qDebug() << "End flow path";
+            qDebug() << "End flow path\n";
             break;
         }
 
-        qDebug() << "Next point's coordinates : x=" << vertices[i].x
-                 << ", y=" << vertices[i].y
-                 << ", z=" << vertices[i].z;
+        qDebug() << "Next point's coordinates :"
+                 << "\nx = " << vertices[i].x
+                 << "\ny = " << vertices[i].y
+                 << "\nz = " << vertices[i].z << "\n";
     }
 
     for(QList<unsigned long>::const_iterator index = m_minIndices.cbegin() ;

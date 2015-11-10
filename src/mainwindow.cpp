@@ -14,7 +14,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     m_dtm(NULL),
     m_flows(),
-    m_glDisplay(new glDisplay(*this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>& >(m_flows)))
+    m_glDisplay(new glDisplay(*this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>& >(m_flows))),
+    m_qdbg(false)
+
 {
     connect(m_glDisplay, SIGNAL(needsRebuild()), this, SLOT(rebuildArrays()));
 
@@ -33,8 +35,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionView_history, SIGNAL(triggered()),ui->dockWidget_His, SLOT(show()));
     //create a connexion on the menu File-> Quit via close slot (or cross)
     connect(ui->actionQuit, SIGNAL(triggered()),this, SLOT(close()));
-    //create a connexion on the radio button in calculating the flow path in mainwindow
+    //create a connexion on the radio button "pushButton_Mouse" in calculating the flow path in mainwindow
     connect(ui->pushButton_Mouse, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
+    //create a connexion on the radio button "btnQDebug" to redirect QDebug in QTextEdit
+    connect(ui->btnQDebug, SIGNAL(toggled(bool)),this, SLOT(qdClick(bool)));
+
 }
 
 
@@ -64,7 +69,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
 
 
-void MainWindow::openDialog() // Open a dialog to choose a file
+void MainWindow::openDialog() // Open a dialog to choose a fiexemple set textcolorle
 {
     QString file;
 
@@ -79,7 +84,7 @@ void MainWindow::openDialog() // Open a dialog to choose a file
         if(fDlg.exec())
         {
             QStringList selectedFiles;
-            // Get the list of selected files
+            // Get the list ofnew Q_DebugStream(std::cout, ui->textEdit_MW); selected filesexemple set textcolor
             selectedFiles = fDlg.selectedFiles();
             if(selectedFiles.length() == 1)
                 file = selectedFiles.first();
@@ -97,7 +102,7 @@ void MainWindow::openDialog() // Open a dialog to choose a file
             m_flows.clear();
         }
         try
-        {
+        {new Q_DebugStream(std::cout, ui->textEdit_MW);
             m_dtm = new megafi::DTM(file);
             rebuildArrays();
         }
@@ -132,7 +137,7 @@ void MainWindow::rebuildArrays()
             case megafi::MODE_VERTEX_ARRAY  : (*flow)->buildArrays(); break;
             case megafi::MODE_VERTEX_INDICES: (*flow)->buildArrays(); break;
             }
-        }
+        }new Q_DebugStream(std::cout, ui->textEdit_MW);
     }
 }
 
@@ -174,3 +179,19 @@ void MainWindow::editingPath()
     ui->textEdit_MW->append(m_glDisplay->endFP);
 }
 #endif
+
+// functions to activate redirection of qdebug and others types of messages in QTextEdit in MainWindow
+void MainWindow::qdClick (bool qdbg)
+{new Q_DebugStream(std::cout, ui->textEdit_MW);
+    m_qdbg = qdbg;
+}
+
+
+void MainWindow::activeQDebug()
+{
+    if (m_qdbg)
+        {
+            new Q_DebugStream(std::cout, ui->textEdit_MW);  //Redirect Console output to QTextEdit
+            Q_DebugStream::registerQDebugMessageHandler(); //Redirect qDebug() output to QTextEdit
+        }
+}

@@ -211,6 +211,9 @@ directly on the DTM on the screen.</string>
           <pointsize>9</pointsize>
          </font>
         </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
         <property name="decimals">
          <number>2</number>
         </property>
@@ -225,6 +228,9 @@ directly on the DTM on the screen.</string>
          <font>
           <pointsize>9</pointsize>
          </font>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
         <property name="decimals">
          <number>2</number>
@@ -243,6 +249,9 @@ directly on the DTM on the screen.</string>
          <font>
           <pointsize>9</pointsize>
          </font>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
         <property name="decimals">
          <number>2</number>
@@ -273,14 +282,17 @@ directly on the DTM on the screen.</string>
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="btnComputation">
+       <widget class="QPushButton" name="btnQDebug">
         <property name="font">
          <font>
           <pointsize>9</pointsize>
          </font>
         </property>
         <property name="text">
-         <string>Calcul</string>
+         <string>Append the QDebug</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -302,7 +314,11 @@ directly on the DTM on the screen.</string>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_7">
       <item>
-       <widget class="QTextEdit" name="textEdit_MW"/>
+       <widget class="QTextEdit" name="textEdit_MW">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -423,8 +439,6 @@ directly on the DTM on the screen.</string>
       </item>
      </layout>
     </widget>
-    <zorder>horizontalLayoutWidget</zorder>
-    <zorder>bxXcoord</zorder>
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_His">
