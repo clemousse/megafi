@@ -24,7 +24,8 @@ SOURCES += main.cpp\
         tests.cpp \
         drawable.cpp \
         flowpath.cpp \
-    gldisplay.inl
+    gldisplay.inl \
+    q_debugstream.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -34,6 +35,7 @@ HEADERS  += mainwindow.h \
             tests.h \
             flowpath.h \
             drawable.h \
-            draw.h
+            draw.h \
+    q_debugstream.h
 
 FORMS    += mainwindow.ui

@@ -28,7 +28,6 @@ private:
     static void myQDebugMessageHandler(QtMsgType, const QMessageLogContext &, const QString &msg);
 
 protected:
-
     //This is called when a std::endl has been inserted into the stream
     virtual int_type overflow(int_type v);
 

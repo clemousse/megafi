@@ -25,13 +25,10 @@ protected:
     glDisplay* const m_glDisplay;
     bool m_qdbg;
 
-
 public:
-     explicit MainWindow(QWidget* parent = NULL);
+    explicit MainWindow(QWidget* parent = NULL);
     ~MainWindow();
-#if FALSE
-     void editingPath();
-#endif
+    void myMessageOutput();
     void activeQDebug();
 
 public slots:

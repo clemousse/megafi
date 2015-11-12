@@ -41,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //create a connexion on the radio button "btnQDebug" to redirect QDebug in QTextEdit
     connect(ui->btnQDebug, SIGNAL(toggled(bool)),this, SLOT(qdClick(bool)));
 
+    new Q_DebugStream (std::cout, ui->textEdit_MW);
+
 }
 
 
@@ -70,17 +72,19 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
 
 
-void MainWindow::openDialog() // Open a dialog to choose a fiexemple set textcolorle
+void MainWindow::openDialog() // Open a dialog to choose a file
 {
     QString file;
 
     // Actions related to the dialog window
     {
+
+
         QFileDialog fDlg;
 
         // Don't accept empty file or directory; only one file
         fDlg.setFileMode(QFileDialog::ExistingFile);
-        fDlg.setWindowTitle("Choose the DTM file");
+        fDlg.setWindowTitle("ChoosQMessageLogContexte the DTM file");
 
         if(fDlg.exec())
         {
@@ -91,7 +95,7 @@ void MainWindow::openDialog() // Open a dialog to choose a fiexemple set textcol
                 file = selectedFiles.first();
         }
     }
-
+//
     if(!file.isEmpty())
     {
         if(m_dtm)
@@ -103,7 +107,7 @@ void MainWindow::openDialog() // Open a dialog to choose a fiexemple set textcol
             m_flows.clear();
         }
         try
-        {new Q_DebugStream(std::cout, ui->textEdit_MW);
+        {
             m_dtm = new megafi::DTM(file);
             rebuildArrays();
             emit dtmHasChanged();
@@ -114,6 +118,8 @@ void MainWindow::openDialog() // Open a dialog to choose a fiexemple set textcol
         }
     }
 }
+
+
 
 void MainWindow::rebuildArrays()
 {
@@ -128,19 +134,21 @@ void MainWindow::rebuildArrays()
         }
 
         // Rebuild flows
+
+
         for(QList<megafi::FlowPath*>::iterator flow = m_flows.begin() ;
             flow != m_flows.end() ;
             ++flow)
         {
-            const megafi::Mode mode = (*flow)->getMode();
+            const megafi::Mode mode = (*flow)->getMode();//
             switch(mode)
             {
             case megafi::MODE_LEGACY        :                         break;
             case megafi::MODE_VERTEX_ARRAY  : (*flow)->buildArrays(); break;
             case megafi::MODE_VERTEX_INDICES: (*flow)->buildArrays(); break;
             }
-        }new Q_DebugStream(std::cout, ui->textEdit_MW);
-    }
+        }
+   }
 }
 
 void MainWindow::setClickedCoordinates(const qglviewer::Vec& mouse_world)
@@ -152,7 +160,7 @@ void MainWindow::setClickedCoordinates(const qglviewer::Vec& mouse_world)
 
 void MainWindow::addFlow(unsigned long startIndex)
 {
-    if(m_dtm)
+   if(m_dtm)
     {
         megafi::FlowPath* const newFP =
                 new megafi::FlowPath(*m_dtm, startIndex, m_dtm->getMode());
@@ -165,35 +173,43 @@ void MainWindow::deleteFlows()
     for(QList<megafi::FlowPath*>::iterator flow = m_flows.begin() ;
         flow != m_flows.end() ;
         ++flow)
+
     {
         delete *flow;
         *flow = NULL;
     }
 }
 
-#if FALSE
-void MainWindow::editingPath()
-{
-    //QString path_Text;
 
-    //path_Text = "Here the flow path will be displayed";
-
-    ui->textEdit_MW->append(m_glDisplay->endFP);
-}
-#endif
 
 // functions to activate redirection of qdebug and others types of messages in QTextEdit in MainWindow
 void MainWindow::qdClick (bool qdbg)
-{new Q_DebugStream(std::cout, ui->textEdit_MW);
+{
     m_qdbg = qdbg;
+
+    activeQDebug();
 }
 
 
 void MainWindow::activeQDebug()
 {
+
     if (m_qdbg)
-        {
-            new Q_DebugStream(std::cout, ui->textEdit_MW);  //Redirect Console output to QTextEdit
-            Q_DebugStream::registerQDebugMessageHandler(); //Redirect qDebug() output to QTextEdit
-        }
+    {
+       //redirect QDebug in QTextEdit "btnQDebug"
+
+       Q_DebugStream::registerQDebugMessageHandler();
+    }
+    else
+    {
+        //restore the message handler
+        qInstallMessageHandler(0);
+    }
 }
+
+
+/*void MainWindow::openCritical()
+
+{
+    QMessageBox::critical(this, "Critical Message", "test");
+}*/

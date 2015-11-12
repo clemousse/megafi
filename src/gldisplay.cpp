@@ -141,7 +141,13 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
             m_mainW.addFlow((*m_dtm)->computeIndex(mouse_world));
         }
         else
+        {
             qDebug() << "Not found\n";
+            qWarning () << "Warning, Warning, Warning\n";
+            //qFatal() << "Fatal\n"; => bug !
+            qCritical () << "Message critique, attention attention\n";
+
+        }
     }
     else
     {

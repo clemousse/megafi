@@ -66,7 +66,7 @@ void FlowPath::computePath(const DTM& dtm)
         qDebug() << "Next point's coordinates :"
                  << "\nx = " << vertices[m_minIndices.last()].x
                  << "\ny = " << vertices[m_minIndices.last()].y
-                 << "\nz = " << vertices[m_minIndices.last()].z;
+                 << "\nz = " << vertices[m_minIndices.last()].z << "\n";
 
     }
 
