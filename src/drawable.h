@@ -31,7 +31,7 @@ union Color
         float g;
         float b;
     };
-    double v[3];
+    float v[3];
 };
 
 class Drawable : public QObject
@@ -182,7 +182,10 @@ private:
 
     inline void build_color_array (const Color& c)
     {
-        m_colorArray[++m_arrayColorCurrent] = c;
+        m_colorArray[m_arrayColorCurrent].r = c.r;
+        m_colorArray[m_arrayColorCurrent].g = c.g;
+        m_colorArray[m_arrayColorCurrent].b = c.b;
+        ++m_arrayColorCurrent;
     }
 };
 

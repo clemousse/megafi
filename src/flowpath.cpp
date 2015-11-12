@@ -100,8 +100,10 @@ void FlowPath::computePath(const DTM& dtm)
 
         else
         {
+            Point p = vertices[argMin];
+            p.z += 1.;
             m_minIndices.push_back(argMin);
-            m_vertices.push_back(vertices[argMin]);
+            m_vertices.push_back(p);
 
             qDebug() << "Next point's coordinates"
                      << ": x=" << m_vertices.back().x
