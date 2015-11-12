@@ -19,7 +19,7 @@ void glDisplay::drawData(const Datatype& data) const
         if(va)
         {
             glVertexPointer(3, GL_DOUBLE, 0, va);
-            if(ca) glColorPointer(3, GL_FLOAT, 0, ca);
+            if(ca) glColorPointer(3, GL_UNSIGNED_BYTE, 0, ca);
 
             glDrawArrays(glPrimitive(data.getPrimitive()), 0, data.getArrayLength());
         }
@@ -35,7 +35,7 @@ void glDisplay::drawData(const Datatype& data) const
         if(vi)
         {
             glVertexPointer(3, GL_DOUBLE, 0, data.getVertices());
-            if(ca) glColorPointer(3, GL_FLOAT, 0, ca);
+            if(ca) glColorPointer(3, GL_UNSIGNED_BYTE, 0, ca);
 
             glDrawElements(glPrimitive(data.getPrimitive()),
                            data.getArrayLength(),

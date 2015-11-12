@@ -27,11 +27,11 @@ union Color
 {
     struct
     {
-        float r;
-        float g;
-        float b;
+        GLubyte r;
+        GLubyte g;
+        GLubyte b;
     };
-    float v[3];
+    GLubyte v[3];
 };
 
 class Drawable : public QObject

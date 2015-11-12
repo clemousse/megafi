@@ -213,26 +213,26 @@ megafi::Color DTM::computeColor(unsigned long index) const
 
     if(m_vertices[index].z <= (m_colorInterv+m_dataSizeMin.z) && m_vertices[index].z >= m_dataSizeMin.z)
     {
-        ret.b =((m_vertices[index].z-m_dataSizeMin.z)/((m_colorInterv+m_dataSizeMin.z)-m_dataSizeMin.z));
-        ret.g = 1 - ret.b;
+        ret.b = 255 * (m_vertices[index].z-m_dataSizeMin.z)/(m_colorInterv+m_dataSizeMin.z - m_dataSizeMin.z);
+        ret.g = 255 - ret.b;
     }
 
     else if(m_colorInterv+m_dataSizeMin.z < m_vertices[index].z  && m_vertices[index].z <= (2*m_colorInterv)+m_dataSizeMin.z )
     {
-        ret.g =((m_vertices[index].z-(m_colorInterv+m_dataSizeMin.z))/((2*m_colorInterv)+m_dataSizeMin.z-m_colorInterv+m_dataSizeMin.z));
-        ret.b = 1 - ret.g;
+        ret.g = 255 * (m_vertices[index].z - m_colorInterv+m_dataSizeMin.z)/( 2*m_colorInterv + m_dataSizeMin.z-m_colorInterv + m_dataSizeMin.z);
+        ret.b = 255 - ret.g;
     }
 
     else if(m_vertices[index].z <= m_dataSizeMax.z && m_vertices[index].z > (2*m_colorInterv)+m_dataSizeMin.z)
     {
-        ret.r =((m_vertices[index].z-(2*m_colorInterv)+m_dataSizeMin.z)/(m_dataSizeMax.z-(2*m_colorInterv)+m_dataSizeMin.z));
-        ret.g = 1 - ret.r;
+        ret.r = 255 * (m_vertices[index].z - 2*m_colorInterv + m_dataSizeMin.z)/(m_dataSizeMax.z - 2*m_colorInterv + m_dataSizeMin.z);
+        ret.g = 255 - ret.r;
     }
     else
     {
-        ret.r = 1;
-        ret.g = 1;
-        ret.b = 1;
+        ret.r = 255;
+        ret.g = 255;
+        ret.b = 255;
     }
 
     return ret;
