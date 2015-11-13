@@ -6,6 +6,7 @@
 #include <vector>
 
 #include <QObject>
+#include <QReadWriteLock>
 
 #include <QGLViewer/vec.h>
 
@@ -39,6 +40,7 @@ class Drawable : public QObject
     Q_OBJECT
 
 protected:
+    mutable QReadWriteLock lock;
     // Data
     std::vector<Point> m_vertices;
 
@@ -82,6 +84,8 @@ public:
     virtual ~Drawable();
 
     // Getters
+    bool          beginDraw     () const throw();
+    void          endDraw       () const throw();
     Mode          getMode       () const throw();
     Primitive     getPrimitive  () const throw();
 
@@ -101,6 +105,9 @@ public slots:
     // Building
     virtual void buildArrays() =0;
     virtual void buildLegacy() const =0;
+
+signals:
+    void arrayRebuilt() const;
 
 protected:
     void prepareBuild(unsigned long arrayLength) throw(const std::bad_alloc&);

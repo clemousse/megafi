@@ -4,7 +4,8 @@ using namespace megafi;
 using namespace qglviewer;
 
 Drawable::Drawable(Mode mode, Primitive prim) throw()
-    : m_vertices(),
+    : lock(),
+      m_vertices(),
       m_mode(mode), m_prim(prim),
       m_arrayLength(0), m_arrayCurrent(0), m_arrayColorCurrent(0),
       m_vertexArray(NULL),
@@ -118,6 +119,16 @@ Drawable::~Drawable()
     }
 }
 
+
+bool Drawable::beginDraw() const throw()
+{
+    return lock.tryLockForRead();
+}
+
+void Drawable::endDraw() const throw()
+{
+    lock.unlock();
+}
 
 Mode Drawable::getMode() const throw()
 {

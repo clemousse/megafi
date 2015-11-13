@@ -15,7 +15,6 @@ FlowPath::FlowPath(const DTM& dtm, unsigned long origin, const FlowPathProps* de
 #endif
 {
     m_minIndices.push_back(origin);
-    computePath(dtm);
 }
 
 FlowPath::FlowPath(const FlowPath &other)

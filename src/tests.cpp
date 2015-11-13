@@ -13,7 +13,7 @@ bool runTests()
 
 void testOnreadDTM(const QString& dtmFileName)
 {
-    const megafi::DTM testObj(dtmFileName);
+    /*const megafi::DTM testObj(dtmFileName);
     const megafi::Point* const result = testObj.getVertices();
 
     if (result[51].x == 901275 && result[51].y == 1944975 && result[51].z == 1228.50)
@@ -38,5 +38,5 @@ void testOnreadDTM(const QString& dtmFileName)
     else
      {
         qDebug()  << "Le tableau ne correspond pas au fichier d'entrée" << endl;
-     }
+     }*/
 }
