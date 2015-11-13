@@ -48,6 +48,8 @@ public:
 
     void addFlow(unsigned long startIndex);
 
+    void closeEvent(QCloseEvent *);
+
 public slots:
     // GUI slots
     void openDialog();

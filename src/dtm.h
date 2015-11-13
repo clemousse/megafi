@@ -26,8 +26,7 @@ private:
     unsigned long m_nbLines;
 
 public:
-    DTM();
-    DTM(const QString& filePath, Mode mode = MODE, Primitive prim = PRIM);
+    DTM(Mode mode = MODE, Primitive prim = PRIM);
     DTM(const DTM& other);
     ~DTM();
 
@@ -40,6 +39,7 @@ public:
     unsigned long computeIndex(const qglviewer::Vec& mouse_world) const;
 
 public slots:
+    bool buildDTM(QString filePath);
     void buildArrays();
     void buildLegacy() const;
 

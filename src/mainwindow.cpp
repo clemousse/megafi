@@ -60,6 +60,12 @@ MainWindow::~MainWindow()
 }
 
 
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+    event->accept();
+    close();
+}
+
 void MainWindow::close()
 {
     int rep = QMessageBox::question(this,"Quit ?","Do you really want to quit ?",QMessageBox::Yes | QMessageBox::No);
@@ -72,12 +78,12 @@ void MainWindow::close()
 
 void MainWindow::lockInterface()
 {
-    ui->centralWidget->setEnabled(false);
+    setEnabled(false);
 }
 
 void MainWindow::unlockInterface()
 {
-    ui->centralWidget->setEnabled(true);
+    setEnabled(true);
 }
 
 
@@ -116,8 +122,8 @@ void MainWindow::openDialog() // Open a dialog to choose a file
             m_dtm = new megafi::DTM();
             m_dtm->moveToThread(&m_dtmThread);
             connect(this, SIGNAL(buildDTM(QString)), m_dtm, SLOT(buildDTM(QString)));
-            connect(&m_dtmThread, SIGNAL(finished()), this, SLOT(unlockInterface()));
-            connect(&m_dtmThread, SIGNAL(finished()), this, SIGNAL(DTMHasChanged()));
+            connect(m_dtm, SIGNAL(arrayRebuilt()), this, SLOT(unlockInterface()));
+            connect(m_dtm, SIGNAL(arrayRebuilt()), this, SIGNAL(DTMHasChanged()));
             m_dtmThread.start();
             emit buildDTM(file);
         }
@@ -168,8 +174,8 @@ void MainWindow::deleteDTM()
     if(m_dtm)
     {
         m_dtmThread.quit();
-        disconnect(&m_dtmThread, SIGNAL(finished()), this, SIGNAL(DTMHasChanged()));
-        disconnect(&m_dtmThread, SIGNAL(finished()), this, SLOT(unlockInterface()));
+        disconnect(m_dtm, SIGNAL(arrayRebuilt()), this, SIGNAL(DTMHasChanged()));
+        disconnect(m_dtm, SIGNAL(arrayRebuilt()), this, SLOT(unlockInterface()));
         disconnect(this, SIGNAL(buildDTM(QString)), m_dtm, SLOT(buildDTM(QString)));
         delete m_dtm;
         m_dtm = NULL;
