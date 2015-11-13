@@ -14,16 +14,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     m_dtm(NULL),
     m_flows(),
+    m_dtmThread(), m_flowsThread(), m_displayThread(),
     m_flowPathViewDefaultWindow(new FlowPathView(this)),
-    m_glDisplay(new glDisplay(*this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>& >(m_flows)))
+    m_glDisplay(new glDisplay(*this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>* >(&m_flows)))
 {
+    //m_glDisplay->moveToThread(&m_displayThread);
+    //m_displayThread.start(QThread::LowestPriority);
+
     m_flowPathDefaults.lineWidth = 5;
     m_flowPathDefaults.color.r   = 0;
     m_flowPathDefaults.color.g   = 0;
     m_flowPathDefaults.color.b   = 255;
-
-    connect(m_glDisplay, SIGNAL(needsRebuild()), this, SLOT(rebuildArrays()));
-    connect(this, SIGNAL(dtmHasChanged()), m_glDisplay, SLOT(beginDraw()));
 
     //load interface .ui created  with QT Designer
     ui->setupUi(this);
@@ -42,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionView_history, SIGNAL(triggered()),ui->dockWidget_His, SLOT(show()));
     //create a connexion on the menu File-> Quit via close slot (or cross)
     connect(ui->actionQuit, SIGNAL(triggered()),this, SLOT(close()));
+    connect(ui->actionQuit, SIGNAL(triggered()), m_glDisplay, SLOT(close()));
     //create a connexion on the radio button in calculating the flow path in mainwindow
     connect(ui->pushButton_Mouse, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
 }
@@ -49,29 +51,34 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    m_displayThread.quit();
     delete m_glDisplay;
     delete m_flowPathViewDefaultWindow;
     deleteFlows();
-    if(m_dtm) delete m_dtm;
+    deleteDTM();
     delete ui;
 }
 
 
-void MainWindow::closeEvent(QCloseEvent* event)
+void MainWindow::close()
 {
     int rep = QMessageBox::question(this,"Quit ?","Do you really want to quit ?",QMessageBox::Yes | QMessageBox::No);
     if (rep == QMessageBox::Yes)
     {
-        event->accept();
-        m_glDisplay->close();
-    }
-
-    else
-    {
-        event->ignore();
+        QMainWindow::close();
     }
 }
 
+
+void MainWindow::lockInterface()
+{
+    ui->centralWidget->setEnabled(false);
+}
+
+void MainWindow::unlockInterface()
+{
+    ui->centralWidget->setEnabled(true);
+}
 
 
 void MainWindow::openDialog() // Open a dialog to choose a file
@@ -100,49 +107,23 @@ void MainWindow::openDialog() // Open a dialog to choose a file
     {
         if(m_dtm)
         {
-            // Delete DTM
-            delete m_dtm;
-            m_dtm = NULL;
+            deleteDTM();
             deleteFlows();
-            m_flows.clear();
         }
         try
         {
-            m_dtm = new megafi::DTM(file);
-            rebuildArrays();
-            emit dtmHasChanged();
+            lockInterface();
+            m_dtm = new megafi::DTM();
+            m_dtm->moveToThread(&m_dtmThread);
+            connect(this, SIGNAL(buildDTM(QString)), m_dtm, SLOT(buildDTM(QString)));
+            connect(&m_dtmThread, SIGNAL(finished()), this, SLOT(unlockInterface()));
+            connect(&m_dtmThread, SIGNAL(finished()), this, SIGNAL(DTMHasChanged()));
+            m_dtmThread.start();
+            emit buildDTM(file);
         }
         catch(const std::bad_alloc&)
         {
             m_dtm = NULL;
-        }
-    }
-}
-
-void MainWindow::rebuildArrays()
-{
-    // Rebuild DTM
-    if(m_dtm)
-    {
-        switch(m_dtm->getMode())
-        {
-        case megafi::MODE_LEGACY        :                       break;
-        case megafi::MODE_VERTEX_ARRAY  : m_dtm->buildArrays(); break;
-        case megafi::MODE_VERTEX_INDICES: m_dtm->buildArrays(); break;
-        }
-
-        // Rebuild flows
-        for(QList<megafi::FlowPath*>::iterator flow = m_flows.begin() ;
-            flow != m_flows.end() ;
-            ++flow)
-        {
-            const megafi::Mode mode = (*flow)->getMode();
-            switch(mode)
-            {
-            case megafi::MODE_LEGACY        :                         break;
-            case megafi::MODE_VERTEX_ARRAY  : (*flow)->buildArrays(); break;
-            case megafi::MODE_VERTEX_INDICES: (*flow)->buildArrays(); break;
-            }
         }
     }
 }
@@ -182,8 +163,22 @@ void MainWindow::changeFlowPathProperties()
     }
 }
 
+void MainWindow::deleteDTM()
+{
+    if(m_dtm)
+    {
+        m_dtmThread.quit();
+        disconnect(&m_dtmThread, SIGNAL(finished()), this, SIGNAL(DTMHasChanged()));
+        disconnect(&m_dtmThread, SIGNAL(finished()), this, SLOT(unlockInterface()));
+        disconnect(this, SIGNAL(buildDTM(QString)), m_dtm, SLOT(buildDTM(QString)));
+        delete m_dtm;
+        m_dtm = NULL;
+    }
+}
+
 void MainWindow::deleteFlows()
 {
+    m_flowsThread.quit();
     for(QList<megafi::FlowPath*>::iterator flow = m_flows.begin() ;
         flow != m_flows.end() ;
         ++flow)
@@ -191,6 +186,7 @@ void MainWindow::deleteFlows()
         delete *flow;
         *flow = NULL;
     }
+    m_flows.clear();
 }
 
 #if FALSE
