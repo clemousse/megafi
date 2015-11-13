@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_flows(),
     m_dtmThread(), m_flowsThread(), m_displayThread(),
     m_flowPathViewDefaultWindow(new FlowPathView(this)),
-    m_glDisplay(new glDisplay(*this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>* >(&m_flows)))
+    m_glDisplay(new glDisplay(this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>* >(&m_flows)))
 {
     //m_glDisplay->moveToThread(&m_displayThread);
     //m_displayThread.start(QThread::LowestPriority);
@@ -42,8 +42,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //create a connexion on the menu View-> History via showHis slot
     connect(ui->actionView_history, SIGNAL(triggered()),ui->dockWidget_His, SLOT(show()));
     //create a connexion on the menu File-> Quit via close slot (or cross)
-    connect(ui->actionQuit, SIGNAL(triggered()),this, SLOT(close()));
-    connect(ui->actionQuit, SIGNAL(triggered()), m_glDisplay, SLOT(close()));
+    connect(ui->actionQuit, SIGNAL(triggered()),this, SIGNAL(closeAll()));
+    connect(this, SIGNAL(closeAll()), this, SLOT(close()));
+    connect(this, SIGNAL(closeAll()), m_glDisplay, SLOT(close()));
     //create a connexion on the radio button in calculating the flow path in mainwindow
     connect(ui->pushButton_Mouse, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
 }
@@ -52,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     m_displayThread.quit();
+    m_displayThread.wait();
     delete m_glDisplay;
     delete m_flowPathViewDefaultWindow;
     deleteFlows();
@@ -63,7 +65,7 @@ MainWindow::~MainWindow()
 void MainWindow::closeEvent(QCloseEvent* event)
 {
     event->accept();
-    close();
+    emit closeAll();
 }
 
 void MainWindow::close()
@@ -134,7 +136,7 @@ void MainWindow::openDialog() // Open a dialog to choose a file
     }
 }
 
-void MainWindow::setClickedCoordinates(const qglviewer::Vec& mouse_world)
+void MainWindow::setClickedCoordinates(qglviewer::Vec mouse_world)
 {
     ui->bxXcoord->setValue(mouse_world.x);
     ui->bxYcoord->setValue(mouse_world.y);

@@ -65,7 +65,7 @@ bool DTM::buildDTM(QString filePath)
             computeLineLength();
             lock.unlock();
             lock.lockForRead();
-            if(getMode() == MODE_VERTEX_ARRAY && getMode() == MODE_VERTEX_INDICES)
+            if(getMode() == MODE_VERTEX_ARRAY || getMode() == MODE_VERTEX_INDICES)
             {
                 lock.unlock();
                 buildArrays();

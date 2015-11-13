@@ -11,6 +11,7 @@
 #include <QMainWindow>
 #include <QGraphicsSceneMouseEvent>
 #include <QThread>
+#include <QMutex>
 
 
 class MainWindow : public QMainWindow
@@ -59,13 +60,14 @@ public slots:
     void unlockInterface();
 
     // Application slots
-    void setClickedCoordinates(const qglviewer::Vec& mouse_world);
+    void setClickedCoordinates(qglviewer::Vec mouse_world);
 
 signals:
     void buildDTM(QString) const;
     void buildFlow() const;
     void DTMHasChanged() const;
-    void FlowsHaveChanged() const;
+    void flowsHaveChanged() const;
+    void closeAll() const;
 
 private:
     void deleteDTM();

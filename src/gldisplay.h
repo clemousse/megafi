@@ -24,9 +24,10 @@ class glDisplay : public QGLViewer
     Q_OBJECT
 
 private:
-    MainWindow& m_mainW;        // A pointer in order to communicate with main window
     const megafi::DTM *const *const m_dtm;  // The data
-    const QList<const megafi::FlowPath*>& m_flows;
+    const QList<const megafi::FlowPath*>* const m_flows;
+
+    bool m_initialized;
 
 
 protected:
@@ -34,9 +35,9 @@ protected:
     bool m_departureSelection;
 
 public:
-    glDisplay(MainWindow& mainW,
+    glDisplay(const MainWindow *mainW,
               const megafi::DTM* const* dtm,
-              const QList<const megafi::FlowPath*>& flows);
+              const QList<const megafi::FlowPath *> *flows);
     ~glDisplay();
 
     void mousePressEvent(QMouseEvent* const event);
@@ -47,7 +48,8 @@ public slots:
     void rbClick(bool chckD);
 
 signals:
-    void needsRebuild() const;
+    void windowHasChanged() const;
+    void clicked(qglviewer::Vec) const;
 
 private:
     void init(); // Contains initialization code which cannot be executed before the window has been shown
