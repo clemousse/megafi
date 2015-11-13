@@ -167,6 +167,19 @@ void MainWindow::addFlow(unsigned long startIndex)
 void MainWindow::changeFlowPathProperties()
 {
     m_flowPathViewDefaultWindow->changeProps(m_flowPathDefaults);
+    if(m_flows.size())
+    {
+        if (  m_flows[0]->getMode() == megafi::MODE_VERTEX_ARRAY
+           || m_flows[0]->getMode() == megafi::MODE_VERTEX_INDICES)
+        {
+            for(QList<megafi::FlowPath*>::iterator flow = m_flows.begin() ;
+                flow != m_flows.end() ;
+                ++flow)
+            {
+                (*flow)->buildArrays();
+            }
+        }
+    }
 }
 
 void MainWindow::deleteFlows()
