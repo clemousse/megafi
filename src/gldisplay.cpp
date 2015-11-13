@@ -108,7 +108,7 @@ void glDisplay::draw()
     }
 #endif
 
-    double interv = (m_dataSizeMax.z-m_dataSizeMin.z)/3;
+  /*  double interv = (m_dataSizeMax.z-m_dataSizeMin.z)/3;
         if(m_vertices[index].z <= (interv+m_dataSizeMin.z) && m_vertices[index].z >= m_dataSizeMin.z)
         {
             double B=((m_vertices[index].z-m_dataSizeMin.z)/((interv+m_dataSizeMin.z)-m_dataSizeMin.z));
@@ -130,7 +130,7 @@ void glDisplay::draw()
         }
         else{
             glColor3d(1,1,1);
-        }
+        }*/
 
 
 }

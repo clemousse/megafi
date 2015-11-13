@@ -18,9 +18,7 @@ int main(int argc, char *argv[])
 
     MainWindow w;
     w.show();
-    QTimer *timer = new QTimer();
-    timer->connect(timer, SIGNAL(timeout()),& a, SLOT(draw()));
-    timer->start(50);
+
 #if FALSE
     w.editingPath();
 #endif
