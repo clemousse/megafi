@@ -2,12 +2,13 @@
 #define DTM_H
 
 #include "drawable.h"
+#include "q_debugstream.h"
 
 #include <QString>
+#include <QProgressBar>
 
 namespace megafi
 {
-
 
 
 class DTM : public Drawable
@@ -22,6 +23,7 @@ private:
 
     unsigned long m_lineLength;
     unsigned long m_nbLines;
+    QProgressBar* m_progressBar;
 
 public:
     DTM();
@@ -45,6 +47,7 @@ private:
     bool readDTM(const QString& path);
     void computeDataSize();
     void computeLineLength();
+    void progressB();
 
 protected:
     template<Primitive prim> inline void build_begin() const;

@@ -26,6 +26,24 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="toolTip">
+         <string/>
+        </property>
+        <property name="toolTipDuration">
+         <number>-1</number>
+        </property>
+        <property name="statusTip">
+         <string/>
+        </property>
+        <property name="whatsThis">
+         <string/>
+        </property>
+        <property name="accessibleName">
+         <string/>
+        </property>
+        <property name="accessibleDescription">
+         <string/>
+        </property>
         <property name="text">
          <string>CALCULATING THE FLOW PATH</string>
         </property>
@@ -267,54 +285,18 @@ directly on the DTM on the screen.</string>
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_6">
-      <item>
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnQDebug">
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Append the QDebug</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
-    <item>
      <layout class="QHBoxLayout" name="horizontalLayout_7">
       <item>
        <widget class="QTextEdit" name="textEdit_MW">
+        <property name="cursor" stdset="0">
+         <cursorShape>ArrowCursor</cursorShape>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Here are displayed the warning messages from the execution of the code.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="toolTipDuration">
+         <number>5000</number>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>

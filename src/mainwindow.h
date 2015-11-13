@@ -23,20 +23,17 @@ protected:
     megafi::DTM* m_dtm;
     QList<megafi::FlowPath*> m_flows;
     glDisplay* const m_glDisplay;
-    bool m_qdbg;
 
 public:
     explicit MainWindow(QWidget* parent = NULL);
     ~MainWindow();
     void myMessageOutput();
-    void activeQDebug();
 
 public slots:
     void openDialog();
     void rebuildArrays();
     void setClickedCoordinates(const qglviewer::Vec& mouse_world);
     void addFlow(unsigned long startIndex);
-    void qdClick(bool qdbg);
 
 signals:
     void dtmHasChanged(void) const;

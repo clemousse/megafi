@@ -10,10 +10,6 @@ namespace megafi
 class FlowPath : public Drawable
 {
     QList<unsigned long> m_minIndices;
-#if FALSE
-public:
-    QString endFP;
-#endif
 
 public:
     FlowPath(const DTM& dtm, unsigned long origin, Mode mode = MODE);

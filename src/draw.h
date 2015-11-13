@@ -100,6 +100,6 @@ inline int glPrimitive(Primitive p) throw()
 
 // FINAL CHOICE
 #define MODE MODE_VERTEX_ARRAY
-#define PRIM QUADLINE
+#define PRIM QUADFILL
 
 #endif // DRAW_H

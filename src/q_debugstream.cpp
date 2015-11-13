@@ -3,7 +3,7 @@
 
 //constructor
 Q_DebugStream::Q_DebugStream(std::ostream &stream, QTextEdit* text_edit)
-    : m_stream(stream)
+    :m_stream(stream)
 
 {
     log_window = text_edit;
@@ -16,6 +16,7 @@ Q_DebugStream::Q_DebugStream(std::ostream &stream, QTextEdit* text_edit)
 Q_DebugStream::~Q_DebugStream()
 {
     m_stream.rdbuf(m_old_buf);
+    qInstallMessageHandler(0);
 }
 
 
@@ -27,23 +28,29 @@ void Q_DebugStream::registerQDebugMessageHandler()
 
 void Q_DebugStream::myQDebugMessageHandler(QtMsgType type, const QMessageLogContext &, const QString &msg)
 {
-    //Append the text
-
+    //"std::cout <<" append the text
     //"toStdString()" allows to return a std::string object with the data contained in this QString.
-    //The Unicode data is converted into 8-bit characters using the toAscii() function.
-    //std::cout << msg.toStdString().c_str();//"c_str()" return a pointer toward the array of char which contains the object of string type.
+            //The Unicode data is converted into 8-bit characters using the toAscii() function.
+    //"c_str()" return a pointer toward the array of char which contains the object of string type.
+
 
     switch (type)
     {
-
+       case QtDebugMsg:
+            qInstallMessageHandler(0);
+            break;
        case QtWarningMsg:
             std::cout << "Warning : "<< msg.toStdString().c_str();
             break;
        case QtCriticalMsg:
-            std::cout << "Critical : "<< msg.toStdString().c_str();
+            qInstallMessageHandler(0);
+       case QtFatalMsg:
+            abort();
             break;
-     }
+//for critical messages : QMessageBox::critical(this,"Critical Message","Test");
+    }
 }
+
 
 
 Q_DebugStream::int_type Q_DebugStream::overflow(Q_DebugStream::int_type v)
