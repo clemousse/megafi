@@ -81,6 +81,7 @@ void glDisplay::draw()
         flow != m_flows.cend() ;
         ++flow)
     {
+        glLineWidth((*flow)->getLineWidth());
         drawData<megafi::FlowPath>(**flow);
     }
 

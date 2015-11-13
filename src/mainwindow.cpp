@@ -19,8 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_flowPathDefaults.lineWidth = 5;
     m_flowPathDefaults.color.r   = 0;
-    m_flowPathDefaults.color.g   = 1;
-    m_flowPathDefaults.color.b   = 0;
+    m_flowPathDefaults.color.g   = 0;
+    m_flowPathDefaults.color.b   = 255;
 
     connect(m_glDisplay, SIGNAL(needsRebuild()), this, SLOT(rebuildArrays()));
     connect(this, SIGNAL(dtmHasChanged()), m_glDisplay, SLOT(beginDraw()));

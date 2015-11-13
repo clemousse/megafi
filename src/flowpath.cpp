@@ -33,6 +33,8 @@ FlowPath::~FlowPath()
         delete m_props;
 }
 
+float FlowPath::getLineWidth() const { return m_props->lineWidth; }
+
 void FlowPath::computePath(const DTM& dtm)
 {
     const Point*  const vertices   = dtm.getVertices();
