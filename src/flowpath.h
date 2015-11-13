@@ -29,6 +29,8 @@ public:
     FlowPath(const FlowPath& other);
     ~FlowPath();
 
+    float getLineWidth() const;
+
 public slots:
     void buildArrays();
     void buildLegacy() const;

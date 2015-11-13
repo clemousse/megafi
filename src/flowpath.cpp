@@ -33,6 +33,8 @@ FlowPath::~FlowPath()
         delete m_props;
 }
 
+float FlowPath::getLineWidth() const { return m_props->lineWidth; }
+
 void FlowPath::computePath(const DTM& dtm)
 {
     const Point*  const vertices   = dtm.getVertices();
@@ -100,8 +102,10 @@ void FlowPath::computePath(const DTM& dtm)
 
         else
         {
+            Point p = vertices[argMin];
+            p.z += 1.;
             m_minIndices.push_back(argMin);
-            m_vertices.push_back(vertices[argMin]);
+            m_vertices.push_back(p);
 
             qDebug() << "Next point's coordinates"
                      << ": x=" << m_vertices.back().x

@@ -19,8 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_flowPathDefaults.lineWidth = 5;
     m_flowPathDefaults.color.r   = 0;
-    m_flowPathDefaults.color.g   = 1;
-    m_flowPathDefaults.color.b   = 0;
+    m_flowPathDefaults.color.g   = 0;
+    m_flowPathDefaults.color.b   = 255;
 
     connect(m_glDisplay, SIGNAL(needsRebuild()), this, SLOT(rebuildArrays()));
     connect(this, SIGNAL(dtmHasChanged()), m_glDisplay, SLOT(beginDraw()));
@@ -167,6 +167,19 @@ void MainWindow::addFlow(unsigned long startIndex)
 void MainWindow::changeFlowPathProperties()
 {
     m_flowPathViewDefaultWindow->changeProps(m_flowPathDefaults);
+    if(m_flows.size())
+    {
+        if (  m_flows[0]->getMode() == megafi::MODE_VERTEX_ARRAY
+           || m_flows[0]->getMode() == megafi::MODE_VERTEX_INDICES)
+        {
+            for(QList<megafi::FlowPath*>::iterator flow = m_flows.begin() ;
+                flow != m_flows.end() ;
+                ++flow)
+            {
+                (*flow)->buildArrays();
+            }
+        }
+    }
 }
 
 void MainWindow::deleteFlows()

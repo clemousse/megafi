@@ -27,11 +27,11 @@ union Color
 {
     struct
     {
-        float r;
-        float g;
-        float b;
+        GLubyte r;
+        GLubyte g;
+        GLubyte b;
     };
-    double v[3];
+    GLubyte v[3];
 };
 
 class Drawable : public QObject
@@ -56,6 +56,7 @@ private:
     // Indice array
     GLuint*       m_indicesArray;
     Color*        m_colorArray;
+    Color         m_colorToBuild;
 
 protected:
     class IncoherentMode : public std::logic_error
@@ -137,9 +138,9 @@ protected:
         case MODE_LEGACY:
             throw IncoherentMode("buildFunction", MODE_VERTEX_ARRAY, MODE_LEGACY);
         case MODE_VERTEX_ARRAY:
-            build_color_array(color); break;
+            build_color_va(color); break;
         case MODE_VERTEX_INDICES:
-            build_color_array(color); break;
+            build_color_vi(color); break;
         }
     }
 
@@ -171,6 +172,9 @@ private:
 
     inline void build_function_vi    (GLuint i)
     {
+        m_colorArray[i].r = m_colorToBuild.r;
+        m_colorArray[i].g = m_colorToBuild.g;
+        m_colorArray[i].b = m_colorToBuild.b;
         m_indicesArray[m_arrayCurrent] = i;
         ++m_arrayCurrent;
     }
@@ -180,9 +184,19 @@ private:
         glColor3f(c.r, c.g, c.b);
     }
 
-    inline void build_color_array (const Color& c)
+    inline void build_color_va    (const Color& c)
     {
-        m_colorArray[++m_arrayColorCurrent] = c;
+        m_colorArray[m_arrayColorCurrent].r = c.r;
+        m_colorArray[m_arrayColorCurrent].g = c.g;
+        m_colorArray[m_arrayColorCurrent].b = c.b;
+        ++m_arrayColorCurrent;
+    }
+
+    inline void build_color_vi    (const Color& c)
+    {
+        m_colorToBuild.r = c.r;
+        m_colorToBuild.g = c.g;
+        m_colorToBuild.b = c.b;
     }
 };
 

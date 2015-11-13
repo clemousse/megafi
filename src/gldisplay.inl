@@ -15,12 +15,13 @@ void glDisplay::drawData(const Datatype& data) const
     case megafi::MODE_VERTEX_ARRAY:
     {
         const megafi::Point* va = data.getVertexArray();
+        const megafi::Color* ca = data.getColorArray();
         if(va)
         {
-            glEnableClientState(GL_VERTEX_ARRAY);
             glVertexPointer(3, GL_DOUBLE, 0, va);
+            if(ca) glColorPointer(3, GL_UNSIGNED_BYTE, 0, ca);
+
             glDrawArrays(glPrimitive(data.getPrimitive()), 0, data.getArrayLength());
-            glDisableClientState(GL_VERTEX_ARRAY);
         }
         else
             emit needsRebuild();
@@ -29,16 +30,17 @@ void glDisplay::drawData(const Datatype& data) const
 
     case megafi::MODE_VERTEX_INDICES:
     {
-        const GLuint* vi = data.getIndiceArray();
+        const GLuint*        const vi = data.getIndiceArray();
+        const megafi::Color* const ca = data.getColorArray();
         if(vi)
         {
-            glEnableClientState(GL_VERTEX_ARRAY);
             glVertexPointer(3, GL_DOUBLE, 0, data.getVertices());
+            if(ca) glColorPointer(3, GL_UNSIGNED_BYTE, 0, ca);
+
             glDrawElements(glPrimitive(data.getPrimitive()),
                            data.getArrayLength(),
                            GL_UNSIGNED_INT,
                            vi);
-            glDisableClientState(GL_VERTEX_ARRAY);
         }
         else
             emit needsRebuild();

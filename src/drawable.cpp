@@ -9,7 +9,7 @@ Drawable::Drawable(Mode mode, Primitive prim) throw()
       m_arrayLength(0), m_arrayCurrent(0), m_arrayColorCurrent(0),
       m_vertexArray(NULL),
       m_indicesArray(NULL),
-      m_colorArray(NULL)
+      m_colorArray(NULL), m_colorToBuild()
 {
 }
 
@@ -30,8 +30,10 @@ Drawable::Drawable(const Drawable& other) throw(const std::bad_alloc&)
     try
     {
         m_arrayLength = other.m_arrayLength;
+        unsigned long colorLength = 0;
         if(other.m_vertexArray)
         {
+            colorLength = m_arrayLength;
             m_vertexArray = new Point[m_arrayLength];
             for(unsigned long i = 0; i < m_arrayLength; ++i)
             {
@@ -43,6 +45,7 @@ Drawable::Drawable(const Drawable& other) throw(const std::bad_alloc&)
         {
             if(other.m_indicesArray)
             {
+                colorLength = nbVert;
                 m_indicesArray = new GLuint[m_arrayLength];
                 for(unsigned long i = 0; i < m_arrayLength; ++i)
                 {
@@ -54,8 +57,8 @@ Drawable::Drawable(const Drawable& other) throw(const std::bad_alloc&)
             {
                 if(other.m_colorArray)
                 {
-                    m_colorArray = new Color[m_arrayLength];
-                    for(unsigned long i = 0; i < m_arrayLength; ++i)
+                    m_colorArray = new Color[colorLength];
+                    for(unsigned long i = 0; i < colorLength; ++i)
                     {
                         m_colorArray[i] = other.m_colorArray[i];
                     }
@@ -243,7 +246,7 @@ throw(const std::bad_alloc&)
 
                 try
                 {
-                    m_colorArray = new Color[m_arrayLength];
+                    m_colorArray = new Color[m_vertices.size()];
                 }
                 catch(const std::bad_alloc&)
                 {

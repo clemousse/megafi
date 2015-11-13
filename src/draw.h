@@ -100,6 +100,6 @@ inline int glPrimitive(Primitive p) throw()
 
 // FINAL CHOICE
 #define MODE MODE_VERTEX_INDICES
-#define PRIM QUADLINE
+#define PRIM TRIFILL
 
 #endif // DRAW_H

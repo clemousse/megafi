@@ -72,22 +72,26 @@ void glDisplay::draw()
     // I can begin to draw
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear screen
 
+    // States
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+
     // Building DTM
     if(*m_dtm)
-    {
-        glLineWidth(1);
-        glColor3d(1,1,1);
         drawData<megafi::DTM>(**m_dtm);
-    }
 
     // For each flow
     for(QList<const megafi::FlowPath*>::const_iterator flow = m_flows.cbegin() ;
         flow != m_flows.cend() ;
         ++flow)
     {
+        glLineWidth((*flow)->getLineWidth());
         drawData<megafi::FlowPath>(**flow);
     }
 
+    // States
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
 #ifdef IMANE
     for(long i = 0 ; i < m_minIndices.length()-1 ; ++i)
     {
