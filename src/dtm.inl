@@ -89,17 +89,15 @@ TEMPLATE(build_back, QUADLINE, GLuint j,
  * SHAPES
  */
 
-TEMPLATE(build_line, TRIFILL, GLuint i,
-    buildFunction(i);
-    if(i < m_vertices.size() - m_lineLength) // not at last line
-        buildFunction(i + m_lineLength);
-    else
-        buildFunction(i);
-)
+TEMPLATE(build_line, TRIFILL, GLuint i, build_line<TRILINE>(i);)
 
-#define ARRAY_SIZE_TRIFILL NB_CALL_LINE*2
+TEMPLATE(build_back, TRIFILL, GLuint j, buildFunction(j); buildFunction(j);)
+
+#define ARRAY_SIZE_TRIFILL NB_CALL_LINE*2 - m_lineLength + NB_CALL_BACK*2
 
 TEMPLATE(build_line, QUADFILL, GLuint i, build_line<TRIFILL>(i);)
+
+TEMPLATE(build_back, QUADFILL, GLuint j, build_back<QUADFILL>(j);)
 
 #define ARRAY_SIZE_QUADFILL ARRAY_SIZE_TRIFILL
 

@@ -3,6 +3,7 @@
 
 #include "flowpath.h"
 #include "dtm.h"
+#include "flowpathview.h"
 
 #include <QList>
 #include <QMouseEvent>

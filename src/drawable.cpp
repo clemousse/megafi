@@ -6,9 +6,10 @@ using namespace qglviewer;
 Drawable::Drawable(Mode mode, Primitive prim) throw()
     : m_vertices(),
       m_mode(mode), m_prim(prim),
-      m_arrayLength(0), m_arrayCurrent(0),
+      m_arrayLength(0), m_arrayCurrent(0), m_arrayColorCurrent(0),
       m_vertexArray(NULL),
-      m_indicesArray(NULL)
+      m_indicesArray(NULL),
+      m_colorArray(NULL), m_colorToBuild()
 {
 }
 
@@ -29,8 +30,10 @@ Drawable::Drawable(const Drawable& other) throw(const std::bad_alloc&)
     try
     {
         m_arrayLength = other.m_arrayLength;
+        unsigned long colorLength = 0;
         if(other.m_vertexArray)
         {
+            colorLength = m_arrayLength;
             m_vertexArray = new Point[m_arrayLength];
             for(unsigned long i = 0; i < m_arrayLength; ++i)
             {
@@ -42,11 +45,36 @@ Drawable::Drawable(const Drawable& other) throw(const std::bad_alloc&)
         {
             if(other.m_indicesArray)
             {
+                colorLength = nbVert;
                 m_indicesArray = new GLuint[m_arrayLength];
                 for(unsigned long i = 0; i < m_arrayLength; ++i)
                 {
                     m_indicesArray[i] = other.m_indicesArray[i];
                 }
+            }
+
+            try
+            {
+                if(other.m_colorArray)
+                {
+                    m_colorArray = new Color[colorLength];
+                    for(unsigned long i = 0; i < colorLength; ++i)
+                    {
+                        m_colorArray[i] = other.m_colorArray[i];
+                    }
+                }
+            }
+            catch(const std::bad_alloc&)
+            {
+                m_colorArray = NULL;
+                delete[] m_indicesArray;
+                throw;
+            }
+            catch(...)
+            {
+                delete[] m_colorArray;
+                m_colorArray = NULL;
+                throw;
             }
         }
         catch(const std::bad_alloc&)
@@ -86,6 +114,7 @@ Drawable::~Drawable()
     {
         if(m_vertexArray)  delete[] m_vertexArray;
         if(m_indicesArray) delete[] m_indicesArray;
+        if(m_colorArray)   delete[] m_colorArray;
     }
 }
 
@@ -125,6 +154,11 @@ const GLuint* Drawable::getIndiceArray() const throw()
     return m_indicesArray;
 }
 
+const Color* Drawable::getColorArray() const throw()
+{
+    return m_colorArray;
+}
+
 void Drawable::changeMode(Mode m) throw()
 {
     deleteArrays();
@@ -147,10 +181,14 @@ void Drawable::deleteArrays() throw()
         case MODE_VERTEX_ARRAY:
             delete[] m_vertexArray;
             m_vertexArray = NULL;
+            delete[] m_colorArray;
+            m_colorArray = NULL;
             break;
         case MODE_VERTEX_INDICES:
             delete[] m_indicesArray;
             m_indicesArray = NULL;
+            delete[] m_colorArray;
+            m_colorArray = NULL;
             break;
         }
         m_arrayLength = 0;
@@ -176,6 +214,17 @@ throw(const std::bad_alloc&)
             try
             {
                 m_vertexArray = new Point[m_arrayLength];
+
+                try
+                {
+                    m_colorArray = new Color[m_arrayLength];
+                }
+                catch(const std::bad_alloc&)
+                {
+                    delete[] m_vertexArray;
+                    m_colorArray = NULL;
+                    throw;
+                }
             }
             catch(const std::bad_alloc&)
             {
@@ -185,6 +234,7 @@ throw(const std::bad_alloc&)
             }
         }
         m_arrayCurrent = 0;
+        m_arrayColorCurrent = 0;
         break;
 
     case MODE_VERTEX_INDICES:
@@ -193,6 +243,17 @@ throw(const std::bad_alloc&)
             try
             {
                 m_indicesArray = new GLuint[m_arrayLength];
+
+                try
+                {
+                    m_colorArray = new Color[m_vertices.size()];
+                }
+                catch(const std::bad_alloc&)
+                {
+                    delete[] m_indicesArray;
+                    m_colorArray = NULL;
+                    throw;
+                }
             }
             catch(const std::bad_alloc&)
             {
@@ -202,6 +263,7 @@ throw(const std::bad_alloc&)
             }
         }
         m_arrayCurrent = 0;
+        m_arrayColorCurrent = 0;
         break;
     }
 }

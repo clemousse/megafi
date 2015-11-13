@@ -5,8 +5,11 @@
 using namespace megafi;
 
 
-FlowPath::FlowPath(const DTM& dtm, unsigned long origin, Mode mode)
-    : Drawable(mode, TRILINE), m_minIndices()
+FlowPath::FlowPath(const DTM& dtm, unsigned long origin, const FlowPathProps* defaultProps, Mode mode)
+    : Drawable(mode, TRILINE),
+      m_minIndices(),
+      m_defaultProps(defaultProps),
+      m_props(m_defaultProps)
 #if FALSE
       , endFP("Here the flow path")
 #endif
@@ -16,45 +19,79 @@ FlowPath::FlowPath(const DTM& dtm, unsigned long origin, Mode mode)
 }
 
 FlowPath::FlowPath(const FlowPath &other)
-    : Drawable(other), m_minIndices(other.m_minIndices)
+    : Drawable(other),
+      m_minIndices(other.m_minIndices),
+      m_defaultProps(other.m_defaultProps)
 {
+    if(other.m_props != m_defaultProps)
+        m_props = new FlowPathProps(*other.m_props);
 }
 
 FlowPath::~FlowPath()
 {
+    if(m_props != m_defaultProps)
+        delete m_props;
 }
+
+float FlowPath::getLineWidth() const { return m_props->lineWidth; }
 
 void FlowPath::computePath(const DTM& dtm)
 {
     const Point*  const vertices   = dtm.getVertices();
     const unsigned long vLength    = dtm.getNbVertices();
     const unsigned long lineLength = dtm.getLineLength();
+    const Primitive     prim       = dtm.getPrimitive();
 
     qDebug() << "First point's coordinates :"
              << "\nx = " << vertices[m_minIndices.first()].x
              << "\ny = " << vertices[m_minIndices.first()].y
              << "\nz = " << vertices[m_minIndices.first()].z << "\n";
 
+    m_vertices.push_back(vertices[m_minIndices.first()]);
+
     while(true)
     {
         const unsigned long i = m_minIndices.last();
+        double zMin = vertices[i].z;
+        unsigned long argMin = i;
 
-        if( i%lineLength != 0
-                && vertices[i-1].z < vertices[i].z )
-            m_minIndices.push_back(i-1);
+        if( i%lineLength != 0 && vertices[i-1].z < zMin )
+        {
+            argMin = i-1;
+            zMin   = vertices[i-1].z;
+        }
+        if( i%lineLength != lineLength-1 && vertices[i+1].z < zMin )
+        {
+            argMin = i+1;
+            zMin   = vertices[i+1].z;
+        }
+        if( i >= lineLength && vertices[i-lineLength].z < zMin )
+        {
+            argMin = i - lineLength;
+            zMin   = vertices[i-lineLength].z;
+        }
+        if( i < vLength-lineLength && vertices[i+lineLength].z < zMin)
+        {
+            argMin = i + lineLength;
+            zMin   = vertices[i+lineLength].z;
+        }
+        if( prim & PRIM_TRIANGLES )
+        {
+            if( i%lineLength != 0 && i < vLength-lineLength
+                 && vertices[i -1 +lineLength].z < zMin )
+            {
+                argMin = i -1 +lineLength;
+                zMin   = vertices[i -1 +lineLength].z;
+            }
+            if( i%lineLength != lineLength-1 && i >= lineLength
+                 && vertices[i +1 -lineLength].z < zMin )
+            {
+                argMin = i +1 -lineLength;
+                zMin   = vertices[i +1 -lineLength].z;
+            }
+        }
 
-        else if( i%lineLength != lineLength-1
-                 && vertices[i+1].z < vertices[i].z)
-            m_minIndices.push_back(i+1);
-
-        else if( i >= lineLength
-                 && vertices[i-lineLength].z < vertices[i].z)
-            m_minIndices.push_back(i-lineLength);
-
-        else if( i < vLength-lineLength
-                 && vertices[i+lineLength].z < vertices[i].z)
-            m_minIndices.push_back(i+lineLength);
-        else
+        if(argMin == i)
         {
 #if FALSE
             endFP = "End flow path\n";
@@ -62,19 +99,18 @@ void FlowPath::computePath(const DTM& dtm)
             qDebug() << "End flow path\n";
             break;
         }
+        else
+        {
+            Point p = vertices[argMin];
+            p.z += 1.;
+            m_minIndices.push_back(argMin);
+            m_vertices.push_back(p);
 
-        qDebug() << "Next point's coordinates :"
-                 << "\nx = " << vertices[m_minIndices.last()].x
-                 << "\ny = " << vertices[m_minIndices.last()].y
-                 << "\nz = " << vertices[m_minIndices.last()].z << "\n";
-
-    }
-
-    for(QList<unsigned long>::const_iterator index = m_minIndices.cbegin() ;
-        index != m_minIndices.cend() ;
-        ++index)
-    {
-        m_vertices.push_back(vertices[*index]);
+            qDebug() << "Next point's coordinates :"
+                     << "\nx = " << m_vertices.back().x
+                     << "\ny = " << m_vertices.back().y
+                     << "\nz = " << m_vertices.back().z;
+        }
     }
 }
 

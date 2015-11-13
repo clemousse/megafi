@@ -3,6 +3,7 @@
 
 #include "flowpath.h"
 #include "dtm.h"
+#include "flowpathview.h"
 #include "gldisplay.h"
 #include "ui_mainwindow.h"
 #include "q_debugstream.h"
@@ -20,10 +21,19 @@ private:
     Ui::MainWindow *ui;
 
 protected:
+    // Data
     megafi::DTM* m_dtm;
     QList<megafi::FlowPath*> m_flows;
-    glDisplay* const m_glDisplay;
     bool m_qdbg;
+
+
+    // Windows
+    FlowPathView* const m_flowPathViewDefaultWindow;
+    glDisplay*    const m_glDisplay;
+
+    // Properties
+    megafi::FlowPathProps m_flowPathDefaults;
+
 
 public:
     explicit MainWindow(QWidget* parent = NULL);
@@ -37,6 +47,8 @@ public slots:
     void setClickedCoordinates(const qglviewer::Vec& mouse_world);
     void addFlow(unsigned long startIndex);
     void qdClick(bool qdbg);
+    void changeFlowPathProperties();
+
 
 signals:
     void dtmHasChanged(void) const;

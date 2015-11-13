@@ -10,6 +10,7 @@ using namespace megafi;
 
 DTM::DTM()
     : m_dataSizeMin(), m_dataSizeMax(),
+      m_colorInterv(0.),
       m_lineLength(0),
       m_nbLines(0)
 {
@@ -18,12 +19,14 @@ DTM::DTM()
 DTM::DTM(const QString &filePath, Mode mode, Primitive prim)
     : Drawable(mode, prim),
       m_dataSizeMin(), m_dataSizeMax(),
+      m_colorInterv(0.),
       m_lineLength(0),
       m_nbLines(0)
 {
     if(readDTM(filePath))
     {
         computeDataSize();
+        m_colorInterv = (m_dataSizeMax.z-m_dataSizeMin.z)/3;
         computeLineLength();
     }
 }
@@ -32,6 +35,7 @@ DTM::DTM(const DTM &other)
     : Drawable(other),
       m_dataSizeMin(other.m_dataSizeMin),
       m_dataSizeMax(other.m_dataSizeMax),
+      m_colorInterv(other.m_colorInterv),
       m_lineLength(other.m_lineLength),
       m_nbLines(other.m_nbLines)
 {
@@ -203,6 +207,37 @@ unsigned long DTM::computeIndex(const qglviewer::Vec& mouse_world) const
     return index;
 }
 
+megafi::Color DTM::computeColor(unsigned long index) const
+{
+    megafi::Color ret = {{0, 0, 0}};
+
+    if(m_vertices[index].z <= (m_colorInterv+m_dataSizeMin.z) && m_vertices[index].z >= m_dataSizeMin.z)
+    {
+        ret.b = 255 * (m_vertices[index].z-m_dataSizeMin.z)/(m_colorInterv+m_dataSizeMin.z - m_dataSizeMin.z);
+        ret.g = 255 - ret.b;
+    }
+
+    else if(m_colorInterv+m_dataSizeMin.z < m_vertices[index].z  && m_vertices[index].z <= (2*m_colorInterv)+m_dataSizeMin.z )
+    {
+        ret.g = 255 * (m_vertices[index].z - m_colorInterv+m_dataSizeMin.z)/( 2*m_colorInterv + m_dataSizeMin.z-m_colorInterv + m_dataSizeMin.z);
+        ret.b = 255 - ret.g;
+    }
+
+    else if(m_vertices[index].z <= m_dataSizeMax.z && m_vertices[index].z > (2*m_colorInterv)+m_dataSizeMin.z)
+    {
+        ret.r = 255 * (m_vertices[index].z - 2*m_colorInterv + m_dataSizeMin.z)/(m_dataSizeMax.z - 2*m_colorInterv + m_dataSizeMin.z);
+        ret.g = 255 - ret.r;
+    }
+    else
+    {
+        ret.r = 255;
+        ret.g = 255;
+        ret.b = 255;
+    }
+
+    return ret;
+}
+
 #define FUNCTIONS(prim) \
     begin = &DTM::build_begin<prim>; \
     line  = &DTM::build_line <prim>; \
@@ -226,25 +261,6 @@ unsigned long DTM::computeIndex(const qglviewer::Vec& mouse_world) const
         throw UnknownPrimitive(primitive); \
     }
 
-#define BUILD \
-    (this->*begin)(); \
-    const GLuint vLength = m_vertices.size(); \
-    for(GLuint i = 0 ; i < vLength ; ++i) \
-    { \
-        if(i % m_lineLength == 0 && primitive & DESIGN_EDGE) \
-        /* beginning of line        only if drawing edges */ \
-        { \
-            for(GLuint j = i + m_lineLength-1 ; \
-                j >= i && j < vLength ; /* security: j is unsigned so 0 - 1 >= 0 */ \
-                --j) \
-            { \
-                (this->*back)(j); \
-            } \
-        } \
-        (this->*line)(i); \
-    } \
-    (this->*end)()
-
 #define NB_CALL_LINE m_vertices.size()
 #define NB_CALL_BACK m_vertices.size()
 
@@ -261,7 +277,24 @@ void DTM::buildArrays()
     void (DTM::*end  )() const = NULL;
 
     SWITCH_PRIM;
-    BUILD;
+
+    (this->*begin)();
+    const GLuint vLength = m_vertices.size();
+    for(GLuint i = 0 ; i < vLength ; ++i)
+    {
+        if(i % m_lineLength == 0)
+        /* beginning of line */
+        {
+            for(GLuint j = i + m_lineLength-1 ;
+                j >= i && j < vLength ; /* security: j is unsigned so 0 - 1 >= 0 */
+                --j)
+            {
+                (this->*back)(j);
+            }
+        }
+        (this->*line)(i);
+    }
+    (this->*end)();
 }
 
 void DTM::buildLegacy() const
@@ -272,7 +305,24 @@ void DTM::buildLegacy() const
     void (DTM::*end)  ()       const = NULL;
 
     SWITCH_PRIM;
-    BUILD;
+
+    (this->*begin)();
+    const GLuint vLength = m_vertices.size();
+    for(GLuint i = 0 ; i < vLength ; ++i)
+    {
+        if(i % m_lineLength == 0)
+        /* beginning of line */
+        {
+            for(GLuint j = i + m_lineLength-1 ;
+                j >= i && j < vLength ; /* security: j is unsigned so 0 - 1 >= 0 */
+                --j)
+            {
+                (this->*back)(j);
+            }
+        }
+        (this->*line)(i);
+    }
+    (this->*end)();
 }
 
 
