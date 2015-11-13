@@ -10,6 +10,7 @@ using namespace megafi;
 
 DTM::DTM()
     : m_dataSizeMin(), m_dataSizeMax(),
+      m_colorInterv(0),
       m_lineLength(0),
       m_nbLines(0)
 {
@@ -18,12 +19,14 @@ DTM::DTM()
 DTM::DTM(const QString &filePath, Mode mode, Primitive prim)
     : Drawable(mode, prim),
       m_dataSizeMin(), m_dataSizeMax(),
+      m_colorInterv(0),
       m_lineLength(0),
       m_nbLines(0)
 {
     if(readDTM(filePath))
     {
         computeDataSize();
+        m_colorInterv = (m_dataSizeMax.z-m_dataSizeMin.z)/3;
         computeLineLength();
     }
 }
@@ -32,6 +35,7 @@ DTM::DTM(const DTM &other)
     : Drawable(other),
       m_dataSizeMin(other.m_dataSizeMin),
       m_dataSizeMax(other.m_dataSizeMax),
+      m_colorInterv(other.m_colorInterv),
       m_lineLength(other.m_lineLength),
       m_nbLines(other.m_nbLines)
 {
@@ -201,6 +205,37 @@ unsigned long DTM::computeIndex(const qglviewer::Vec& mouse_world) const
     }
 
     return index;
+}
+
+megafi::Color DTM::computeColor(unsigned long index) const
+{
+    megafi::Color ret = {{0, 0, 0}};
+
+    if(m_vertices[index].z <= (m_colorInterv+m_dataSizeMin.z) && m_vertices[index].z >= m_dataSizeMin.z)
+    {
+        ret.b =((m_vertices[index].z-m_dataSizeMin.z)/((m_colorInterv+m_dataSizeMin.z)-m_dataSizeMin.z));
+        ret.g = 1 - ret.b;
+    }
+
+    else if(m_colorInterv+m_dataSizeMin.z < m_vertices[index].z  && m_vertices[index].z <= (2*m_colorInterv)+m_dataSizeMin.z )
+    {
+        ret.g =((m_vertices[index].z-(m_colorInterv+m_dataSizeMin.z))/((2*m_colorInterv)+m_dataSizeMin.z-m_colorInterv+m_dataSizeMin.z));
+        ret.b = 1 - ret.g;
+    }
+
+    else if(m_vertices[index].z <= m_dataSizeMax.z && m_vertices[index].z > (2*m_colorInterv)+m_dataSizeMin.z)
+    {
+        ret.r =((m_vertices[index].z-(2*m_colorInterv)+m_dataSizeMin.z)/(m_dataSizeMax.z-(2*m_colorInterv)+m_dataSizeMin.z));
+        ret.g = 1 - ret.r;
+    }
+    else
+    {
+        ret.r = 1;
+        ret.g = 1;
+        ret.b = 1;
+    }
+
+    return ret;
 }
 
 #define FUNCTIONS(prim) \

@@ -336,18 +336,10 @@ directly on the DTM on the screen.</string>
      </property>
      <addaction name="actionColored_3D"/>
     </widget>
-    <widget class="QMenu" name="menuCustomize_Path">
-     <property name="title">
-      <string>Customize path</string>
-     </property>
-     <addaction name="actionColored"/>
-     <addaction name="actionAnimated"/>
-     <addaction name="actionColored_Animated"/>
-    </widget>
     <addaction name="actionNew_DTM_Window"/>
     <addaction name="separator"/>
     <addaction name="menuCustomize_DTM"/>
-    <addaction name="menuCustomize_Path"/>
+    <addaction name="actionCustomize_paths"/>
     <addaction name="separator"/>
     <addaction name="actionView_legend"/>
     <addaction name="actionView_history"/>
@@ -423,8 +415,6 @@ directly on the DTM on the screen.</string>
       </item>
      </layout>
     </widget>
-    <zorder>horizontalLayoutWidget</zorder>
-    <zorder>bxXcoord</zorder>
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_His">
@@ -576,6 +566,11 @@ directly on the DTM on the screen.</string>
   <action name="actionColored_Animated">
    <property name="text">
     <string>Colored and animated</string>
+   </property>
+  </action>
+  <action name="actionCustomize_paths">
+   <property name="text">
+    <string>Customize paths</string>
    </property>
   </action>
  </widget>

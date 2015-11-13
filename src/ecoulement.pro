@@ -24,7 +24,8 @@ SOURCES += main.cpp\
         tests.cpp \
         drawable.cpp \
         flowpath.cpp \
-    gldisplay.inl
+    gldisplay.inl \
+    flowpathview.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -34,6 +35,8 @@ HEADERS  += mainwindow.h \
             tests.h \
             flowpath.h \
             drawable.h \
-            draw.h
+            draw.h \
+    flowpathview.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    flowpathview.ui

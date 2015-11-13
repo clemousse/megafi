@@ -14,8 +14,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     m_dtm(NULL),
     m_flows(),
+    m_flowPathViewDefaultWindow(new FlowPathView(this)),
     m_glDisplay(new glDisplay(*this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>& >(m_flows)))
 {
+    m_flowPathDefaults.lineWidth = 5;
+    m_flowPathDefaults.color.r   = 0;
+    m_flowPathDefaults.color.g   = 1;
+    m_flowPathDefaults.color.b   = 0;
+
     connect(m_glDisplay, SIGNAL(needsRebuild()), this, SLOT(rebuildArrays()));
     connect(this, SIGNAL(dtmHasChanged()), m_glDisplay, SLOT(beginDraw()));
 
@@ -26,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionOpen_DTM_file, SIGNAL(triggered()), this, SLOT(openDialog()));
     //create a connexion on the menu View-> New DTM Path via show slot
     connect(ui->actionNew_DTM_Window, SIGNAL(triggered()), m_glDisplay, SLOT(show()));
+    // View -> customize paths
+    connect(ui->actionCustomize_paths, SIGNAL(triggered()), this, SLOT(changeFlowPathProperties()));
     //create a connexion on the cross of the m_gl_display window to close it
     connect(ui->actionQuit, SIGNAL(triggered()),m_glDisplay, SLOT(close()));
     //create a connexion on the menu View-> Legend via showLeg slot
@@ -42,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete m_glDisplay;
+    delete m_flowPathViewDefaultWindow;
     deleteFlows();
     if(m_dtm) delete m_dtm;
     delete ui;
@@ -150,9 +159,14 @@ void MainWindow::addFlow(unsigned long startIndex)
     if(m_dtm)
     {
         megafi::FlowPath* const newFP =
-                new megafi::FlowPath(*m_dtm, startIndex, m_dtm->getMode());
+                new megafi::FlowPath(*m_dtm, startIndex, &m_flowPathDefaults, m_dtm->getMode());
         m_flows.push_back(newFP);
     }
+}
+
+void MainWindow::changeFlowPathProperties()
+{
+    m_flowPathViewDefaultWindow->changeProps(m_flowPathDefaults);
 }
 
 void MainWindow::deleteFlows()

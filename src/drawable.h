@@ -23,6 +23,17 @@ union Point
     double v[3];
 };
 
+union Color
+{
+    struct
+    {
+        float r;
+        float g;
+        float b;
+    };
+    double v[3];
+};
+
 class Drawable : public QObject
 {
     Q_OBJECT
@@ -38,10 +49,13 @@ private:
 
     unsigned long m_arrayLength;
     unsigned long m_arrayCurrent;
+    unsigned long m_arrayColorCurrent;
+
     // Vertex array
     Point*        m_vertexArray;
     // Indice array
     GLuint*       m_indicesArray;
+    Color*        m_colorArray;
 
 protected:
     class IncoherentMode : public std::logic_error
@@ -76,6 +90,7 @@ public:
     unsigned long getArrayLength() const throw();
     const Point*  getVertexArray() const throw();
     const GLuint* getIndiceArray() const throw();
+    const Color*  getColorArray () const throw();
 
 public slots:
     // Setters
@@ -89,7 +104,7 @@ public slots:
 protected:
     void prepareBuild(unsigned long arrayLength) throw(const std::bad_alloc&);
 
-    inline void buildFunction(GLuint i) throw(const IncoherentMode&)
+    inline virtual void buildFunction(GLuint i) throw(const IncoherentMode&)
     {
         switch(m_mode)
         {
@@ -102,12 +117,38 @@ protected:
         }
     }
 
-    inline void buildFunction(GLuint i) const throw(const IncoherentMode&)
+    inline virtual void buildFunction(GLuint i) const throw(const IncoherentMode&)
     {
         switch(m_mode)
         {
         case MODE_LEGACY:
             build_function_legacy(i); break;
+        case MODE_VERTEX_ARRAY:
+            throw IncoherentMode("buildFunction", MODE_LEGACY, MODE_VERTEX_ARRAY);
+        case MODE_VERTEX_INDICES:
+            throw IncoherentMode("buildFunction", MODE_LEGACY, MODE_VERTEX_INDICES);
+        }
+    }
+
+    inline void buildColor(const Color& color) throw(const IncoherentMode&)
+    {
+        switch(m_mode)
+        {
+        case MODE_LEGACY:
+            throw IncoherentMode("buildFunction", MODE_VERTEX_ARRAY, MODE_LEGACY);
+        case MODE_VERTEX_ARRAY:
+            build_color_array(color); break;
+        case MODE_VERTEX_INDICES:
+            build_color_array(color); break;
+        }
+    }
+
+    inline void buildColor(const Color& color) const throw(const IncoherentMode&)
+    {
+        switch(m_mode)
+        {
+        case MODE_LEGACY:
+            build_color_legacy(color); break;
         case MODE_VERTEX_ARRAY:
             throw IncoherentMode("buildFunction", MODE_LEGACY, MODE_VERTEX_ARRAY);
         case MODE_VERTEX_INDICES:
@@ -132,6 +173,16 @@ private:
     {
         m_indicesArray[m_arrayCurrent] = i;
         ++m_arrayCurrent;
+    }
+
+    inline void build_color_legacy(const Color& c) const
+    {
+        glColor3f(c.r, c.g, c.b);
+    }
+
+    inline void build_color_array (const Color& c)
+    {
+        m_colorArray[++m_arrayColorCurrent] = c;
     }
 };
 

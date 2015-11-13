@@ -80,9 +80,6 @@ void glDisplay::draw()
         drawData<megafi::DTM>(**m_dtm);
     }
 
-    // Building flows
-    glLineWidth(10);
-    glColor3d(0,1,0);
     // For each flow
     for(QList<const megafi::FlowPath*>::const_iterator flow = m_flows.cbegin() ;
         flow != m_flows.cend() ;

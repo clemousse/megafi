@@ -52,13 +52,13 @@ void glDisplay::drawData(const Datatype& data) const
         {
             switch(error)
             {
-            case GL_INVALID_ENUM                 : qWarning() << "GL returned error GL_INVALID_ENUM                 "; break;
-            case GL_INVALID_VALUE                : qWarning() << "GL returned error GL_INVALID_VALUE                "; break;
-            case GL_INVALID_OPERATION            : qWarning() << "GL returned error GL_INVALID_OPERATION            "; break;
-            case GL_INVALID_FRAMEBUFFER_OPERATION: qWarning() << "GL returned error GL_INVALID_FRAMEBUFFER_OPERATION"; break;
-            case GL_OUT_OF_MEMORY                : qWarning() << "GL returned error GL_OUT_OF_MEMORY                "; break;
-            case GL_STACK_UNDERFLOW              : qWarning() << "GL returned error GL_STACK_UNDERFLOW              "; break;
-            case GL_STACK_OVERFLOW               : qWarning() << "GL returned error GL_STACK_OVERFLOW               "; break;
+            case GL_INVALID_ENUM                 : qWarning("GL returned error GL_INVALID_ENUM                 "); break;
+            case GL_INVALID_VALUE                : qWarning("GL returned error GL_INVALID_VALUE                "); break;
+            case GL_INVALID_OPERATION            : qWarning("GL returned error GL_INVALID_OPERATION            "); break;
+            case GL_INVALID_FRAMEBUFFER_OPERATION: qWarning("GL returned error GL_INVALID_FRAMEBUFFER_OPERATION"); break;
+            case GL_OUT_OF_MEMORY                : qWarning("GL returned error GL_OUT_OF_MEMORY                "); break;
+            case GL_STACK_UNDERFLOW              : qWarning("GL returned error GL_STACK_UNDERFLOW              "); break;
+            case GL_STACK_OVERFLOW               : qWarning("GL returned error GL_STACK_OVERFLOW               "); break;
             }
         }
     }
