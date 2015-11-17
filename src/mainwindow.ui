@@ -369,6 +369,7 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
     </property>
     <addaction name="actionNew_DTM_Window"/>
     <addaction name="separator"/>
+    <addaction name="actionCustomize_DTM"/>
     <addaction name="actionCustomize_paths"/>
     <addaction name="separator"/>
     <addaction name="actionView_history"/>
@@ -457,7 +458,7 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Historic</string>
+    <string>History</string>
    </property>
   </action>
   <action name="actionFullscreen_mode">
@@ -526,6 +527,11 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
   <action name="actionCustomize_paths">
    <property name="text">
     <string>Customize paths</string>
+   </property>
+  </action>
+  <action name="actionCustomize_DTM">
+   <property name="text">
+    <string>Customize DTM</string>
    </property>
   </action>
  </widget>
