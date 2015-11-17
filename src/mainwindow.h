@@ -38,6 +38,8 @@ protected:
     const glDisplay* const m_glDisplay;
     QProgressBar*    const m_progressBar;
 
+    Q_DebugStream*   const m_debugStream;
+
     // Properties
     megafi::FlowPathProps m_flowPathDefaults;
 

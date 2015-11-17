@@ -16,20 +16,16 @@ MainWindow::MainWindow(QWidget *parent) :
     m_dtmThread(),
     m_flowPathViewDefaultWindow(new FlowPathView(this)),
     m_glDisplay(new glDisplay(this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>* >(&m_flows))),
-    m_progressBar(new QProgressBar())
+    m_progressBar(new QProgressBar()),
+    m_debugStream(new Q_DebugStream(std::cout, ui->textEdit_MW))
 {
     qRegisterMetaType<megafi::Point>("megafi::Point");
+    Q_DebugStream::registerQDebugMessageHandler();
 
     m_flowPathDefaults.lineWidth = 5;
     m_flowPathDefaults.color.r   = 0;
     m_flowPathDefaults.color.g   = 0;
     m_flowPathDefaults.color.b   = 255;
-
-    m_progressBar->setWindowModality(Qt::NonModal);
-    m_progressBar->setWindowTitle("Be patient please, file is being read!");
-    m_progressBar->setFormat("Be patient please, file is being read!");
-    m_progressBar->setTextVisible(true);
-    m_progressBar->setGeometry(0,0,500,20);
 
     //load interface .ui created  with QT Designer
     ui->setupUi(this);
@@ -53,15 +49,21 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //create a connexion on the radio button "btnQDebug" to redirect QDebug in QTextEdit
 
-    new Q_DebugStream(std::cout, ui->textEdit_MW);
-
     connect(ui->btnComputation, SIGNAL(clicked()), this, SLOT(startComputation()));
+
+    // Initialize progress bar
+    m_progressBar->setWindowModality(Qt::NonModal);
+    m_progressBar->setWindowTitle("Be patient please, file is being read!");
+    m_progressBar->setFormat("Be patient please, file is being read!");
+    m_progressBar->setTextVisible(true);
+    m_progressBar->setGeometry(0,0,500,20);
 }
 
 
 
 MainWindow::~MainWindow()
 {
+    delete m_debugStream;
     delete m_progressBar;
     delete m_glDisplay;
     delete m_flowPathViewDefaultWindow;
