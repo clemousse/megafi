@@ -5,14 +5,12 @@
 using namespace megafi;
 
 
-FlowPath::FlowPath(const DTM& dtm, unsigned long origin, const FlowPathProps* defaultProps, Mode mode)
+FlowPath::FlowPath(const FlowPathProps* defaultProps, Mode mode)
     : Drawable(mode, TRILINE),
       m_minIndices(),
       m_defaultProps(defaultProps),
       m_props(m_defaultProps)
 {
-    m_minIndices.push_back(origin);
-    computePath(dtm);
 }
 
 FlowPath::FlowPath(const FlowPath &other)
@@ -32,12 +30,16 @@ FlowPath::~FlowPath()
 
 float FlowPath::getLineWidth() const { return m_props->lineWidth; }
 
-void FlowPath::computePath(const DTM& dtm)
+void FlowPath::computePath(const DTM *dtm, unsigned long startIndex)
 {
-    const Point*  const vertices   = dtm.getVertices();
-    const unsigned long vLength    = dtm.getNbVertices();
-    const unsigned long lineLength = dtm.getLineLength();
-    const Primitive     prim       = dtm.getPrimitive();
+    m_minIndices.push_back(startIndex);
+
+    dtm->lock.lockForRead();
+
+    const Point*  const vertices   = dtm->getVertices();
+    const unsigned long vLength    = dtm->getNbVertices();
+    const unsigned long lineLength = dtm->getLineLength();
+    const Primitive     prim       = dtm->getPrimitive();
 
     qDebug() << "First point's coordinates :"
              << "\nx = " << vertices[m_minIndices.first()].x
@@ -107,6 +109,8 @@ void FlowPath::computePath(const DTM& dtm)
                      << "\nz = " << m_vertices.back().z << "\n";
         }
     }
+
+    dtm->lock.unlock();
 }
 
 
@@ -126,6 +130,8 @@ void FlowPath::buildArrays()
     }
 
     BUILD
+
+    emit arrayRebuilt();
 }
 
 void FlowPath::buildLegacy() const

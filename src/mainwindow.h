@@ -11,6 +11,8 @@
 #include <QList>
 #include <QMainWindow>
 #include <QGraphicsSceneMouseEvent>
+#include <QThread>
+#include <QMutex>
 
 
 class MainWindow : public QMainWindow
@@ -25,10 +27,14 @@ protected:
     megafi::DTM* m_dtm;
     QList<megafi::FlowPath*> m_flows;
 
+    // Threads
+private:
+    QThread m_dtmThread;
 
+protected:
     // Windows
     FlowPathView* const m_flowPathViewDefaultWindow;
-    glDisplay*    const m_glDisplay;
+    const glDisplay*    const m_glDisplay;
 
     // Properties
     megafi::FlowPathProps m_flowPathDefaults;
@@ -37,22 +43,34 @@ protected:
 public:
     explicit MainWindow(QWidget* parent = NULL);
     ~MainWindow();
+
     void myMessageOutput();
 
+    void closeEvent(QCloseEvent *);
+
 public slots:
+    // GUI slots
     void openDialog();
-    void rebuildArrays();
-    void setClickedCoordinates(const qglviewer::Vec& mouse_world);
-    void addFlow(unsigned long startIndex);
+    void close();
     void changeFlowPathProperties();
+    void startComputation();
+    void lockInterface();
+    void unlockInterface();
+
+    // Application slots
+    void setClickedCoordinates(qglviewer::Vec mouse_world);
+    void addFlow(unsigned long startIndex);
 
 signals:
-    void dtmHasChanged(void) const;
-
-protected:
-    void closeEvent(QCloseEvent* event);
+    void buildDTM(QString) const;
+    void buildFlow(const megafi::DTM*, unsigned long) const;
+    void DTMHasChanged() const;
+    void flowsHaveChanged() const;
+    void closeAll() const;
+    void computeIndex(megafi::Point) const;
 
 private:
+    void deleteDTM();
     void deleteFlows();
 };
 

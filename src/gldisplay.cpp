@@ -4,21 +4,25 @@
 
 #include <QDebug>
 
-glDisplay::glDisplay(MainWindow& mainW,
+glDisplay::glDisplay(const MainWindow* mainW,
                      const megafi::DTM* const* dtm,
-                     const QList<const megafi::FlowPath*>& flows)
-    : m_mainW(mainW),
-    m_dtm(dtm),
+                     const QList<const megafi::FlowPath*>* flows)
+    : m_dtm(dtm),
     m_flows(flows),
+    m_initialized(false),
     m_windowSize(400, 300),
     m_departureSelection(false)
 
 {
-    setBaseSize(m_windowSize);
-    setWindowTitle("New DTM");
+    resize(m_windowSize);
+    setWindowTitle("MEGAFI Viewer");
 
     //In order to make MouseGrabber react to mouse events
     setMouseTracking(true);
+
+    connect(mainW, SIGNAL(DTMHasChanged()), this, SLOT(reinit()));
+    connect(mainW, SIGNAL(flowsHaveChanged()), this, SLOT(updateGL()));
+    connect(this, SIGNAL(clicked(qglviewer::Vec)), mainW, SLOT(setClickedCoordinates(qglviewer::Vec)));
 }
 
 glDisplay::~glDisplay()
@@ -29,69 +33,83 @@ void glDisplay::reshapeWindow(int width, int height)
 {
     m_windowSize.setWidth(width);
     m_windowSize.setHeight(height);
-
-    init();
+    emit windowHasChanged();
 }
 
 void glDisplay::init()
 {
-    // draw axis and grid (does not work)
-    setAxisIsDrawn(true);
-    setGridIsDrawn(true);
-
-    // set background and frontground colors
-    QColor bg(0, 0, 0);
-    setBackgroundColor(bg);
-    QColor fg(255, 255, 255);
-    setForegroundColor(fg);
-
-
-    glViewport(0, 0, m_windowSize.width(), m_windowSize.height()); // Set the viewport size to fill the window
-
-    // Move camera
-    if(*m_dtm)
+    if(!m_initialized)
     {
-        setSceneBoundingBox((*m_dtm)->getLL(), (*m_dtm)->getUR());
-        showEntireScene();
+        // draw axis and grid (does not work)
+        setAxisIsDrawn(true);
+        setGridIsDrawn(true);
+
+        // set background and frontground colors
+        QColor bg(0, 0, 0);
+        setBackgroundColor(bg);
+        QColor fg(255, 255, 255);
+        setForegroundColor(fg);
+
+        glViewport(0, 0, m_windowSize.width(), m_windowSize.height()); // Set the viewport size to fill the window
+
+        // Move camera
+        if(*m_dtm && (*m_dtm)->lock.tryLockForRead())
+        {
+            setSceneBoundingBox((*m_dtm)->getLL(), (*m_dtm)->getUR());
+            (*m_dtm)->lock.unlock();
+            showEntireScene();
+        }
+
+        m_initialized = true;
     }
 }
 
-void glDisplay::beginDraw()
+void glDisplay::reinit()
 {
-
-    if(isVisible())
-    {
-        init();
-        draw();
-
-    }
+    m_initialized = false;
+    updateGL();
 }
 
 void glDisplay::draw()
 {
-    // I can begin to draw
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear screen
-
-    // States
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-
-    // Building DTM
-    if(*m_dtm)
-        drawData<megafi::DTM>(**m_dtm);
-
-    // For each flow
-    for(QList<const megafi::FlowPath*>::const_iterator flow = m_flows.cbegin() ;
-        flow != m_flows.cend() ;
-        ++flow)
+    if(isVisible())
     {
-        glLineWidth((*flow)->getLineWidth());
-        drawData<megafi::FlowPath>(**flow);
-    }
+        if(!m_initialized) init();
 
-    // States
-    glDisableClientState(GL_COLOR_ARRAY);
-    glDisableClientState(GL_VERTEX_ARRAY);
+        if(m_initialized)
+        {
+            // I can begin to draw
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear screen
+
+            // States
+            glEnableClientState(GL_VERTEX_ARRAY);
+            glEnableClientState(GL_COLOR_ARRAY);
+
+            // Building DTM
+            if(*m_dtm)
+            {
+                if((*m_dtm)->lock.tryLockForRead())
+                {
+                    glLineWidth(1);
+                    drawData<megafi::DTM>(**m_dtm);
+                    (*m_dtm)->lock.unlock();
+                }
+            }
+
+            // For each flow
+            for(QList<const megafi::FlowPath*>::const_iterator flow = m_flows->cbegin() ;
+                flow != m_flows->cend() ;
+                ++flow)
+            {
+                glLineWidth((*flow)->getLineWidth());
+                drawData<megafi::FlowPath>(**flow);
+            }
+
+            // States
+            glDisableClientState(GL_COLOR_ARRAY);
+            glDisableClientState(GL_VERTEX_ARRAY);
+        }
+    }
 #ifdef IMANE
     for(long i = 0 ; i < m_minIndices.length()-1 ; ++i)
     {
@@ -167,8 +185,7 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
                       << "position y : " << mouse_world.y << endl
                       << "position z : " << mouse_world.z << endl;
 
-            m_mainW.setClickedCoordinates(mouse_world);
-            m_mainW.addFlow((*m_dtm)->computeIndex(mouse_world));
+            emit clicked(mouse_world);
         }
         else
         {

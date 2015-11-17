@@ -9,15 +9,7 @@
 
 using namespace megafi;
 
-DTM::DTM()
-    : m_dataSizeMin(), m_dataSizeMax(),
-      m_colorInterv(0.),
-      m_lineLength(0),
-      m_nbLines(0)
-{
-}
-
-DTM::DTM(const QString &filePath, Mode mode, Primitive prim)
+DTM::DTM(Mode mode, Primitive prim)
     : Drawable(mode, prim),
       m_dataSizeMin(), m_dataSizeMax(),
       m_colorInterv(0.),
@@ -26,12 +18,6 @@ DTM::DTM(const QString &filePath, Mode mode, Primitive prim)
       m_progressBar(NULL)
 
 {
-    if(readDTM(filePath))
-    {
-        computeDataSize();
-        m_colorInterv = (m_dataSizeMax.z-m_dataSizeMin.z)/2;
-        computeLineLength();
-    }
 }
 
 
@@ -69,6 +55,32 @@ unsigned long DTM::getLineLength() const
 unsigned long DTM::getNbLines() const
 {
     return m_nbLines;
+}
+
+bool DTM::buildDTM(QString filePath)
+{
+    bool fOpen = false;
+    lock.lockForWrite();
+    if(m_vertices.empty())
+    {
+        fOpen = readDTM(filePath);
+        if(fOpen)
+        {
+            computeDataSize();
+            m_colorInterv = (m_dataSizeMax.z-m_dataSizeMin.z)/3;
+            computeLineLength();
+            lock.unlock();
+            lock.lockForRead();
+            if(getMode() == MODE_VERTEX_ARRAY || getMode() == MODE_VERTEX_INDICES)
+            {
+                lock.unlock();
+                buildArrays();
+            }
+            emit arrayRebuilt();
+        }
+    }
+    lock.unlock();
+    return fOpen;
 }
 
 /* Purpose: read the coordinates from a DTM file and store them in a QVector
@@ -209,8 +221,10 @@ void DTM::computeLineLength()
     qInstallMessageHandler(0);
 }
 
-unsigned long DTM::computeIndex(const qglviewer::Vec& mouse_world) const
+unsigned long DTM::computeIndex(Point mouse_world) const
 {
+    lock.lockForRead();
+
     unsigned long ix = 0;
     unsigned long index = 0;
 
@@ -245,6 +259,9 @@ unsigned long DTM::computeIndex(const qglviewer::Vec& mouse_world) const
         }
     }
 
+    lock.unlock();
+
+    emit indexComputed(index);
     return index;
 }
 
@@ -305,6 +322,8 @@ megafi::Color DTM::computeColor(unsigned long index) const
 
 void DTM::buildArrays()
 {
+    lock.lockForWrite();
+
     {
         const unsigned long arraySize = array_size(getPrimitive());
         prepareBuild(arraySize);
@@ -334,10 +353,14 @@ void DTM::buildArrays()
         (this->*line)(i);
     }
     (this->*end)();
+
+    lock.unlock();
 }
 
 void DTM::buildLegacy() const
 {
+    lock.lockForRead();
+
     void (DTM::*begin)()       const = NULL;
     void (DTM::*line) (GLuint) const = NULL;
     void (DTM::*back) (GLuint) const = NULL;
@@ -362,6 +385,8 @@ void DTM::buildLegacy() const
         (this->*line)(i);
     }
     (this->*end)();
+
+    lock.unlock();
 }
 
 

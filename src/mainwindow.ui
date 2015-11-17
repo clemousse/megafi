@@ -298,7 +298,7 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="btnComputation">
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -411,7 +411,7 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
     <set>Qt::BottomDockWidgetArea|Qt::LeftDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>HISTORIC</string>
+    <string>HISTORY</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
