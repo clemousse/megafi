@@ -10,9 +10,6 @@ FlowPath::FlowPath(const DTM& dtm, unsigned long origin, const FlowPathProps* de
       m_minIndices(),
       m_defaultProps(defaultProps),
       m_props(m_defaultProps)
-#if FALSE
-      , endFP("Here the flow path")
-#endif
 {
     m_minIndices.push_back(origin);
     computePath(dtm);
@@ -93,9 +90,7 @@ void FlowPath::computePath(const DTM& dtm)
 
         if(argMin == i)
         {
-#if FALSE
-            endFP = "End flow path\n";
-#endif
+
             qDebug() << "End flow path\n";
             break;
         }

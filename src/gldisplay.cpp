@@ -172,7 +172,9 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
         }
         else
         {
-            qDebug() << "Not found\n";
+            Q_DebugStream::registerQDebugMessageHandler();
+            qWarning() << "Not found\n";
+            qInstallMessageHandler(0);
         }
     }
     else

@@ -33,7 +33,6 @@ void Q_DebugStream::myQDebugMessageHandler(QtMsgType type, const QMessageLogCont
             //The Unicode data is converted into 8-bit characters using the toAscii() function.
     //"c_str()" return a pointer toward the array of char which contains the object of string type.
 
-
     switch (type)
     {
        case QtDebugMsg:

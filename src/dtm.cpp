@@ -80,7 +80,7 @@ bool DTM::readDTM(const QString& path)
 {
     bool bOpen = false;
 
-    // Opening the file//void activeQDebug();barre de progression infinie qt
+    // Opening the file
     QFile file(path);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
@@ -109,7 +109,7 @@ bool DTM::readDTM(const QString& path)
             // A line contains three numbers; make one string (character sequence) for each number
             coordinates = line.split(' ');
 
-            // Convert //void activeQDebug();each string to a real machine number
+            // Convert each string to a real machine number
             double a = coordinates[0].toDouble();
             double b = coordinates[1].toDouble();
             double c = coordinates[2].toDouble();
@@ -214,7 +214,7 @@ unsigned long DTM::computeIndex(const qglviewer::Vec& mouse_world) const
     unsigned long ix = 0;
     unsigned long index = 0;
 
-    // Retrouver l'indice du point qui a pour coordonnées mouse_world
+    // Find the index of the point which coordinates are containes in mouse_world
     for(unsigned long i = 0 ; i < m_lineLength-1; i+=1)
     {
         if (m_vertices[i].x == mouse_world.x)
