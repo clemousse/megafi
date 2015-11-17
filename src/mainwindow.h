@@ -29,7 +29,6 @@ protected:
     // Threads
 private:
     QThread m_dtmThread;
-    QThread m_flowsThread;
 
 protected:
     // Windows
@@ -46,7 +45,6 @@ public:
     void editingPath();
 #endif
 
-    void addFlow(unsigned long startIndex);
 
     void closeEvent(QCloseEvent *);
 
@@ -55,18 +53,21 @@ public slots:
     void openDialog();
     void close();
     void changeFlowPathProperties();
+    void startComputation();
     void lockInterface();
     void unlockInterface();
 
     // Application slots
     void setClickedCoordinates(qglviewer::Vec mouse_world);
+    void addFlow(unsigned long startIndex);
 
 signals:
     void buildDTM(QString) const;
-    void buildFlow() const;
+    void buildFlow(const megafi::DTM*, unsigned long) const;
     void DTMHasChanged() const;
     void flowsHaveChanged() const;
     void closeAll() const;
+    void computeIndex(megafi::Point) const;
 
 private:
     void deleteDTM();

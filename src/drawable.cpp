@@ -120,16 +120,6 @@ Drawable::~Drawable()
 }
 
 
-bool Drawable::beginDraw() const throw()
-{
-    return lock.tryLockForRead();
-}
-
-void Drawable::endDraw() const throw()
-{
-    lock.unlock();
-}
-
 Mode Drawable::getMode() const throw()
 {
     return m_mode;

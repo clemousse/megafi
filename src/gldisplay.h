@@ -43,9 +43,12 @@ public:
     void mousePressEvent(QMouseEvent* const event);
 
 public slots:
-    void beginDraw();
+    void reinit();
     void reshapeWindow(int width, int height);
     void rbClick(bool chckD);
+
+private slots:
+    void draw(); // drawing function
 
 signals:
     void windowHasChanged() const;
@@ -53,7 +56,6 @@ signals:
 
 private:
     void init(); // Contains initialization code which cannot be executed before the window has been shown
-    void draw(); // drawing function
     template<class Datatype> void drawData(const Datatype&) const;
 };
 

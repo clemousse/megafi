@@ -180,7 +180,7 @@ void DTM::computeLineLength()
     qDebug() << "Lines are" << m_lineLength << "points long.";
 }
 
-unsigned long DTM::computeIndex(const qglviewer::Vec& mouse_world) const
+unsigned long DTM::computeIndex(Point mouse_world) const
 {
     lock.lockForRead();
 
@@ -220,6 +220,7 @@ unsigned long DTM::computeIndex(const qglviewer::Vec& mouse_world) const
 
     lock.unlock();
 
+    emit indexComputed(index);
     return index;
 }
 

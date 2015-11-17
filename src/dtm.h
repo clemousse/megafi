@@ -36,12 +36,14 @@ public:
     unsigned long getLineLength() const;
     unsigned long getNbLines   () const;
 
-    unsigned long computeIndex(const qglviewer::Vec& mouse_world) const;
-
 public slots:
     bool buildDTM(QString filePath);
     void buildArrays();
     void buildLegacy() const;
+    unsigned long computeIndex(megafi::Point mouse_world) const;
+
+signals:
+    void indexComputed(unsigned long) const;
 
 private:
     bool readDTM(const QString& path);

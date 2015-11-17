@@ -39,8 +39,10 @@ class Drawable : public QObject
 {
     Q_OBJECT
 
-protected:
+public:
     mutable QReadWriteLock lock;
+
+protected:
     // Data
     std::vector<Point> m_vertices;
 
@@ -84,8 +86,6 @@ public:
     virtual ~Drawable();
 
     // Getters
-    bool          beginDraw     () const throw();
-    void          endDraw       () const throw();
     Mode          getMode       () const throw();
     Primitive     getPrimitive  () const throw();
 

@@ -18,8 +18,8 @@ glDisplay::glDisplay(const MainWindow* mainW,
     //In order to make MouseGrabber react to mouse events
     setMouseTracking(true);
 
-    connect(mainW, SIGNAL(DTMHasChanged()), this, SLOT(beginDraw()));
-    connect(mainW, SIGNAL(flowsHaveChanged()), this, SLOT(beginDraw()));
+    connect(mainW, SIGNAL(DTMHasChanged()), this, SLOT(reinit()));
+    connect(mainW, SIGNAL(flowsHaveChanged()), this, SLOT(draw()));
     connect(this, SIGNAL(clicked(qglviewer::Vec)), mainW, SLOT(setClickedCoordinates(qglviewer::Vec)));
 }
 
@@ -52,10 +52,10 @@ void glDisplay::init()
         glViewport(0, 0, m_windowSize.width(), m_windowSize.height()); // Set the viewport size to fill the window
 
         // Move camera
-        if(*m_dtm && (*m_dtm)->beginDraw())
+        if(*m_dtm && (*m_dtm)->lock.tryLockForRead())
         {
             setSceneBoundingBox((*m_dtm)->getLL(), (*m_dtm)->getUR());
-            (*m_dtm)->endDraw();
+            (*m_dtm)->lock.unlock();
             showEntireScene();
         }
 
@@ -63,7 +63,7 @@ void glDisplay::init()
     }
 }
 
-void glDisplay::beginDraw()
+void glDisplay::reinit()
 {
     m_initialized = false;
 }
@@ -86,10 +86,10 @@ void glDisplay::draw()
             // Building DTM
             if(*m_dtm)
             {
-                if((*m_dtm)->beginDraw())
+                if((*m_dtm)->lock.tryLockForRead())
                 {
                     drawData<megafi::DTM>(**m_dtm);
-                    (*m_dtm)->endDraw();
+                    (*m_dtm)->lock.unlock();
                 }
             }
 

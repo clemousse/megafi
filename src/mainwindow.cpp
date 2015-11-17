@@ -14,10 +14,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     m_dtm(NULL),
     m_flows(),
-    m_dtmThread(), m_flowsThread(),
+    m_dtmThread(),
     m_flowPathViewDefaultWindow(new FlowPathView(this)),
     m_glDisplay(new glDisplay(this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>* >(&m_flows)))
 {
+    qRegisterMetaType<megafi::Point>("megafi::Point");
 
     m_flowPathDefaults.lineWidth = 5;
     m_flowPathDefaults.color.r   = 0;
@@ -45,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(closeAll()), m_glDisplay, SLOT(close()));
     //create a connexion on the radio button in calculating the flow path in mainwindow
     connect(ui->pushButton_Mouse, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
+    connect(ui->btnComputation, SIGNAL(clicked()), this, SLOT(startComputation()));
 }
 
 
@@ -122,6 +124,8 @@ void MainWindow::openDialog() // Open a dialog to choose a file
             connect(this, SIGNAL(buildDTM(QString)), m_dtm, SLOT(buildDTM(QString)));
             connect(m_dtm, SIGNAL(arrayRebuilt()), this, SLOT(unlockInterface()));
             connect(m_dtm, SIGNAL(arrayRebuilt()), this, SIGNAL(DTMHasChanged()));
+            connect(this, SIGNAL(computeIndex(megafi::Point)), m_dtm, SLOT(computeIndex(megafi::Point)));
+            connect(m_dtm, SIGNAL(indexComputed(unsigned long)), this, SLOT(addFlow(unsigned long)));
             m_dtmThread.start();
             emit buildDTM(file);
         }
@@ -139,13 +143,25 @@ void MainWindow::setClickedCoordinates(qglviewer::Vec mouse_world)
     ui->bxZcoord->setValue(mouse_world.z);
 }
 
+void MainWindow::startComputation()
+{
+    megafi::Point coords;
+    coords.x = ui->bxXcoord->value();
+    coords.y = ui->bxYcoord->value();
+    coords.z = ui->bxZcoord->value();
+    emit computeIndex(coords);
+}
+
 void MainWindow::addFlow(unsigned long startIndex)
 {
     if(m_dtm)
     {
         megafi::FlowPath* const newFP =
-                new megafi::FlowPath(*m_dtm, startIndex, &m_flowPathDefaults, m_dtm->getMode());
+                new megafi::FlowPath(&m_flowPathDefaults, m_dtm->getMode());
         m_flows.push_back(newFP);
+        connect(this, SIGNAL(buildFlow(const megafi::DTM*, unsigned long)), newFP, SLOT(computePath(const megafi::DTM*, unsigned long)));
+        connect(newFP, SIGNAL(arrayRebuilt()), this, SIGNAL(flowsHaveChanged()));
+        emit buildFlow(m_dtm, startIndex);
     }
 }
 
@@ -172,6 +188,8 @@ void MainWindow::deleteDTM()
     if(m_dtm)
     {
         m_dtmThread.quit();
+        disconnect(m_dtm, SIGNAL(indexComputed(unsigned long)), this, SLOT(addFlow(unsigned long)));
+        disconnect(this, SIGNAL(computeIndex(megafi::Point)), m_dtm, SLOT(computeIndex(megafi::Point)));
         disconnect(m_dtm, SIGNAL(arrayRebuilt()), this, SIGNAL(DTMHasChanged()));
         disconnect(m_dtm, SIGNAL(arrayRebuilt()), this, SLOT(unlockInterface()));
         disconnect(this, SIGNAL(buildDTM(QString)), m_dtm, SLOT(buildDTM(QString)));
@@ -182,11 +200,12 @@ void MainWindow::deleteDTM()
 
 void MainWindow::deleteFlows()
 {
-    m_flowsThread.quit();
     for(QList<megafi::FlowPath*>::iterator flow = m_flows.begin() ;
         flow != m_flows.end() ;
         ++flow)
     {
+        disconnect(*flow, SIGNAL(arrayRebuilt()), this, SIGNAL(flowsHaveChanged()));
+        disconnect(this, SIGNAL(buildFlow(const megafi::DTM*, unsigned long)), *flow, SLOT(computePath(const megafi::DTM*, unsigned long)));
         delete *flow;
         *flow = NULL;
     }
