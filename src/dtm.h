@@ -25,7 +25,6 @@ private:
 
     unsigned long m_lineLength;
     unsigned long m_nbLines;
-    QProgressBar* m_progressBar;
 
 public:
     DTM(Mode mode = MODE, Primitive prim = PRIM);
@@ -51,7 +50,6 @@ private:
     bool readDTM(const QString& path);
     void computeDataSize();
     void computeLineLength();
-    void progressB();
 
 protected:
     Color computeColor(unsigned long index) const;

@@ -6,7 +6,6 @@
 #include <QGraphicsSceneMouseEvent>
 #include <iostream>
 #include <QKeySequence>
-#include <QProgressBar>
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -16,7 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_flows(),
     m_dtmThread(),
     m_flowPathViewDefaultWindow(new FlowPathView(this)),
-    m_glDisplay(new glDisplay(this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>* >(&m_flows)))
+    m_glDisplay(new glDisplay(this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>* >(&m_flows))),
+    m_progressBar(new QProgressBar())
 {
     qRegisterMetaType<megafi::Point>("megafi::Point");
 
@@ -24,6 +24,12 @@ MainWindow::MainWindow(QWidget *parent) :
     m_flowPathDefaults.color.r   = 0;
     m_flowPathDefaults.color.g   = 0;
     m_flowPathDefaults.color.b   = 255;
+
+    m_progressBar->setWindowModality(Qt::NonModal);
+    m_progressBar->setWindowTitle("Be patient please, file is being read!");
+    m_progressBar->setFormat("Be patient please, file is being read!");
+    m_progressBar->setTextVisible(true);
+    m_progressBar->setGeometry(0,0,500,20);
 
     //load interface .ui created  with QT Designer
     ui->setupUi(this);
@@ -56,6 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    delete m_progressBar;
     delete m_glDisplay;
     delete m_flowPathViewDefaultWindow;
     deleteFlows();
@@ -126,14 +133,28 @@ void MainWindow::openDialog() // Open a dialog to choose a file
             }
             try
             {
-                lockInterface();
                 m_dtm = new megafi::DTM();
+
+                // Initialize progress bar
+                // All at 0 for the "infinite" aspect
+                m_progressBar->setMaximum(0);
+                m_progressBar->setMinimum(0);
+                m_progressBar->setValue(0);
+                m_progressBar->show();
+                lockInterface();
+
                 m_dtm->moveToThread(&m_dtmThread);
+                // What happen at beginning of thread
                 connect(this, SIGNAL(buildDTM(QString)), m_dtm, SLOT(buildDTM(QString)));
+                // What happen at end of thread
                 connect(m_dtm, SIGNAL(arrayRebuilt()), this, SLOT(unlockInterface()));
                 connect(m_dtm, SIGNAL(arrayRebuilt()), this, SIGNAL(DTMHasChanged()));
+                connect(m_dtm, SIGNAL(arrayRebuilt()), m_progressBar, SLOT(close()));
+                // What happen afterwards
                 connect(this, SIGNAL(computeIndex(megafi::Point)), m_dtm, SLOT(computeIndex(megafi::Point)));
                 connect(m_dtm, SIGNAL(indexComputed(unsigned long)), this, SLOT(addFlow(unsigned long)));
+
+                // Start thread
                 m_dtmThread.start();
                 emit buildDTM(file);
             }

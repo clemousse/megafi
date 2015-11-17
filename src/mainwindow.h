@@ -11,6 +11,7 @@
 #include <QList>
 #include <QMainWindow>
 #include <QGraphicsSceneMouseEvent>
+#include <QProgressBar>
 #include <QThread>
 #include <QMutex>
 
@@ -33,8 +34,9 @@ private:
 
 protected:
     // Windows
-    FlowPathView* const m_flowPathViewDefaultWindow;
-    const glDisplay*    const m_glDisplay;
+    FlowPathView*    const m_flowPathViewDefaultWindow;
+    const glDisplay* const m_glDisplay;
+    QProgressBar*    const m_progressBar;
 
     // Properties
     megafi::FlowPathProps m_flowPathDefaults;
