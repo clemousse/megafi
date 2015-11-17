@@ -20,11 +20,10 @@ public:
 
     static void registerQDebugMessageHandler();
 
-
 private:
     std::ostream &m_stream;
-    std::streambuf* m_old_buf;
-    QTextEdit* log_window;
+    std::streambuf* const m_oldBuf;
+    QTextEdit* const m_logWindow;
 
     static void myQDebugMessageHandler(QtMsgType, const QMessageLogContext &, const QString &msg);
 

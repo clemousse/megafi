@@ -3,11 +3,11 @@
 
 //constructor
 Q_DebugStream::Q_DebugStream(std::ostream &stream, QTextEdit* text_edit)
-    :m_stream(stream)
+    :m_stream(stream),
+      m_oldBuf(stream.rdbuf()),
+      m_logWindow(text_edit)
 
 {
-    log_window = text_edit;
-    m_old_buf = stream.rdbuf();
     stream.rdbuf(this);
 }
 
@@ -15,7 +15,7 @@ Q_DebugStream::Q_DebugStream(std::ostream &stream, QTextEdit* text_edit)
 //destructor
 Q_DebugStream::~Q_DebugStream()
 {
-    m_stream.rdbuf(m_old_buf);
+    m_stream.rdbuf(m_oldBuf);
     qInstallMessageHandler(0);
 }
 
@@ -36,10 +36,11 @@ void Q_DebugStream::myQDebugMessageHandler(QtMsgType type, const QMessageLogCont
     switch (type)
     {
        case QtDebugMsg:
-            qInstallMessageHandler(0);
+            std::cout << msg.toStdString();
             break;
        case QtWarningMsg:
-            std::cout << "Warning : "<< msg.toStdString().c_str();
+            std::cerr << msg.toStdString();
+            //m_logWindow << msg;
             break;
        case QtCriticalMsg:
             qInstallMessageHandler(0);
@@ -56,7 +57,7 @@ Q_DebugStream::int_type Q_DebugStream::overflow(Q_DebugStream::int_type v)
 {
     if (v == '\n')
     {
-        log_window->append("");
+        //log_window->append("");
     }
     return v;
 }
@@ -69,20 +70,20 @@ std::streamsize Q_DebugStream::xsputn(const char *p, std::streamsize n)
     {
         QStringList strSplitted = str.split("\n");
         //Move to the end of the document.
-        log_window->moveCursor (QTextCursor::End);
-        log_window->insertPlainText (strSplitted.at(0)); //Index 0 is still on the same old line
+        //log_window->moveCursor (QTextCursor::End);
+        //log_window->insertPlainText (strSplitted.at(0)); //Index 0 is still on the same old line
 
         for(int i = 1; i < strSplitted.size(); i++)
         {
-            log_window->append(strSplitted.at(i));
+            //log_window->append(strSplitted.at(i));
         }
     }
     else
     {
         //Move to the end of the document.
-        log_window->moveCursor (QTextCursor::End);
+        //log_window->moveCursor (QTextCursor::End);
         //convenience slot that inserts text at the current cursor position. Here, at the end.
-        log_window->insertPlainText (str);
+        //log_window->insertPlainText (str);
     }
     return n;
 }
