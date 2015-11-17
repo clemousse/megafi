@@ -26,7 +26,7 @@ DTM::DTM(const QString &filePath, Mode mode, Primitive prim)
     if(readDTM(filePath))
     {
         computeDataSize();
-        m_colorInterv = (m_dataSizeMax.z-m_dataSizeMin.z)/3;
+        m_colorInterv = (m_dataSizeMax.z-m_dataSizeMin.z)/2;
         computeLineLength();
     }
 }
@@ -211,28 +211,26 @@ megafi::Color DTM::computeColor(unsigned long index) const
 {
     megafi::Color ret = {{0, 0, 0}};
 
-    if(m_vertices[index].z <= (m_colorInterv+m_dataSizeMin.z) && m_vertices[index].z >= m_dataSizeMin.z)
+    if(m_vertices[index].z < (m_colorInterv+m_dataSizeMin.z) && m_vertices[index].z >= m_dataSizeMin.z)
     {
-        ret.b = 255 * (m_vertices[index].z-m_dataSizeMin.z)/(m_colorInterv+m_dataSizeMin.z - m_dataSizeMin.z);
-        ret.g = 255 - ret.b;
+        ret.r = 255 * (m_vertices[index].z-m_dataSizeMin.z)/(m_colorInterv+m_dataSizeMin.z - m_dataSizeMin.z);
+        ret.g = 255;
+
+
     }
 
-    else if(m_colorInterv+m_dataSizeMin.z < m_vertices[index].z  && m_vertices[index].z <= (2*m_colorInterv)+m_dataSizeMin.z )
+    else if(m_vertices[index].z <= m_dataSizeMax.z && m_vertices[index].z >= (m_colorInterv)+m_dataSizeMin.z)
     {
-        ret.g = 255 * (m_vertices[index].z - m_colorInterv+m_dataSizeMin.z)/( 2*m_colorInterv + m_dataSizeMin.z-m_colorInterv + m_dataSizeMin.z);
-        ret.b = 255 - ret.g;
-    }
+        ret.r = 255;
+        ret.g = 255 - (255 * (m_vertices[index].z - (m_colorInterv + m_dataSizeMin.z))/(m_dataSizeMax.z - (m_colorInterv + m_dataSizeMin.z)));
 
-    else if(m_vertices[index].z <= m_dataSizeMax.z && m_vertices[index].z > (2*m_colorInterv)+m_dataSizeMin.z)
-    {
-        ret.r = 255 * (m_vertices[index].z - 2*m_colorInterv + m_dataSizeMin.z)/(m_dataSizeMax.z - 2*m_colorInterv + m_dataSizeMin.z);
-        ret.g = 255 - ret.r;
+
     }
     else
     {
         ret.r = 255;
         ret.g = 255;
-        ret.b = 255;
+
     }
 
     return ret;

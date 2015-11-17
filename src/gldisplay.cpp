@@ -57,10 +57,12 @@ void glDisplay::init()
 
 void glDisplay::beginDraw()
 {
+
     if(isVisible())
     {
         init();
         draw();
+
     }
 }
 
@@ -104,6 +106,32 @@ void glDisplay::draw()
         glEnd();
     }
 #endif
+
+  /*  double interv = (m_dataSizeMax.z-m_dataSizeMin.z)/3;
+        if(m_vertices[index].z <= (interv+m_dataSizeMin.z) && m_vertices[index].z >= m_dataSizeMin.z)
+        {
+            double B=((m_vertices[index].z-m_dataSizeMin.z)/((interv+m_dataSizeMin.z)-m_dataSizeMin.z));
+            glColor3d(0,1-B,B);
+        }
+
+        else if(interv+m_dataSizeMin.z < m_vertices[index].z  && m_vertices[index].z <= (2*interv)+m_dataSizeMin.z )
+        {
+            double G=((m_vertices[index].z-(interv+m_dataSizeMin.z))/((2*interv)+m_dataSizeMin.z-interv+m_dataSizeMin.z));
+            glColor3d(0,G,1-G);
+
+        }
+
+        else if(m_vertices[index].z <= m_dataSizeMax.z && m_vertices[index].z > (2*interv)+m_dataSizeMin.z)
+        {
+            double R=((m_vertices[index].z-(2*interv)+m_dataSizeMin.z)/(m_dataSizeMax.z-(2*interv)+m_dataSizeMin.z));
+            glColor3d(R,1-R,0);
+
+        }
+        else{
+            glColor3d(1,1,1);
+        }*/
+
+
 }
 
 
@@ -155,6 +183,7 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
         //release the curseur of the mouse to the parent class
         QGLViewer::mousePressEvent(event);
     }
+
 }
 
 
