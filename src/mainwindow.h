@@ -6,7 +6,6 @@
 #include "flowpathview.h"
 #include "gldisplay.h"
 #include "ui_mainwindow.h"
-#include "q_debugstream.h"
 
 #include <QList>
 #include <QMainWindow>
@@ -40,8 +39,6 @@ protected:
     FlowPathView*    const m_flowPathViewDefaultWindow;
     const glDisplay* const m_glDisplay;
     QProgressBar*    const m_progressBar;
-
-    Q_DebugStream*   const m_debugStream;
 
     // Properties
     megafi::FlowPathProps m_flowPathDefaults;

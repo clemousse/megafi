@@ -1,32 +1,21 @@
 #include "q_debugstream.h"
+#include "logwidget.h"
 
+#include <iostream>
 
-//constructor
-Q_DebugStream::Q_DebugStream(std::ostream &stream, QTextEdit* text_edit)
-    :m_stream(stream),
-      m_oldBuf(stream.rdbuf()),
-      m_logWindow(text_edit)
+using namespace megafi;
 
-{
-    stream.rdbuf(this);
-}
+#ifdef QT_NO_DEBUG_OUTPUT
+bool DebugStream::verbose = false;
+#else
+bool DebugStream::verbose = true;
+#endif
 
-
-//destructor
-Q_DebugStream::~Q_DebugStream()
-{
-    m_stream.rdbuf(m_oldBuf);
-    qInstallMessageHandler(0);
-}
-
-
-void Q_DebugStream::registerQDebugMessageHandler()
-{
-    qInstallMessageHandler(myQDebugMessageHandler);
-}
-
-
-void Q_DebugStream::myQDebugMessageHandler(QtMsgType type, const QMessageLogContext &, const QString &msg)
+#if QT_VERSION >= 0x050000
+void DebugStream::handle(QtMsgType type, const QMessageLogContext&, const QString& msg)
+#else
+void DebugStream::handle(QtMsgType type, const QString& msg)
+#endif
 {
     //"std::cout <<" append the text
     //"toStdString()" allows to return a std::string object with the data contained in this QString.
@@ -36,24 +25,36 @@ void Q_DebugStream::myQDebugMessageHandler(QtMsgType type, const QMessageLogCont
     switch (type)
     {
        case QtDebugMsg:
-            std::cout << msg.toStdString();
+            if(verbose)
+                std::wcout << msg.toStdWString();
             break;
        case QtWarningMsg:
-            std::cerr << msg.toStdString();
-            //m_logWindow << msg;
+            std::wcerr << msg.toStdWString();
             break;
        case QtCriticalMsg:
-            qInstallMessageHandler(0);
+            break;
        case QtFatalMsg:
-            abort();
+            //abort();
             break;
 //for critical messages : QMessageBox::critical(this,"Critical Message","Test");
     }
 }
 
 
+//constructor
+DebugStream::DebugStream() : basic_streambuf()
+{
+}
 
-Q_DebugStream::int_type Q_DebugStream::overflow(Q_DebugStream::int_type v)
+
+//destructor
+DebugStream::~DebugStream()
+{
+}
+
+
+
+DebugStream::int_type DebugStream::overflow(DebugStream::int_type v)
 {
     if (v == '\n')
     {
@@ -63,7 +64,7 @@ Q_DebugStream::int_type Q_DebugStream::overflow(Q_DebugStream::int_type v)
 }
 
 
-std::streamsize Q_DebugStream::xsputn(const char *p, std::streamsize n)
+std::streamsize DebugStream::xsputn(const char *p, std::streamsize n)
 {
     QString str(p);
     if(str.contains("\n"))

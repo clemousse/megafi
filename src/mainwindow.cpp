@@ -18,11 +18,9 @@ MainWindow::MainWindow(QWidget *parent) :
     m_dtmThread(),
     m_flowPathViewDefaultWindow(new FlowPathView(this)),
     m_glDisplay(new glDisplay(&m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>* >(&m_flows))),
-    m_progressBar(new QProgressBar()),
-    m_debugStream(new Q_DebugStream(std::cout, ui->textEdit_MW))
+    m_progressBar(new QProgressBar())
 {
     qRegisterMetaType<megafi::Point>("megafi::Point");
-    Q_DebugStream::registerQDebugMessageHandler();
 
     m_flowPathDefaults.lineWidth = 5;
     m_flowPathDefaults.color.r   = 0;
@@ -76,7 +74,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    delete m_debugStream;
     delete m_progressBar;
     delete m_glDisplay;
     delete m_flowPathViewDefaultWindow;

@@ -2,7 +2,6 @@
 #define DTM_H
 
 #include "drawable.h"
-#include "q_debugstream.h"
 
 #include <QString>
 #include <QProgressBar>
