@@ -23,8 +23,6 @@ void glDisplay::drawData(const Datatype& data) const
 
             glDrawArrays(glPrimitive(data.getPrimitive()), 0, data.getArrayLength());
         }
-        else
-            emit needsRebuild();
     }
         break;
 
@@ -42,8 +40,6 @@ void glDisplay::drawData(const Datatype& data) const
                            GL_UNSIGNED_INT,
                            vi);
         }
-        else
-            emit needsRebuild();
     }
         break;
     }

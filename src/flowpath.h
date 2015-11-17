@@ -15,6 +15,8 @@ struct FlowPathProps
 
 class FlowPath : public Drawable
 {
+    Q_OBJECT
+
     QList<unsigned long> m_minIndices;
     const FlowPathProps* const m_defaultProps;
     const FlowPathProps* m_props;
@@ -25,7 +27,7 @@ public:
 #endif
 
 public:
-    FlowPath(const DTM& dtm, unsigned long origin, const FlowPathProps* defaultProps, Mode mode = MODE);
+    FlowPath(const FlowPathProps* defaultProps, Mode mode = MODE);
     FlowPath(const FlowPath& other);
     ~FlowPath();
 
@@ -34,9 +36,7 @@ public:
 public slots:
     void buildArrays();
     void buildLegacy() const;
-
-protected:
-    void computePath(const DTM& dtm);
+    void computePath(const megafi::DTM* dtm, unsigned long startIndex);
 
 private:
     inline virtual void buildFunction(GLuint i) throw(const IncoherentMode&) override

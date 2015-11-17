@@ -6,6 +6,7 @@
 #include <vector>
 
 #include <QObject>
+#include <QReadWriteLock>
 
 #include <QGLViewer/vec.h>
 
@@ -37,6 +38,9 @@ union Color
 class Drawable : public QObject
 {
     Q_OBJECT
+
+public:
+    mutable QReadWriteLock lock;
 
 protected:
     // Data
@@ -101,6 +105,9 @@ public slots:
     // Building
     virtual void buildArrays() =0;
     virtual void buildLegacy() const =0;
+
+signals:
+    void arrayRebuilt() const;
 
 protected:
     void prepareBuild(unsigned long arrayLength) throw(const std::bad_alloc&);
