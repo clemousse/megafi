@@ -158,8 +158,9 @@ void MainWindow::addFlow(unsigned long startIndex)
     {
         megafi::FlowPath* const newFP =
                 new megafi::FlowPath(&m_flowPathDefaults, m_dtm->getMode());
+        newFP->computePath(m_dtm, startIndex);
         m_flows.push_back(newFP);
-        connect(this, SIGNAL(buildFlow(const megafi::DTM*, unsigned long)), newFP, SLOT(computePath(const megafi::DTM*, unsigned long)));
+        connect(this, SIGNAL(buildFlow(const megafi::DTM*, unsigned long)), newFP, SLOT(buildArrays()));
         connect(newFP, SIGNAL(arrayRebuilt()), this, SIGNAL(flowsHaveChanged()));
         emit buildFlow(m_dtm, startIndex);
     }

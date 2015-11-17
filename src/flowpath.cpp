@@ -117,8 +117,6 @@ void FlowPath::computePath(const DTM *dtm, unsigned long startIndex)
     }
 
     dtm->lock.unlock();
-
-    buildArrays();
 }
 
 
