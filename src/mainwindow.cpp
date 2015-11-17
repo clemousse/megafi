@@ -221,6 +221,7 @@ void MainWindow::deleteDTM()
     if(m_dtm)
     {
         m_dtmThread.quit();
+        m_dtmThread.wait();
         disconnect(m_dtm, SIGNAL(indexComputed(unsigned long)), this, SLOT(addFlow(unsigned long)));
         disconnect(this, SIGNAL(computeIndex(megafi::Point)), m_dtm, SLOT(computeIndex(megafi::Point)));
         disconnect(m_dtm, SIGNAL(arrayRebuilt()), this, SIGNAL(DTMHasChanged()));
