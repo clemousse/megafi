@@ -57,8 +57,9 @@ void glDisplay::init()
             setSceneBoundingBox((*m_dtm)->getLL(), (*m_dtm)->getUR());
             (*m_dtm)->endDraw();
             showEntireScene();
-            m_initialized = true;
         }
+
+        m_initialized = true;
     }
 }
 

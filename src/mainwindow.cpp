@@ -14,12 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     m_dtm(NULL),
     m_flows(),
-    m_dtmThread(), m_flowsThread(), m_displayThread(),
+    m_dtmThread(), m_flowsThread(),
     m_flowPathViewDefaultWindow(new FlowPathView(this)),
     m_glDisplay(new glDisplay(this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>* >(&m_flows)))
 {
-    //m_glDisplay->moveToThread(&m_displayThread);
-    //m_displayThread.start(QThread::LowestPriority);
 
     m_flowPathDefaults.lineWidth = 5;
     m_flowPathDefaults.color.r   = 0;
@@ -52,8 +50,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    m_displayThread.quit();
-    m_displayThread.wait();
     delete m_glDisplay;
     delete m_flowPathViewDefaultWindow;
     deleteFlows();
