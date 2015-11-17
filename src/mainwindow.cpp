@@ -6,15 +6,15 @@
 #include <QGraphicsSceneMouseEvent>
 #include <iostream>
 #include <QKeySequence>
-
+#include <QProgressBar>
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     m_dtm(NULL),
-    m_qdbg(false),
     m_flowPathViewDefaultWindow(new FlowPathView(this)),
+    m_flows(),
     m_glDisplay(new glDisplay(*this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>& >(m_flows)))
 
 {
@@ -30,10 +30,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     //create a connexion on the menu File-> Open DTM File via openDialog slot
-    connect(ui->actionOpen_DTM_file, SIGNAL(triggered()), this, SLOT(openDialog()));
+    connect(ui->actionOpen_DTM_file, SIGNAL(triggered()),this, SLOT(openDialog()));
     //create a connexion on the menu View-> New DTM Path via show slot
     connect(ui->actionNew_DTM_Window, SIGNAL(triggered()), m_glDisplay, SLOT(show()));
-    // View -> customize paths
+    //create a connexion ont the menu View -> Customize paths
     connect(ui->actionCustomize_paths, SIGNAL(triggered()), this, SLOT(changeFlowPathProperties()));
     //create a connexion on the cross of the m_gl_display window to close it
     connect(ui->actionQuit, SIGNAL(triggered()),m_glDisplay, SLOT(close()));
@@ -41,14 +41,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionView_history, SIGNAL(triggered()),ui->dockWidget_His, SLOT(show()));
     //create a connexion on the menu File-> Quit via close slot (or cross)
     connect(ui->actionQuit, SIGNAL(triggered()),this, SLOT(close()));
-    //create a connexion on the radio button "pushButton_Mouse" in calculating the flow path in mainwindow
+    //create a connexion on the radio button "pushButton_Mouse" in calculating the funsigned long vIn = 0;
     connect(ui->pushButton_Mouse, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
     //create a connexion on the radio button "btnQDebug" to redirect QDebug in QTextEdit
-    //connect(ui->btnQDebug, SIGNAL(toggled(bool)),this, SLOT(qdClick(bool)));
 
-    new Q_DebugStream (std::cout, ui->textEdit_MW);
-
+    new Q_DebugStream(std::cout, ui->textEdit_MW);
 }
+
 
 
 MainWindow::~MainWindow()
@@ -61,7 +60,9 @@ MainWindow::~MainWindow()
 }
 
 
+
 void MainWindow::closeEvent(QCloseEvent* event)
+
 {
     int rep = QMessageBox::question(this,"Quit ?","Do you really want to quit ?",QMessageBox::Yes | QMessageBox::No);
     if (rep == QMessageBox::Yes)
@@ -78,13 +79,14 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
 
 
+
 void MainWindow::openDialog() // Open a dialog to choose a file
 {
     QString file;
 
+
     // Actions related to the dialog window
     {
-
         QFileDialog fDlg;
 
         // Don't accept empty file or directory; only one file
@@ -99,7 +101,8 @@ void MainWindow::openDialog() // Open a dialog to choose a file
             if(selectedFiles.length() == 1)
                 file = selectedFiles.first();
         }
-    }
+
+    // Actions related to dtm
 
     if(!file.isEmpty())
     {
@@ -123,12 +126,13 @@ void MainWindow::openDialog() // Open a dialog to choose a file
         }
     }
 }
+}
 
 
 
 void MainWindow::rebuildArrays()
 {
-    // Rebuild DTM
+    // Rebuild DTMQApplication
     if(m_dtm)
     {
         switch(m_dtm->getMode())
@@ -156,12 +160,16 @@ void MainWindow::rebuildArrays()
    }
 }
 
+
+
 void MainWindow::setClickedCoordinates(const qglviewer::Vec& mouse_world)
 {
     ui->bxXcoord->setValue(mouse_world.x);
     ui->bxYcoord->setValue(mouse_world.y);
     ui->bxZcoord->setValue(mouse_world.z);
 }
+
+
 
 void MainWindow::addFlow(unsigned long startIndex)
 {
@@ -172,6 +180,7 @@ void MainWindow::addFlow(unsigned long startIndex)
         m_flows.push_back(newFP);
     }
 }
+
 
 void MainWindow::changeFlowPathProperties()
 {
@@ -191,6 +200,7 @@ void MainWindow::changeFlowPathProperties()
     }
 }
 
+
 void MainWindow::deleteFlows()
 {
     for(QList<megafi::FlowPath*>::iterator flow = m_flows.begin() ;
@@ -200,33 +210,6 @@ void MainWindow::deleteFlows()
     {
         delete *flow;
         *flow = NULL;
+
     }
 }
-
-
-
-// functions to activate redirection of qdebug and others types of messages in QTextEdit in MainWindow
-void MainWindow::qdClick (bool qdbg)
-{
-    m_qdbg = qdbg;
-
-    activeQDebug();
-}
-
-
-void MainWindow::activeQDebug()
-{
-
-    if (m_qdbg)
-    {
-       //redirect QDebug in QTextEdit "btnQDebug"
-
-       Q_DebugStream::registerQDebugMessageHandler();
-    }
-    else
-    {
-        //restore the message handler
-        qInstallMessageHandler(0);
-    }
-}
-

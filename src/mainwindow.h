@@ -24,7 +24,6 @@ protected:
     // Data
     megafi::DTM* m_dtm;
     QList<megafi::FlowPath*> m_flows;
-    bool m_qdbg;
 
 
     // Windows
@@ -39,16 +38,13 @@ public:
     explicit MainWindow(QWidget* parent = NULL);
     ~MainWindow();
     void myMessageOutput();
-    void activeQDebug();
 
 public slots:
     void openDialog();
     void rebuildArrays();
     void setClickedCoordinates(const qglviewer::Vec& mouse_world);
     void addFlow(unsigned long startIndex);
-    void qdClick(bool qdbg);
     void changeFlowPathProperties();
-
 
 signals:
     void dtmHasChanged(void) const;

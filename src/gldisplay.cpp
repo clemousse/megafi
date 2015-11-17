@@ -173,10 +173,6 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
         else
         {
             qDebug() << "Not found\n";
-            qWarning () << "Warning, Warning, Warning\n";
-            //qFatal() << "Fatal\n"; => bug !
-            qCritical () << "Message critique, attention attention\n";
-
         }
     }
     else

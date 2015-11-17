@@ -19,10 +19,6 @@ class FlowPath : public Drawable
     const FlowPathProps* const m_defaultProps;
     const FlowPathProps* m_props;
 
-#if FALSE
-public:
-    QString endFP;
-#endif
 
 public:
     FlowPath(const DTM& dtm, unsigned long origin, const FlowPathProps* defaultProps, Mode mode = MODE);

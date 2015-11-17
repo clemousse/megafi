@@ -22,10 +22,6 @@ int main(int argc, char *argv[])
     w.setWindowTitle("MEGAFI : Modèle d'Ecoulement d'une Goutte dans les Alpes Franco-Italiennes");
     w.show();
 
-#if FALSE
-    w.editingPath();
-#endif
-
     return a.exec();
 #endif
 

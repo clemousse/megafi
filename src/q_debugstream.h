@@ -4,8 +4,8 @@
 #include <iostream>
 #include <streambuf>
 #include <string>
-
-#include "mainwindow.h"
+#include <QMessageBox>
+#include <QTextEdit>
 
 class Q_DebugStream : public std::basic_streambuf<char>
 {
@@ -19,6 +19,7 @@ public:
     ~Q_DebugStream();
 
     static void registerQDebugMessageHandler();
+
 
 private:
     std::ostream &m_stream;

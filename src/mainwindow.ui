@@ -29,6 +29,24 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="toolTip">
+         <string/>
+        </property>
+        <property name="toolTipDuration">
+         <number>-1</number>
+        </property>
+        <property name="statusTip">
+         <string/>
+        </property>
+        <property name="whatsThis">
+         <string/>
+        </property>
+        <property name="accessibleName">
+         <string/>
+        </property>
+        <property name="accessibleDescription">
+         <string/>
+        </property>
         <property name="text">
          <string>CALCULATING THE FLOW PATH</string>
         </property>
@@ -58,7 +76,7 @@
         <property name="text">
          <string>Click on the button below to switch on selection mode.
 It will allow you to select a point of the DTM directly on the screen.
-The flow path will be calculated from this point and you will see it on screen.</string>
+To run the computing of the flow path and see it on screen, push the &quot;Calcul&quot; button.</string>
         </property>
        </widget>
       </item>
@@ -258,9 +276,51 @@ The flow path will be calculated from this point and you will see it on screen.<
          <double>3270.300000000000182</double>
         </property>
         <property name="singleStep">
-         <double>0.100000000000000</double>
+         <double>0.010000000000000</double>
         </property>
        </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="font">
+         <font>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Calcul</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </item>
@@ -268,8 +328,11 @@ The flow path will be calculated from this point and you will see it on screen.<
      <layout class="QHBoxLayout" name="horizontalLayout_7">
       <item>
        <widget class="QTextEdit" name="textEdit_MW">
+        <property name="cursor" stdset="0">
+         <cursorShape>ArrowCursor</cursorShape>
+        </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;In this area are printed Warning messages during the execution of the program.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Here are displayed the warning messages from the execution of the code.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="toolTipDuration">
          <number>5000</number>
@@ -323,8 +386,8 @@ The flow path will be calculated from this point and you will see it on screen.<
    </property>
    <property name="minimumSize">
     <size>
-     <width>230</width>
-     <height>200</height>
+     <width>200</width>
+     <height>414</height>
     </size>
    </property>
    <property name="font">
@@ -347,30 +410,13 @@ The flow path will be calculated from this point and you will see it on screen.<
    <property name="allowedAreas">
     <set>Qt::BottomDockWidgetArea|Qt::LeftDockWidgetArea</set>
    </property>
+   <property name="windowTitle">
+    <string>HISTORIC</string>
+   </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_8">
-    <widget class="QWidget" name="horizontalLayoutWidget_2">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>0</y>
-       <width>211</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>HISTORIC</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </widget>
+   <widget class="QWidget" name="dockWidgetContents_8"/>
   </widget>
   <action name="actionOpen_DTM_file">
    <property name="text">
