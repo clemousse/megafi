@@ -13,13 +13,13 @@ glDisplay::glDisplay(const MainWindow* mainW,
     m_windowSize(400, 300),
     m_departureSelection(false)
 {
-    setBaseSize(m_windowSize);
+    resize(m_windowSize);
 
     //In order to make MouseGrabber react to mouse events
     setMouseTracking(true);
 
     connect(mainW, SIGNAL(DTMHasChanged()), this, SLOT(reinit()));
-    connect(mainW, SIGNAL(flowsHaveChanged()), this, SLOT(draw()));
+    connect(mainW, SIGNAL(flowsHaveChanged()), this, SLOT(updateGL()));
     connect(this, SIGNAL(clicked(qglviewer::Vec)), mainW, SLOT(setClickedCoordinates(qglviewer::Vec)));
 }
 
@@ -48,7 +48,6 @@ void glDisplay::init()
         QColor fg(255, 255, 255);
         setForegroundColor(fg);
 
-
         glViewport(0, 0, m_windowSize.width(), m_windowSize.height()); // Set the viewport size to fill the window
 
         // Move camera
@@ -66,6 +65,7 @@ void glDisplay::init()
 void glDisplay::reinit()
 {
     m_initialized = false;
+    updateGL();
 }
 
 void glDisplay::draw()

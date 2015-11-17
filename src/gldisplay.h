@@ -47,15 +47,13 @@ public slots:
     void reshapeWindow(int width, int height);
     void rbClick(bool chckD);
 
-private slots:
-    void draw(); // drawing function
-
 signals:
     void windowHasChanged() const;
     void clicked(qglviewer::Vec) const;
 
 private:
     void init(); // Contains initialization code which cannot be executed before the window has been shown
+    void draw(); // drawing function
     template<class Datatype> void drawData(const Datatype&) const;
 };
 
