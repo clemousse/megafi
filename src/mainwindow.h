@@ -15,6 +15,9 @@
 #include <QThread>
 #include <QMutex>
 
+namespace megafi
+{
+
 
 class MainWindow : public QMainWindow
 {
@@ -76,5 +79,6 @@ private:
     void deleteFlows();
 };
 
+}
 
 #endif // MAINWINDOW_H

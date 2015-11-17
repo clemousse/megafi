@@ -1,11 +1,11 @@
 #include "gldisplay.h"
 #include "gldisplay.inl"
-#include "mainwindow.h"
 
 #include <QDebug>
 
-glDisplay::glDisplay(const MainWindow* mainW,
-                     const megafi::DTM* const* dtm,
+using namespace megafi;
+
+glDisplay::glDisplay(const megafi::DTM* const* dtm,
                      const QList<const megafi::FlowPath*>* flows)
     : m_dtm(dtm),
     m_flows(flows),
@@ -19,10 +19,6 @@ glDisplay::glDisplay(const MainWindow* mainW,
 
     //In order to make MouseGrabber react to mouse events
     setMouseTracking(true);
-
-    connect(mainW, SIGNAL(DTMHasChanged()), this, SLOT(reinit()));
-    connect(mainW, SIGNAL(flowsHaveChanged()), this, SLOT(updateGL()));
-    connect(this, SIGNAL(clicked(qglviewer::Vec)), mainW, SLOT(setClickedCoordinates(qglviewer::Vec)));
 }
 
 glDisplay::~glDisplay()

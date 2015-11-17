@@ -10,10 +10,8 @@
 
 #include <QGLViewer/qglviewer.h>
 
-
-// Declare a class MainWindow to resolve circular inclusion
-class MainWindow;
-
+namespace megafi
+{
 
 /* Window where OpenGL graphics will be done.
  *
@@ -35,8 +33,7 @@ protected:
     bool m_departureSelection;
 
 public:
-    glDisplay(const MainWindow *mainW,
-              const megafi::DTM* const* dtm,
+    glDisplay(const megafi::DTM* const* dtm,
               const QList<const megafi::FlowPath *> *flows);
     ~glDisplay();
 
@@ -56,5 +53,7 @@ private:
     void draw(); // Drawing function
     template<class Datatype> void drawData(const Datatype&) const;
 };
+
+}
 
 #endif // GLDISPLAY_H
