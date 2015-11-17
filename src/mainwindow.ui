@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="windowOpacity">
+   <double>1.000000000000000</double>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
@@ -44,41 +47,6 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_10">
-      <item>
-       <widget class="QLabel" name="label_8">
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <italic>true</italic>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>To choose the departure point, you can : </string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <widget class="Line" name="line">
-      <property name="font">
-       <font>
-        <weight>50</weight>
-        <italic>false</italic>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item>
      <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
        <widget class="QLabel" name="label_6">
@@ -88,14 +56,18 @@
          </font>
         </property>
         <property name="text">
-         <string>Click on this radio button to switch on selection mode :
-then, you will be able to select a point with the mouse
-directly on the DTM on the screen.</string>
+         <string>Click on the button below to switch on selection mode.
+It will allow you to select a point of the DTM directly on the screen.
+The flow path will be calculated from this point and you will see it on screen.</string>
         </property>
        </widget>
       </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
       <item>
-       <spacer name="spcrCoords">
+       <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -114,32 +86,22 @@ directly on the DTM on the screen.</string>
           <pointsize>9</pointsize>
          </font>
         </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;This button allows you to switch on selection mode in order to choose a point of the DTM with your mouse, directly on the screen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="toolTipDuration">
+         <number>5000</number>
+        </property>
         <property name="text">
-         <string>Selection mode</string>
+         <string>Selection Mode</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_5">
       <item>
-       <widget class="QLabel" name="label_9">
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Enter coordinates directly here</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
+       <spacer name="horizontalSpacer_4">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -162,6 +124,9 @@ directly on the DTM on the screen.</string>
           <pointsize>9</pointsize>
          </font>
         </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>X</string>
         </property>
@@ -176,6 +141,9 @@ directly on the DTM on the screen.</string>
          <font>
           <pointsize>9</pointsize>
          </font>
+        </property>
+        <property name="toolTip">
+         <string/>
         </property>
         <property name="text">
          <string>Y</string>
@@ -211,14 +179,26 @@ directly on the DTM on the screen.</string>
           <pointsize>9</pointsize>
          </font>
         </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Coordinate X of the selected point.&lt;br/&gt;Projection system is Lambert II etendu.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="toolTipDuration">
+         <number>5000</number>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
         <property name="decimals">
          <number>2</number>
         </property>
+        <property name="minimum">
+         <double>900000.000000000000000</double>
+        </property>
         <property name="maximum">
-         <double>1000000.000000000000000</double>
+         <double>999975.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>25.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -229,17 +209,26 @@ directly on the DTM on the screen.</string>
           <pointsize>9</pointsize>
          </font>
         </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Coordinate Y of the selected point.&lt;br/&gt;Projection system is Lambert II etendu.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="toolTipDuration">
+         <number>5000</number>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
         <property name="decimals">
          <number>2</number>
         </property>
+        <property name="minimum">
+         <double>1900020.000000000000000</double>
+        </property>
         <property name="maximum">
-         <double>2000000.000000000000000</double>
+         <double>1944980.000000000000000</double>
         </property>
         <property name="singleStep">
-         <double>1.000000000000000</double>
+         <double>25.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -250,64 +239,28 @@ directly on the DTM on the screen.</string>
           <pointsize>9</pointsize>
          </font>
         </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Coordinate Z of the selected point.&lt;br/&gt;It represents the elevation of the point.&lt;br/&gt;Projection system is Lambert II etendu.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="toolTipDuration">
+         <number>5000</number>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
         <property name="decimals">
          <number>2</number>
         </property>
+        <property name="minimum">
+         <double>318.800000000000011</double>
+        </property>
         <property name="maximum">
-         <double>5000.000000000000000</double>
+         <double>3270.300000000000182</double>
         </property>
         <property name="singleStep">
-         <double>0.010000000000000</double>
+         <double>0.100000000000000</double>
         </property>
        </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_6">
-      <item>
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnQDebug">
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Append the QDebug</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
       </item>
      </layout>
     </item>
@@ -315,6 +268,12 @@ directly on the DTM on the screen.</string>
      <layout class="QHBoxLayout" name="horizontalLayout_7">
       <item>
        <widget class="QTextEdit" name="textEdit_MW">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;In this area are printed Warning messages during the execution of the program.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="toolTipDuration">
+         <number>5000</number>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -338,7 +297,6 @@ directly on the DTM on the screen.</string>
      <string>File</string>
     </property>
     <addaction name="actionOpen_DTM_file"/>
-    <addaction name="actionExport_coordinates"/>
     <addaction name="actionExport_picture"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -346,93 +304,16 @@ directly on the DTM on the screen.</string>
     <property name="title">
      <string>View</string>
     </property>
-    <widget class="QMenu" name="menuCustomize_DTM">
-     <property name="title">
-      <string>Customize DTM</string>
-     </property>
-     <addaction name="actionColored_3D"/>
-    </widget>
     <addaction name="actionNew_DTM_Window"/>
     <addaction name="separator"/>
-    <addaction name="menuCustomize_DTM"/>
     <addaction name="actionCustomize_paths"/>
     <addaction name="separator"/>
-    <addaction name="actionView_legend"/>
     <addaction name="actionView_history"/>
-   </widget>
-   <widget class="QMenu" name="menuCalcul">
-    <property name="title">
-     <string>Calcul</string>
-    </property>
-    <addaction name="actionStart"/>
-    <addaction name="actionInterrupt"/>
-    <addaction name="actionSave"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
-   <addaction name="menuCalcul"/>
-  </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QDockWidget" name="dockWidget_Leg">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>230</width>
-     <height>200</height>
-    </size>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
-   <property name="floating">
-    <bool>false</bool>
-   </property>
-   <property name="features">
-    <set>QDockWidget::DockWidgetClosable</set>
-   </property>
-   <property name="allowedAreas">
-    <set>Qt::LeftDockWidgetArea|Qt::TopDockWidgetArea</set>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_7">
-    <widget class="QWidget" name="horizontalLayoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>9</x>
-       <y>0</y>
-       <width>211</width>
-       <height>19</height>
-      </rect>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>LEGEND</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </widget>
-  </widget>
   <widget class="QDockWidget" name="dockWidget_His">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -450,6 +331,12 @@ directly on the DTM on the screen.</string>
     <font>
      <pointsize>9</pointsize>
     </font>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;This box contains the historic of all the flow paths calculated.&lt;br/&gt;Each flow has his own number and color.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="toolTipDuration">
+    <number>5000</number>
    </property>
    <property name="floating">
     <bool>false</bool>
@@ -487,6 +374,9 @@ directly on the DTM on the screen.</string>
   </widget>
   <action name="actionOpen_DTM_file">
    <property name="text">
+    <string>Open DTM file</string>
+   </property>
+   <property name="toolTip">
     <string>Open DTM file</string>
    </property>
   </action>
@@ -546,6 +436,9 @@ directly on the DTM on the screen.</string>
   </action>
   <action name="actionNew_DTM_Window">
    <property name="text">
+    <string>New DTM Window</string>
+   </property>
+   <property name="toolTip">
     <string>New DTM Window</string>
    </property>
   </action>

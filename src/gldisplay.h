@@ -51,7 +51,7 @@ signals:
 
 private:
     void init(); // Contains initialization code which cannot be executed before the window has been shown
-    void draw(); // drawing function
+    void draw(); // Drawing function
     template<class Datatype> void drawData(const Datatype&) const;
 };
 

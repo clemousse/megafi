@@ -109,7 +109,7 @@ void FlowPath::computePath(const DTM& dtm)
             qDebug() << "Next point's coordinates :"
                      << "\nx = " << m_vertices.back().x
                      << "\ny = " << m_vertices.back().y
-                     << "\nz = " << m_vertices.back().z;
+                     << "\nz = " << m_vertices.back().z << "\n";
         }
     }
 }

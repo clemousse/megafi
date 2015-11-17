@@ -15,6 +15,7 @@ glDisplay::glDisplay(MainWindow& mainW,
 
 {
     setBaseSize(m_windowSize);
+    setWindowTitle("New DTM");
 
     //In order to make MouseGrabber react to mouse events
     setMouseTracking(true);

@@ -37,16 +37,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionCustomize_paths, SIGNAL(triggered()), this, SLOT(changeFlowPathProperties()));
     //create a connexion on the cross of the m_gl_display window to close it
     connect(ui->actionQuit, SIGNAL(triggered()),m_glDisplay, SLOT(close()));
-    //create a connexion on the menu View-> Legend via showLeg slot
-    connect(ui->actionView_legend, SIGNAL(triggered()),ui->dockWidget_Leg, SLOT(show()));
-    //create a connexion on the menu View-> History via showHis slot
+    //create a connexion on the menu View-> Historic via showHis slot
     connect(ui->actionView_history, SIGNAL(triggered()),ui->dockWidget_His, SLOT(show()));
     //create a connexion on the menu File-> Quit via close slot (or cross)
     connect(ui->actionQuit, SIGNAL(triggered()),this, SLOT(close()));
     //create a connexion on the radio button "pushButton_Mouse" in calculating the flow path in mainwindow
     connect(ui->pushButton_Mouse, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
     //create a connexion on the radio button "btnQDebug" to redirect QDebug in QTextEdit
-    connect(ui->btnQDebug, SIGNAL(toggled(bool)),this, SLOT(qdClick(bool)));
+    //connect(ui->btnQDebug, SIGNAL(toggled(bool)),this, SLOT(qdClick(bool)));
 
     new Q_DebugStream (std::cout, ui->textEdit_MW);
 
@@ -87,23 +85,22 @@ void MainWindow::openDialog() // Open a dialog to choose a file
     // Actions related to the dialog window
     {
 
-
         QFileDialog fDlg;
 
         // Don't accept empty file or directory; only one file
         fDlg.setFileMode(QFileDialog::ExistingFile);
-        fDlg.setWindowTitle("ChoosQMessageLogContexte the DTM file");
+        fDlg.setWindowTitle("Choose the DTM file");
 
         if(fDlg.exec())
         {
             QStringList selectedFiles;
-            // Get the list ofnew Q_DebugStream(std::cout, ui->textEdit_MW); selected filesexemple set textcolor
+            // Get the list of selected files
             selectedFiles = fDlg.selectedFiles();
             if(selectedFiles.length() == 1)
                 file = selectedFiles.first();
         }
     }
-//
+
     if(!file.isEmpty())
     {
         if(m_dtm)
@@ -148,7 +145,7 @@ void MainWindow::rebuildArrays()
             flow != m_flows.end() ;
             ++flow)
         {
-            const megafi::Mode mode = (*flow)->getMode();//
+            const megafi::Mode mode = (*flow)->getMode();
             switch(mode)
             {
             case megafi::MODE_LEGACY        :                         break;

@@ -16,7 +16,7 @@ class DTM : public Drawable
 
     // Members
 private:
-    // data bounding rectangle
+    // Data bounding rectangle
     qglviewer::Vec m_dataSizeMin;
     qglviewer::Vec m_dataSizeMax;
 

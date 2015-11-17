@@ -7,6 +7,7 @@
 #include "tests.h"
 
 #include <QApplication>
+#include <QIcon>
 
 int main(int argc, char *argv[])
 {
@@ -17,6 +18,7 @@ int main(int argc, char *argv[])
 #else
 
     MainWindow w;
+    w.setWindowIcon(QIcon(QCoreApplication::applicationDirPath()+"/goutte.jpg"));
     w.setWindowTitle("MEGAFI : Modèle d'Ecoulement d'une Goutte dans les Alpes Franco-Italiennes");
     w.show();
 
