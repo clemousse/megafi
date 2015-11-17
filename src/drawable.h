@@ -35,6 +35,10 @@ union Color
     GLubyte v[3];
 };
 
+QDebug operator<<(QDebug dbg, const qglviewer::Vec& p);
+QDebug operator<<(QDebug dbg, const Point& p);
+QDebug operator<<(QDebug dbg, const Color& c);
+
 class Drawable : public QObject
 {
     Q_OBJECT
