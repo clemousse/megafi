@@ -7,6 +7,8 @@
 #include <iostream>
 #include <QKeySequence>
 #include <QDebug>
+#include <QTextBlock>
+#include <QTextCursor>
 
 using namespace megafi;
 
@@ -21,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_progressBar(new QProgressBar())
 {
     qRegisterMetaType<megafi::Point>("megafi::Point");
+    qRegisterMetaType<QTextBlock>("QTextBlock");
+    qRegisterMetaType<QTextCursor>("QTextCursor");
 
     m_flowPathDefaults.lineWidth = 5;
     m_flowPathDefaults.color.r   = 0;

@@ -2,14 +2,12 @@
 #define LOGWIDGET_H
 
 #include <QPlainTextEdit>
-#include <QMutex>
 
 namespace megafi
 {
 
 class LogWidget : public QPlainTextEdit
 {
-    QMutex m_lock;
     static LogWidget* m_log;
 
 public:

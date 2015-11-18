@@ -53,6 +53,7 @@ void DebugStream::handle(QtMsgType type, const char *msg)
             break;
        case QtWarningMsg:
             std::cerr << msg;
+            if(LogWidget::isSet()) LogWidget::getLog() << msg;
             break;
        case QtCriticalMsg:
             break;
