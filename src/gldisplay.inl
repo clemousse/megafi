@@ -3,6 +3,9 @@
 
 #include "gldisplay.h"
 
+namespace megafi
+{
+
 template<class Datatype>
 void glDisplay::drawData(const Datatype& data) const
 {
@@ -61,5 +64,7 @@ void glDisplay::drawData(const Datatype& data) const
         }
     }
 }
+
+} // namespace megafi
 
 #endif // GLDISPLAY_INL

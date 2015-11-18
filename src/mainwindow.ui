@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>679</width>
+    <width>757</width>
     <height>469</height>
    </rect>
   </property>
@@ -327,7 +327,7 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_7">
       <item>
-       <widget class="QTextEdit" name="textEdit_MW">
+       <widget class="megafi::LogWidget" name="log">
         <property name="cursor" stdset="0">
          <cursorShape>ArrowCursor</cursorShape>
         </property>
@@ -351,8 +351,8 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>679</width>
-     <height>29</height>
+     <width>757</width>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -536,6 +536,13 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>megafi::LogWidget</class>
+   <extends>QPlainTextEdit</extends>
+   <header>logwidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

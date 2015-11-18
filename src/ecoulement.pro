@@ -26,7 +26,8 @@ SOURCES += main.cpp\
         flowpath.cpp \
     gldisplay.inl \
     q_debugstream.cpp \
-    flowpathview.cpp
+    flowpathview.cpp \
+    logwidget.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -38,7 +39,8 @@ HEADERS  += mainwindow.h \
             drawable.h \
             draw.h \
     q_debugstream.h \
-    flowpathview.h
+    flowpathview.h \
+    logwidget.h
 
 
 FORMS    += mainwindow.ui \

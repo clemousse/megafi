@@ -14,8 +14,7 @@ DTM::DTM(Mode mode, Primitive prim)
       m_dataSizeMin(), m_dataSizeMax(),
       m_colorInterv(0.),
       m_lineLength(0),
-      m_nbLines(0),
-      m_progressBar(NULL)
+      m_nbLines(0)
 
 {
 }
@@ -33,7 +32,6 @@ DTM::DTM(const DTM &other)
 
 DTM::~DTM()
 {
-    delete m_progressBar;
 }
 
 
@@ -106,13 +104,6 @@ bool DTM::readDTM(const QString& path)
         QStringList coordinates;
         Point p;
 
-        // Create the infinite progress bar
-        m_progressBar = new QProgressBar();
-            //initialize it
-            progressB();
-            //show it
-            m_progressBar->show();
-
         while(!filestream.atEnd())
         {
             // The file is read line-by-line
@@ -137,25 +128,10 @@ bool DTM::readDTM(const QString& path)
 
         // The file has been opened, close it now
         file.close();
-        // close the progress bar once file is read
-        m_progressBar->close();
-
     }
     return bOpen;
 }
 
-
-void DTM::progressB()
-
-{
-    m_progressBar->setFormat("Be patient please, file is being read !");
-    m_progressBar->setTextVisible(true);
-    m_progressBar->setGeometry(0,0,500,100);
-    // All at 0 for the "infinite" aspect
-    m_progressBar->setMaximum(0);
-    m_progressBar->setMinimum(0);
-    m_progressBar->setValue(0);
-}
 
 void DTM::computeDataSize()
 {
@@ -198,9 +174,9 @@ void DTM::computeLineLength()
           {
              if(lineLength_prec != NOT_COMPUTED && m_lineLength != lineLength_prec)
              {
-                 Q_DebugStream::registerQDebugMessageHandler();
-                    qWarning() << "Lines" << i << "and" << i+1 << "don't have the same length.\n";
-                 qInstallMessageHandler(0);
+                 //Q_DebugStream::registerQDebugMessageHandler();
+                 qWarning() << "Lines" << i << "and" << i+1 << "don't have the same length.\n";
+                 //qInstallMessageHandler(0);
              }
 
              lineLength_prec = m_lineLength;
@@ -212,13 +188,13 @@ void DTM::computeLineLength()
     m_lineLength = lineLength_prec;
 
     // to append numbres of points in a line and number of lines in the DTM file
-    Q_DebugStream::registerQDebugMessageHandler();
-        qWarning() << "Lines are" << m_lineLength << "points long.\n";
-    qInstallMessageHandler(0);
+    //Q_DebugStream::registerQDebugMessageHandler();
+    qWarning() << "Lines are" << m_lineLength << "points long.\n";
+    //qInstallMessageHandler(0);
 
-    Q_DebugStream::registerQDebugMessageHandler();
-        qWarning() << "There are" << m_nbLines << "lines in the file.\n";
-    qInstallMessageHandler(0);
+    //Q_DebugStream::registerQDebugMessageHandler();
+    qWarning() << "There are" << m_nbLines << "lines in the file.\n";
+    //qInstallMessageHandler(0);
 }
 
 unsigned long DTM::computeIndex(Point mouse_world) const

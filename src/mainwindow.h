@@ -6,13 +6,16 @@
 #include "flowpathview.h"
 #include "gldisplay.h"
 #include "ui_mainwindow.h"
-#include "q_debugstream.h"
 
 #include <QList>
 #include <QMainWindow>
 #include <QGraphicsSceneMouseEvent>
+#include <QProgressBar>
 #include <QThread>
 #include <QMutex>
+
+namespace megafi
+{
 
 
 class MainWindow : public QMainWindow
@@ -33,8 +36,9 @@ private:
 
 protected:
     // Windows
-    FlowPathView* const m_flowPathViewDefaultWindow;
-    const glDisplay*    const m_glDisplay;
+    FlowPathView*    const m_flowPathViewDefaultWindow;
+    const glDisplay* const m_glDisplay;
+    QProgressBar*    const m_progressBar;
 
     // Properties
     megafi::FlowPathProps m_flowPathDefaults;
@@ -43,8 +47,6 @@ protected:
 public:
     explicit MainWindow(QWidget* parent = NULL);
     ~MainWindow();
-
-    void myMessageOutput();
 
     void closeEvent(QCloseEvent *);
 
@@ -74,5 +76,6 @@ private:
     void deleteFlows();
 };
 
+}
 
 #endif // MAINWINDOW_H
