@@ -100,12 +100,16 @@ void MainWindow::close()
 
 void MainWindow::lockInterface()
 {
-    setEnabled(false);
+    ui->actionOpen_DTM_file ->setEnabled(false);
+    ui->actionExport_picture->setEnabled(false);
+    ui->centralWidget       ->setEnabled(false);
 }
 
 void MainWindow::unlockInterface()
 {
-    setEnabled(true);
+    ui->actionOpen_DTM_file ->setEnabled(true);
+    ui->actionExport_picture->setEnabled(true);
+    ui->centralWidget       ->setEnabled(true);
 }
 
 
