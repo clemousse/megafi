@@ -198,7 +198,7 @@ void MainWindow::startComputation()
 
 void MainWindow::addFlow(unsigned long startIndex)
 {
-   if(m_dtm)
+    if(m_dtm)
     {
         megafi::FlowPath* const newFP =
                 new megafi::FlowPath(&m_flowPathDefaults, ui->pathList, m_dtm->getMode());
@@ -225,6 +225,7 @@ void MainWindow::changeFlowPathProperties()
                 ++flow)
             {
                 (*flow)->buildArrays();
+                (*flow)->buildIcon();
             }
         }
     }
