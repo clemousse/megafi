@@ -31,13 +31,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_flowPathDefaults.color.g   = 0;
     m_flowPathDefaults.color.b   = 255;
 
-    m_progressBar->setWindowModality(Qt::NonModal);
-    m_progressBar->setWindowTitle("Be patient please, file is being read!");
-    m_progressBar->setFormat("Be patient please, file is being read!");
-    m_progressBar->setTextVisible(true);
-    m_progressBar->setGeometry(0,0,500,20);
-
-
     connect(this, SIGNAL(DTMHasChanged()), m_glDisplay, SLOT(reinit()));
     connect(this, SIGNAL(flowsHaveChanged()), m_glDisplay, SLOT(updateGL()));
     connect(m_glDisplay, SIGNAL(clicked(qglviewer::Vec)), this, SLOT(setClickedCoordinates(qglviewer::Vec)));
