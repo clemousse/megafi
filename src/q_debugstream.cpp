@@ -23,10 +23,11 @@ void DebugStream::handle(QtMsgType type, const QMessageLogContext&, const QStrin
     {
     case QtDebugMsg:
         if(verbose)
-            std::wcout << msg.toStdWString();
+            std::wcerr << msg.toStdWString();
         break;
     case QtWarningMsg:
         std::wcerr << msg.toStdWString();
+        if(LogWidget::isSet()) LogWidget::getLog() << msg;
         break;
     case QtCriticalMsg:
         break;
@@ -48,7 +49,7 @@ void DebugStream::handle(QtMsgType type, const char *msg)
     {
        case QtDebugMsg:
             if(verbose)
-                std::cout << msg;
+                std::cerr << msg;
             break;
        case QtWarningMsg:
             std::cerr << msg;
