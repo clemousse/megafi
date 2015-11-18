@@ -38,6 +38,10 @@ public slots:
     void buildLegacy() const;
     void computePath(const megafi::DTM* dtm, unsigned long startIndex);
 
+    // For GUI side
+    void setName(const QString& newName);
+    void buildIcon();
+
 private:
     inline virtual void buildFunction(GLuint i) throw(const IncoherentMode&) override
     {
@@ -49,10 +53,6 @@ private:
         buildColor(m_props->color);
         Drawable::buildFunction(i);
     }
-
-    // For GUI side
-private slots:
-    void setName(const QString& newName);
 };
 
 }

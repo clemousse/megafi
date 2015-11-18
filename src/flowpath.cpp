@@ -1,6 +1,12 @@
 #include "flowpath.h"
 
 #include <QDebug>
+#include <QSize>
+#include <QPoint>
+#include <QRect>
+#include <QColor>
+#include <QPixmap>
+#include <QPainter>
 
 using namespace megafi;
 
@@ -15,6 +21,7 @@ FlowPath::FlowPath(const FlowPathProps* defaultProps, QListWidget *parent, Mode 
 {
     ++m_number;
     setName(QString("Path #%1").arg(m_number));
+    buildIcon();
 }
 
 FlowPath::FlowPath(const FlowPath &other)
@@ -151,4 +158,51 @@ void FlowPath::buildLegacy() const
 void FlowPath::setName(const QString &newName)
 {
     setText(newName);
+}
+
+void FlowPath::buildIcon()
+{
+    if(m_props)
+    {
+        // Standard dimension
+        const QSize drawingSize(32, 32), margins(1,1);
+
+        // Bounds
+        const QPoint left(0 + margins.width(), drawingSize.height()/2 - m_props->lineWidth/2);
+        const QSize  extend(drawingSize.width() - margins.width(), m_props->lineWidth);
+
+        // Define the rectangle to be drawn
+        const QRect  line(left, extend);
+
+        // Color
+        QColor qcolor;
+        {
+            Color color(m_props->color);
+            qcolor.setRed(color.r);
+            qcolor.setGreen(color.g);
+            qcolor.setBlue(color.b);
+            qcolor.setAlpha(255);
+        }
+
+        // Surface to be drawn
+        QPixmap drawing(drawingSize);
+
+        // Background
+        {
+            QColor background(0, 0, 0, 0);
+            drawing.fill(background);
+        }
+
+        // Drawing
+        {
+            // Drawer
+            QPainter painter(&drawing);
+            painter.fillRect(line, qcolor);
+        }
+
+        // Transform it to an icon
+        QIcon icon(drawing);
+
+        setIcon(icon);
+    }
 }
