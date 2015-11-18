@@ -4,6 +4,8 @@
 #include "drawable.h"
 #include "dtm.h"
 
+#include <QListWidgetItem>
+
 namespace megafi
 {
 
@@ -13,7 +15,7 @@ struct FlowPathProps
     Color color;
 };
 
-class FlowPath : public Drawable
+class FlowPath : public Drawable, public QListWidgetItem
 {
     Q_OBJECT
 
@@ -23,7 +25,7 @@ class FlowPath : public Drawable
 
 
 public:
-    FlowPath(const FlowPathProps* defaultProps, Mode mode = MODE);
+    FlowPath(const FlowPathProps* defaultProps, QListWidget *parent = NULL, Mode mode = MODE);
     FlowPath(const FlowPath& other);
     ~FlowPath();
 

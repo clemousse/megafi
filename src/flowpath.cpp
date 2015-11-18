@@ -5,8 +5,9 @@
 using namespace megafi;
 
 
-FlowPath::FlowPath(const FlowPathProps* defaultProps, Mode mode)
+FlowPath::FlowPath(const FlowPathProps* defaultProps, QListWidget *parent, Mode mode)
     : Drawable(mode, TRILINE),
+      QListWidgetItem(parent),
       m_minIndices(),
       m_defaultProps(defaultProps),
       m_props(m_defaultProps)
@@ -14,7 +15,7 @@ FlowPath::FlowPath(const FlowPathProps* defaultProps, Mode mode)
 }
 
 FlowPath::FlowPath(const FlowPath &other)
-    : Drawable(other),
+    : Drawable(other), QListWidgetItem(other),
       m_minIndices(other.m_minIndices),
       m_defaultProps(other.m_defaultProps)
 {
