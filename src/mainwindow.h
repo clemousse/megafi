@@ -55,6 +55,7 @@ public slots:
     void openDialog();
     void close();
     void changeFlowPathProperties();
+    void changeFlowPathProperties(QListWidgetItem* item);
     void startComputation();
     void lockInterface();
     void unlockInterface();

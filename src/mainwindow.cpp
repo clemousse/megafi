@@ -50,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(closeAll()), m_glDisplay, SLOT(close()));
     //create a connexion on the radio button in calculating the flow path in mainwindow
     connect(ui->selectionModeBtn, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
+    // create a connection between double-click on history and the change properties function
+    connect(ui->pathList, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(changeFlowPathProperties(QListWidgetItem*)));
 
     //create a connexion on the radio button "btnQDebug" to redirect QDebug in QTextEdit
 
@@ -266,6 +268,17 @@ void MainWindow::addFlow(unsigned long startIndex)
     }
 }
 
+void MainWindow::changeFlowPathProperties(QListWidgetItem* item)
+{
+    FlowPath* fpItem = static_cast<FlowPath*>(item);
+
+    FlowPathProps* newProps = new FlowPathProps(m_flowPathDefaults);
+    m_flowPathViewDefaultWindow->changeProps(*newProps);
+
+    fpItem->setProperties(newProps);
+    fpItem->buildArrays();
+    fpItem->buildIcon();
+}
 
 void MainWindow::changeFlowPathProperties()
 {

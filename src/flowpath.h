@@ -32,6 +32,7 @@ public:
     ~FlowPath();
 
     float getLineWidth() const;
+    void  setProperties(const FlowPathProps* newProps);
 
 public slots:
     void buildArrays();

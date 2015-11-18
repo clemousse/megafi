@@ -540,6 +540,11 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
     <string>Customize DTM</string>
    </property>
   </action>
+  <action name="actionCustomize_path">
+   <property name="text">
+    <string>Customize path</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

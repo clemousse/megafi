@@ -20,6 +20,7 @@ FlowPath::FlowPath(const FlowPathProps* defaultProps, QListWidget *parent, Mode 
       m_props(m_defaultProps)
 {
     ++m_number;
+    setFlags(flags() | Qt::ItemIsEditable);
     setName(QString("Path #%1").arg(m_number));
     buildIcon();
 }
@@ -40,6 +41,16 @@ FlowPath::~FlowPath()
 }
 
 float FlowPath::getLineWidth() const { return m_props->lineWidth; }
+
+void  FlowPath::setProperties(const FlowPathProps* newProps)
+{
+    if(newProps)
+    {
+        if(m_props != m_defaultProps)
+            delete m_props;
+        m_props = newProps;
+    }
+}
 
 void FlowPath::computePath(const DTM *dtm, unsigned long startIndex)
 {
