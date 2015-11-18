@@ -13,9 +13,31 @@ bool DebugStream::verbose = true;
 
 #if QT_VERSION >= 0x050000
 void DebugStream::handle(QtMsgType type, const QMessageLogContext&, const QString& msg)
+{
+    //"std::cout <<" append the text
+    //"toStdString()" allows to return a std::string object with the data contained in this QString.
+    //The Unicode data is converted into 8-bit characters using the toAscii() function.
+    //"c_str()" return a pointer toward the array of char which contains the object of string type.
+
+    switch (type)
+    {
+    case QtDebugMsg:
+        if(verbose)
+            std::wcout << msg.toStdWString();
+        break;
+    case QtWarningMsg:
+        std::wcerr << msg.toStdWString();
+        break;
+    case QtCriticalMsg:
+        break;
+    case QtFatalMsg:
+        //abort();
+        break;
+        //for critical messages : QMessageBox::critical(this,"Critical Message","Test");
+    }
+}
 #else
-void DebugStream::handle(QtMsgType type, const QString& msg)
-#endif
+void DebugStream::handle(QtMsgType type, const char *msg)
 {
     //"std::cout <<" append the text
     //"toStdString()" allows to return a std::string object with the data contained in this QString.
@@ -26,10 +48,10 @@ void DebugStream::handle(QtMsgType type, const QString& msg)
     {
        case QtDebugMsg:
             if(verbose)
-                std::wcout << msg.toStdWString();
+                std::cout << msg;
             break;
        case QtWarningMsg:
-            std::wcerr << msg.toStdWString();
+            std::cerr << msg;
             break;
        case QtCriticalMsg:
             break;
@@ -39,6 +61,7 @@ void DebugStream::handle(QtMsgType type, const QString& msg)
 //for critical messages : QMessageBox::critical(this,"Critical Message","Test");
     }
 }
+#endif
 
 
 //constructor

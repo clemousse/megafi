@@ -18,7 +18,7 @@ public:
 #if QT_VERSION >= 0x050000
     static void handle(QtMsgType type, const QMessageLogContext&, const QString& msg);
 #else
-    static void handle(QtMsgType type, const QString& msg);
+    static void handle(QtMsgType type, const char* msg);
 #endif
 
 public:
