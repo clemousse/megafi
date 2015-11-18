@@ -19,6 +19,8 @@ class FlowPath : public Drawable, public QListWidgetItem
 {
     Q_OBJECT
 
+    static unsigned int m_number;
+
     QList<unsigned long> m_minIndices;
     const FlowPathProps* const m_defaultProps;
     const FlowPathProps* m_props;
@@ -47,6 +49,10 @@ private:
         buildColor(m_props->color);
         Drawable::buildFunction(i);
     }
+
+    // For GUI side
+private slots:
+    void setName(const QString& newName);
 };
 
 }

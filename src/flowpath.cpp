@@ -4,6 +4,7 @@
 
 using namespace megafi;
 
+unsigned int FlowPath::m_number = 0;
 
 FlowPath::FlowPath(const FlowPathProps* defaultProps, QListWidget *parent, Mode mode)
     : Drawable(mode, TRILINE),
@@ -12,6 +13,8 @@ FlowPath::FlowPath(const FlowPathProps* defaultProps, QListWidget *parent, Mode 
       m_defaultProps(defaultProps),
       m_props(m_defaultProps)
 {
+    ++m_number;
+    setName(QString("Path #%1").arg(m_number));
 }
 
 FlowPath::FlowPath(const FlowPath &other)
@@ -143,4 +146,9 @@ void FlowPath::buildLegacy() const
         BUILD
         glEnd();
     }
+}
+
+void FlowPath::setName(const QString &newName)
+{
+    setText(newName);
 }
