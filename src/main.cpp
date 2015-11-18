@@ -1,4 +1,4 @@
-#include "q_debugstream.h"
+#include "debugstream.h"
 #include "mainwindow.h"
 #include "tests.h"
 
