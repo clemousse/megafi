@@ -31,10 +31,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_flowPathDefaults.color.g   = 0;
     m_flowPathDefaults.color.b   = 255;
 
-    connect(this, SIGNAL(DTMHasChanged()), m_glDisplay, SLOT(reinit()));
-    connect(this, SIGNAL(flowsHaveChanged()), m_glDisplay, SLOT(updateGL()));
-    connect(m_glDisplay, SIGNAL(clicked(qglviewer::Vec)), this, SLOT(setClickedCoordinates(qglviewer::Vec)));
-
     //load interface .ui created  with QT Designer
     ui->setupUi(this);
 
@@ -53,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(closeAll()), this, SLOT(close()));
     connect(this, SIGNAL(closeAll()), m_glDisplay, SLOT(close()));
     //create a connexion on the radio button in calculating the flow path in mainwindow
-    connect(ui->pushButton_Mouse, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
+    connect(ui->selectionModeBtn, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
 
     //create a connexion on the radio button "btnQDebug" to redirect QDebug in QTextEdit
 
@@ -65,6 +61,16 @@ MainWindow::MainWindow(QWidget *parent) :
     m_progressBar->setFormat("Be patient please, file is being read!");
     m_progressBar->setTextVisible(true);
     m_progressBar->setGeometry(0,0,500,20);
+
+    // Application signals
+    connect(this, SIGNAL(DTMHasChanged()), m_glDisplay, SLOT(reinit()));
+    connect(this, SIGNAL(flowsHaveChanged()), m_glDisplay, SLOT(updateGL()));
+    connect(m_glDisplay, SIGNAL(clicked(qglviewer::Vec)), this, SLOT(setClickedCoordinates(qglviewer::Vec)));
+
+    updateDTMWidgets();
+    connect(this, SIGNAL(DTMHasChanged()), this, SLOT(updateDTMWidgets()));
+    updateFlowWidgets();
+    connect(this, SIGNAL(flowsHaveChanged()), this, SLOT(updateFlowWidgets()));
 }
 
 
@@ -112,6 +118,55 @@ void MainWindow::unlockInterface()
     ui->centralWidget       ->setEnabled(true);
 }
 
+void MainWindow::updateDTMWidgets()
+{
+    if(m_dtm)
+        enableDTMWidgets();
+    else
+        disableDTMWidgets();
+}
+
+void MainWindow::enableDTMWidgets()
+{
+    ui->infosLbl          ->setEnabled(true);
+    ui->selectionModeBtn  ->setEnabled(true);
+    ui->coordinatesLblX   ->setEnabled(true);
+    ui->coordinatesLblY   ->setEnabled(true);
+    ui->coordinatesLblZ   ->setEnabled(true);
+    ui->bxXcoord          ->setEnabled(true);
+    ui->bxYcoord          ->setEnabled(true);
+    ui->bxZcoord          ->setEnabled(true);
+    ui->btnComputation    ->setEnabled(true);
+}
+
+void MainWindow::disableDTMWidgets()
+{
+    ui->infosLbl          ->setEnabled(false);
+    ui->selectionModeBtn  ->setEnabled(false);
+    ui->coordinatesLblX   ->setEnabled(false);
+    ui->coordinatesLblY   ->setEnabled(false);
+    ui->coordinatesLblZ   ->setEnabled(false);
+    ui->bxXcoord          ->setEnabled(false);
+    ui->bxYcoord          ->setEnabled(false);
+    ui->bxZcoord          ->setEnabled(false);
+    ui->btnComputation    ->setEnabled(false);
+}
+
+void MainWindow::updateFlowWidgets()
+{
+    if(m_flows.empty())
+        disableFlowWidgets();
+    else
+        enableFlowWidgets();
+}
+
+void MainWindow::enableFlowWidgets()
+{
+}
+
+void MainWindow::disableFlowWidgets()
+{
+}
 
 
 void MainWindow::openDialog() // Open a dialog to choose a file
