@@ -198,12 +198,13 @@ void MainWindow::startComputation()
 
 void MainWindow::addFlow(unsigned long startIndex)
 {
-   if(m_dtm)
+    if(m_dtm)
     {
         megafi::FlowPath* const newFP =
-                new megafi::FlowPath(&m_flowPathDefaults, m_dtm->getMode());
+                new megafi::FlowPath(&m_flowPathDefaults, ui->pathList, m_dtm->getMode());
         newFP->computePath(m_dtm, startIndex);
         m_flows.push_back(newFP);
+        ui->pathList->addItem(newFP);
         connect(this, SIGNAL(buildFlow(const megafi::DTM*, unsigned long)), newFP, SLOT(buildArrays()));
         connect(newFP, SIGNAL(arrayRebuilt()), this, SIGNAL(flowsHaveChanged()));
         emit buildFlow(m_dtm, startIndex);
@@ -224,6 +225,7 @@ void MainWindow::changeFlowPathProperties()
                 ++flow)
             {
                 (*flow)->buildArrays();
+                (*flow)->buildIcon();
             }
         }
     }
@@ -257,5 +259,6 @@ void MainWindow::deleteFlows()
         delete *flow;
         *flow = NULL;
     }
+    ui->pathList->clear();
     m_flows.clear();
 }
