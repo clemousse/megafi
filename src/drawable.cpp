@@ -1,7 +1,30 @@
 #include "drawable.h"
 
+#include <QDebug>
+
 using namespace megafi;
 using namespace qglviewer;
+
+QDebug operator<<(QDebug dbg, const Vec& p)
+{
+    dbg.nospace() << '(' << p.x << ", " << p.y << ", " << p.z << ')';
+    return dbg.space();
+}
+
+QDebug operator<<(QDebug dbg, const Point& p)
+{
+    dbg.nospace() << '(' << p.x << ", " << p.y << ", " << p.z << ')';
+    return dbg.space();
+}
+
+QDebug operator<<(QDebug dbg, const Color& c)
+{
+    dbg.nospace() << '(' << static_cast<unsigned int>(c.r)
+                  << ',' << static_cast<unsigned int>(c.g)
+                  << ',' << static_cast<unsigned int>(c.b)
+                  << ')';
+    return dbg.space();
+}
 
 Drawable::Drawable(Mode mode, Primitive prim) throw()
     : lock(),

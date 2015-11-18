@@ -7,6 +7,10 @@
 #include <iostream>
 #include <QKeySequence>
 #include <QDebug>
+#include <QTextBlock>
+#include <QTextCursor>
+
+using namespace megafi;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -15,17 +19,28 @@ MainWindow::MainWindow(QWidget *parent) :
     m_flows(),
     m_dtmThread(),
     m_flowPathViewDefaultWindow(new FlowPathView(this)),
-    m_glDisplay(new glDisplay(this, &m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>* >(&m_flows))),
-    m_progressBar(new QProgressBar()),
-    m_debugStream(new Q_DebugStream(std::cout, ui->textEdit_MW))
+    m_glDisplay(new glDisplay(&m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>* >(&m_flows))),
+    m_progressBar(new QProgressBar())
 {
     qRegisterMetaType<megafi::Point>("megafi::Point");
-    Q_DebugStream::registerQDebugMessageHandler();
+    qRegisterMetaType<QTextBlock>("QTextBlock");
+    qRegisterMetaType<QTextCursor>("QTextCursor");
 
     m_flowPathDefaults.lineWidth = 5;
     m_flowPathDefaults.color.r   = 0;
     m_flowPathDefaults.color.g   = 0;
     m_flowPathDefaults.color.b   = 255;
+
+    m_progressBar->setWindowModality(Qt::NonModal);
+    m_progressBar->setWindowTitle("Be patient please, file is being read!");
+    m_progressBar->setFormat("Be patient please, file is being read!");
+    m_progressBar->setTextVisible(true);
+    m_progressBar->setGeometry(0,0,500,20);
+
+
+    connect(this, SIGNAL(DTMHasChanged()), m_glDisplay, SLOT(reinit()));
+    connect(this, SIGNAL(flowsHaveChanged()), m_glDisplay, SLOT(updateGL()));
+    connect(m_glDisplay, SIGNAL(clicked(qglviewer::Vec)), this, SLOT(setClickedCoordinates(qglviewer::Vec)));
 
     //load interface .ui created  with QT Designer
     ui->setupUi(this);
@@ -63,7 +78,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    delete m_debugStream;
     delete m_progressBar;
     delete m_glDisplay;
     delete m_flowPathViewDefaultWindow;
@@ -223,6 +237,7 @@ void MainWindow::deleteDTM()
     if(m_dtm)
     {
         m_dtmThread.quit();
+        m_dtmThread.wait();
         disconnect(m_dtm, SIGNAL(indexComputed(unsigned long)), this, SLOT(addFlow(unsigned long)));
         disconnect(this, SIGNAL(computeIndex(megafi::Point)), m_dtm, SLOT(computeIndex(megafi::Point)));
         disconnect(m_dtm, SIGNAL(arrayRebuilt()), this, SIGNAL(DTMHasChanged()));
