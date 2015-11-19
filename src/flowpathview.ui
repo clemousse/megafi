@@ -76,8 +76,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>257</x>
+     <y>115</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -92,8 +92,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>325</x>
+     <y>115</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -101,5 +101,24 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>colorButton</sender>
+   <signal>clicked()</signal>
+   <receiver>FlowPathView</receiver>
+   <slot>changeColor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>355</x>
+     <y>63</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>401</x>
+     <y>94</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>changeColor()</slot>
+ </slots>
 </ui>

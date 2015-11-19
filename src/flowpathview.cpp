@@ -12,8 +12,6 @@ FlowPathView::FlowPathView(QWidget *parent) :
     // UI setup :
     ui->setupUi(this);
 
-    connect(ui->colorButton, SIGNAL(clicked()), this, SLOT(changeColor()));
-
     // Prevents interaction with main window while this one is opened
     setWindowModality(Qt::WindowModal);
 }
