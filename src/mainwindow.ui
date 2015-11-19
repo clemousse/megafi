@@ -401,6 +401,7 @@
      <string>File</string>
     </property>
     <addaction name="actionOpen_DTM_file"/>
+    <addaction name="actionExport_paths"/>
     <addaction name="actionExport_picture"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -584,6 +585,11 @@
   <action name="actionCustomize_path">
    <property name="text">
     <string>Customize path</string>
+   </property>
+  </action>
+  <action name="actionExport_paths">
+   <property name="text">
+    <string>Export paths</string>
    </property>
   </action>
  </widget>

@@ -65,6 +65,7 @@ public slots:
     void updateFlowWidgets();
     void enableFlowWidgets();
     void disableFlowWidgets();
+    void exportFlowPaths();
 
     // Application slots
     void setClickedCoordinates(qglviewer::Vec mouse_world);

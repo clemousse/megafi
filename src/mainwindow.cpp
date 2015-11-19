@@ -11,6 +11,7 @@
 #include <QTextBlock>
 #include <QTextCursor>
 #include <limits>
+#include <QTextStream>
 
 using namespace megafi;
 
@@ -55,6 +56,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->btnComputation, SIGNAL(clicked()), this, SLOT(startComputation()));
     //create a connexion on the push button "pushButton_CL" to clear the log
     connect(ui->clearLogButton, SIGNAL(clicked()), ui->log, SLOT(clear()));
+    //create a connexion on the menu File-> Export Paths
+    connect(ui->actionExport_paths, SIGNAL(triggered()),this, SLOT(exportFlowPaths()));
 
     // Initialize progress bar
     m_progressBar->setWindowModality(Qt::NonModal);
@@ -189,7 +192,6 @@ void MainWindow::disableFlowWidgets()
 {
 }
 
-
 void MainWindow::openDialog() // Open a dialog to choose a file
 {
     QString file;
@@ -248,15 +250,13 @@ void MainWindow::openDialog() // Open a dialog to choose a file
                 emit buildDTM(file);
             }
             catch(const std::bad_alloc&)
-            {int rep = QMessageBox::question(this,"Quit ?","Do you really want to quit ?",QMessageBox::Yes | QMessageBox::No);
-                if (rep == QMessageBox::Yes)
-                {
+            {
                 m_dtm = NULL;
-                }
             }
         }
     }
 }
+
 
 void MainWindow::setClickedCoordinates(qglviewer::Vec mouse_world)
 {
@@ -364,4 +364,37 @@ void MainWindow::deleteFlows()
     }
     ui->pathList->clear();
     m_flows.clear();
+}
+
+void MainWindow::exportFlowPaths()
+{
+    QString filter;
+    QString flows = QFileDialog::getSaveFileName(this, "Save the flow paths", QString(),
+                                                 "Text files (*.txt);;XML files (*.xml)", &filter);
+    if(filter == "Text files (*.txt)")
+    {
+         flows += ".txt";
+    }
+
+    else
+    {
+         flows += ".xml";
+    }
+
+         //creating of a file to export path in the release of the poject
+            QFile file(flows);
+
+            //openning the file in "read only" and checking the good opening
+            if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+            return;
+
+            //creating a stream "flux" ti write in the file
+            QTextStream stream(&file);
+
+            //choosing the UTF-8 codec
+            stream.setCodec("UTF-8");
+
+            stream << "test";
+
+            //flux << this->megafi::FlowPath::getm_VerticesX(1);
 }
