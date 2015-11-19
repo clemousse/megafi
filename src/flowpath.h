@@ -4,6 +4,8 @@
 #include "drawable.h"
 #include "dtm.h"
 
+#include <QListWidgetItem>
+
 namespace megafi
 {
 
@@ -13,9 +15,11 @@ struct FlowPathProps
     Color color;
 };
 
-class FlowPath : public Drawable
+class FlowPath : public Drawable, public QListWidgetItem
 {
     Q_OBJECT
+
+    static unsigned int m_number;
 
     QList<unsigned long> m_minIndices;
     const FlowPathProps* const m_defaultProps;
@@ -23,16 +27,21 @@ class FlowPath : public Drawable
 
 
 public:
-    FlowPath(const FlowPathProps* defaultProps, Mode mode = MODE);
+    FlowPath(const FlowPathProps* defaultProps, QListWidget *parent = NULL, Mode mode = MODE);
     FlowPath(const FlowPath& other);
     ~FlowPath();
 
     float getLineWidth() const;
+    void  setProperties(const FlowPathProps* newProps);
 
 public slots:
     void buildArrays();
     void buildLegacy() const;
     void computePath(const megafi::DTM* dtm, unsigned long startIndex);
+
+    // For GUI side
+    void setName(const QString& newName);
+    void buildIcon();
 
 private:
     inline virtual void buildFunction(GLuint i) throw(const IncoherentMode&) override

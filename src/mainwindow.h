@@ -55,9 +55,16 @@ public slots:
     void openDialog();
     bool closeQuestion();
     void changeFlowPathProperties();
+    void changeFlowPathProperties(QListWidgetItem* item);
     void startComputation();
     void lockInterface();
     void unlockInterface();
+    void updateDTMWidgets();
+    void enableDTMWidgets();
+    void disableDTMWidgets();
+    void updateFlowWidgets();
+    void enableFlowWidgets();
+    void disableFlowWidgets();
 
     // Application slots
     void setClickedCoordinates(qglviewer::Vec mouse_world);

@@ -1,20 +1,32 @@
 #include "flowpath.h"
 
 #include <QDebug>
+#include <QSize>
+#include <QPoint>
+#include <QRect>
+#include <QColor>
+#include <QPixmap>
+#include <QPainter>
 
 using namespace megafi;
 
+unsigned int FlowPath::m_number = 0;
 
-FlowPath::FlowPath(const FlowPathProps* defaultProps, Mode mode)
+FlowPath::FlowPath(const FlowPathProps* defaultProps, QListWidget *parent, Mode mode)
     : Drawable(mode, TRILINE),
+      QListWidgetItem(parent),
       m_minIndices(),
       m_defaultProps(defaultProps),
       m_props(m_defaultProps)
 {
+    ++m_number;
+    setFlags(flags() | Qt::ItemIsEditable);
+    setName(QString("Path #%1").arg(m_number));
+    buildIcon();
 }
 
 FlowPath::FlowPath(const FlowPath &other)
-    : Drawable(other),
+    : Drawable(other), QListWidgetItem(other),
       m_minIndices(other.m_minIndices),
       m_defaultProps(other.m_defaultProps)
 {
@@ -29,6 +41,16 @@ FlowPath::~FlowPath()
 }
 
 float FlowPath::getLineWidth() const { return m_props->lineWidth; }
+
+void  FlowPath::setProperties(const FlowPathProps* newProps)
+{
+    if(newProps)
+    {
+        if(m_props != m_defaultProps)
+            delete m_props;
+        m_props = newProps;
+    }
+}
 
 void FlowPath::computePath(const DTM *dtm, unsigned long startIndex)
 {
@@ -96,7 +118,7 @@ void FlowPath::computePath(const DTM *dtm, unsigned long startIndex)
         {
 
             qDebug() << "End flow path\n";
-            qWarning()<< "Flow path is computed! It has"<< countPoints_FP+1 <<".\n";
+            qWarning()<< "Flow path is computed! It has"<< countPoints_FP+1 <<"steps.\n";
             break;
         }
         else
@@ -146,5 +168,57 @@ void FlowPath::buildLegacy() const
         glBegin(GL_LINE_STRIP);
         BUILD
         glEnd();
+    }
+}
+
+void FlowPath::setName(const QString &newName)
+{
+    setText(newName);
+}
+
+void FlowPath::buildIcon()
+{
+    if(m_props)
+    {
+        // Standard dimension
+        const QSize drawingSize(32, 32), margins(1,1);
+
+        // Bounds
+        const QPoint left(0 + margins.width(), drawingSize.height()/2 - m_props->lineWidth/2);
+        const QSize  extend(drawingSize.width() - margins.width(), m_props->lineWidth);
+
+        // Define the rectangle to be drawn
+        const QRect  line(left, extend);
+
+        // Color
+        QColor qcolor;
+        {
+            Color color(m_props->color);
+            qcolor.setRed(color.r);
+            qcolor.setGreen(color.g);
+            qcolor.setBlue(color.b);
+            qcolor.setAlpha(255);
+        }
+
+        // Surface to be drawn
+        QPixmap drawing(drawingSize);
+
+        // Background
+        {
+            QColor background(0, 0, 0, 0);
+            drawing.fill(background);
+        }
+
+        // Drawing
+        {
+            // Drawer
+            QPainter painter(&drawing);
+            painter.fillRect(line, qcolor);
+        }
+
+        // Transform it to an icon
+        QIcon icon(drawing);
+
+        setIcon(icon);
     }
 }

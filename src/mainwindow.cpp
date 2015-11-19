@@ -34,10 +34,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_flowPathDefaults.color.g   = 0;
     m_flowPathDefaults.color.b   = 255;
 
-    connect(this, SIGNAL(DTMHasChanged()), m_glDisplay, SLOT(reinit()));
-    connect(this, SIGNAL(flowsHaveChanged()), m_glDisplay, SLOT(updateGL()));
-    connect(m_glDisplay, SIGNAL(clicked(qglviewer::Vec)), this, SLOT(setClickedCoordinates(qglviewer::Vec)));
-
     //load interface .ui created  with QT Designer
     ui->setupUi(this);
 
@@ -51,11 +47,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionQuit, SIGNAL(triggered()),this, SLOT(close()));
     //create a connexion on the menu View-> History via showHis slot
     connect(ui->actionView_history, SIGNAL(triggered()),ui->dockWidget_His, SLOT(show()));
-    //create a connexion on the push button in calculating the flow path in mainwindow
-    connect(ui->pushButton_Mouse, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
-    //create a connexion on the button "btnComputation" to activate the calcul of the flow path
+    //create a connexion on the push button "selectionModeBtn" to activate the mode selection
+    connect(ui->selectionModeBtn, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
+    //create a connection between double-click on history and the change properties function
+    connect(ui->pathList, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(changeFlowPathProperties(QListWidgetItem*)));
+    //create a connexion on the push button "btnComputation" to calculate the flow path in mainwindow
     connect(ui->btnComputation, SIGNAL(clicked()), this, SLOT(startComputation()));
-    //create a connexion on the push button to clear the log
+    //create a connexion on the push button "pushButton_CL" to clear the log
     connect(ui->pushButton_CL, SIGNAL(clicked()), ui->log, SLOT(clear()));
 
     // Initialize progress bar
@@ -64,6 +62,17 @@ MainWindow::MainWindow(QWidget *parent) :
     m_progressBar->setFormat("Be patient please, file is being read!");
     m_progressBar->setTextVisible(true);
     m_progressBar->setGeometry(0,0,500,25);
+
+
+    // Application signals
+    connect(this, SIGNAL(DTMHasChanged()), m_glDisplay, SLOT(reinit()));
+    connect(this, SIGNAL(flowsHaveChanged()), m_glDisplay, SLOT(updateGL()));
+    connect(m_glDisplay, SIGNAL(clicked(qglviewer::Vec)), this, SLOT(setClickedCoordinates(qglviewer::Vec)));
+
+    updateDTMWidgets();
+    connect(this, SIGNAL(DTMHasChanged()), this, SLOT(updateDTMWidgets()));
+    updateFlowWidgets();
+    connect(this, SIGNAL(flowsHaveChanged()), this, SLOT(updateFlowWidgets()));
 }
 
 
@@ -111,14 +120,67 @@ bool MainWindow::closeQuestion()
 
 void MainWindow::lockInterface()
 {
-    setEnabled(false);
+    ui->actionOpen_DTM_file ->setEnabled(false);
+    ui->actionExport_picture->setEnabled(false);
+    ui->centralWidget       ->setEnabled(false);
 }
 
 void MainWindow::unlockInterface()
 {
-    setEnabled(true);
+    ui->actionOpen_DTM_file ->setEnabled(true);
+    ui->actionExport_picture->setEnabled(true);
+    ui->centralWidget       ->setEnabled(true);
 }
 
+void MainWindow::updateDTMWidgets()
+{
+    if(m_dtm)
+        enableDTMWidgets();
+    else
+        disableDTMWidgets();
+}
+
+void MainWindow::enableDTMWidgets()
+{
+    ui->infosLbl          ->setEnabled(true);
+    ui->selectionModeBtn  ->setEnabled(true);
+    ui->coordinatesLblX   ->setEnabled(true);
+    ui->coordinatesLblY   ->setEnabled(true);
+    ui->coordinatesLblZ   ->setEnabled(true);
+    ui->bxXcoord          ->setEnabled(true);
+    ui->bxYcoord          ->setEnabled(true);
+    ui->bxZcoord          ->setEnabled(true);
+    ui->btnComputation    ->setEnabled(true);
+}
+
+void MainWindow::disableDTMWidgets()
+{
+    ui->infosLbl          ->setEnabled(false);
+    ui->selectionModeBtn  ->setEnabled(false);
+    ui->coordinatesLblX   ->setEnabled(false);
+    ui->coordinatesLblY   ->setEnabled(false);
+    ui->coordinatesLblZ   ->setEnabled(false);
+    ui->bxXcoord          ->setEnabled(false);
+    ui->bxYcoord          ->setEnabled(false);
+    ui->bxZcoord          ->setEnabled(false);
+    ui->btnComputation    ->setEnabled(false);
+}
+
+void MainWindow::updateFlowWidgets()
+{
+    if(m_flows.empty())
+        disableFlowWidgets();
+    else
+        enableFlowWidgets();
+}
+
+void MainWindow::enableFlowWidgets()
+{
+}
+
+void MainWindow::disableFlowWidgets()
+{
+}
 
 
 void MainWindow::openDialog() // Open a dialog to choose a file
@@ -211,15 +273,16 @@ void MainWindow::startComputation()
 
 void MainWindow::addFlow(unsigned long startIndex)
 {
-   if(m_dtm)
+    if(m_dtm)
     {
         if(startIndex != std::numeric_limits<unsigned long>::max())
 
         {
             megafi::FlowPath* const newFP =
-                    new megafi::FlowPath(&m_flowPathDefaults, m_dtm->getMode());
+                    new megafi::FlowPath(&m_flowPathDefaults, ui->pathList, m_dtm->getMode());
             newFP->computePath(m_dtm, startIndex);
             m_flows.push_back(newFP);
+            ui->pathList->addItem(newFP);
             connect(this, SIGNAL(buildFlow(const megafi::DTM*, unsigned long)), newFP, SLOT(buildArrays()));
             connect(newFP, SIGNAL(arrayRebuilt()), this, SIGNAL(flowsHaveChanged()));
             emit buildFlow(m_dtm, startIndex);
@@ -233,6 +296,17 @@ void MainWindow::addFlow(unsigned long startIndex)
     }
 }
 
+void MainWindow::changeFlowPathProperties(QListWidgetItem* item)
+{
+    FlowPath* fpItem = static_cast<FlowPath*>(item);
+
+    FlowPathProps* newProps = new FlowPathProps(m_flowPathDefaults);
+    m_flowPathViewDefaultWindow->changeProps(*newProps);
+
+    fpItem->setProperties(newProps);
+    fpItem->buildArrays();
+    fpItem->buildIcon();
+}
 
 void MainWindow::changeFlowPathProperties()
 {
@@ -247,6 +321,7 @@ void MainWindow::changeFlowPathProperties()
                 ++flow)
             {
                 (*flow)->buildArrays();
+                (*flow)->buildIcon();
             }
         }
     }
@@ -280,5 +355,6 @@ void MainWindow::deleteFlows()
         delete *flow;
         *flow = NULL;
     }
+    ui->pathList->clear();
     m_flows.clear();
 }

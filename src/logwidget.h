@@ -17,8 +17,8 @@ public:
 
 public:
     LogWidget(QWidget* parent = NULL);
-    LogWidget& operator<<(const QString& txt);
-    LogWidget& operator<<(const char* txt);
+    LogWidget& operator<<(QString txt);
+    LogWidget& operator<<(char* txt);
 };
 
 }

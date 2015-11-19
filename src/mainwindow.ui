@@ -19,9 +19,9 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_9">
+     <layout class="QHBoxLayout" name="titleHL">
       <item>
-       <widget class="QLabel" name="label_7">
+       <widget class="QLabel" name="titleLbl">
         <property name="font">
          <font>
           <pointsize>15</pointsize>
@@ -65,9 +65,9 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <layout class="QHBoxLayout" name="infosHL">
       <item>
-       <widget class="QLabel" name="label_6">
+       <widget class="QLabel" name="infosLbl">
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -81,9 +81,9 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <layout class="QHBoxLayout" name="selectionModeHL">
       <item>
-       <spacer name="horizontalSpacer">
+       <spacer name="leftSelectionModeHSpc">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -96,7 +96,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_Mouse">
+       <widget class="QPushButton" name="selectionModeBtn">
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -117,7 +117,7 @@
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer_4">
+       <spacer name="rightSelectionModeHSpc">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -150,7 +150,7 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_11">
       <item>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="coordinatesLblX">
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -168,7 +168,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="coordinatesLblY">
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -186,7 +186,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="coordinatesLblZ">
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -203,7 +203,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <layout class="QHBoxLayout" name="coordinatesHL">
       <item>
        <widget class="QDoubleSpinBox" name="bxXcoord">
         <property name="font">
@@ -300,7 +300,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QHBoxLayout" name="computationHL">
       <item>
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
@@ -348,7 +348,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_7">
+     <layout class="QHBoxLayout" name="logHL">
       <item>
        <widget class="megafi::LogWidget" name="log">
         <property name="cursor" stdset="0">
@@ -458,7 +458,13 @@
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_8"/>
+   <widget class="QWidget" name="dockWidgetContents_8">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QListWidget" name="pathList"/>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <action name="actionOpen_DTM_file">
    <property name="text">
@@ -573,6 +579,11 @@
   <action name="actionCustomize_DTM">
    <property name="text">
     <string>Customize DTM</string>
+   </property>
+  </action>
+  <action name="actionCustomize_path">
+   <property name="text">
+    <string>Customize path</string>
    </property>
   </action>
  </widget>

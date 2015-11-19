@@ -1,0 +1,21 @@
+Priorité,Feature,"User story : En tant qu'utilisateur, je voudrais",User story détaillée,Notes,Points,Tâche,Points,Ressource,Temps estimé,Temps,Statut,Remarque
+3,Afficher le MNT,Voir le MNT,Je veux voir le MNT,OpenGL (imposé),11,,,,,,,
+3,Afficher le MNT,Voir le MNT,Je veux voir le MNT,,,Fonction de tri du fichier initial,3,,1,,,
+8,Interface graphique,Documentation utilisateur,,,3,Documentation,2,,1,,,
+8,Interface graphique,Documentation utilisateur,,,3,Relecture,1,,"0,25",,,
+9,Interface graphique,Avoir un programme d'installation,Dézipper,+ Documentation,1,Windows,"0,5",,"0,75",,,
+9,Interface graphique,Avoir un programme d'installation,Dézipper,+ Documentation,1,Debian,"0,5",,"0,75",,,
+10,Interface graphique,Dessiner la fenêtre principale du programme,"Supprimer la 2D, espace de log",,"12,5",Retravailler les menus,"0,5",,"0,5",,,
+10,Interface graphique,Dessiner la fenêtre principale du programme,"Supprimer la 2D, espace de log",,,Fignolage,3,C,0,1,EC,
+10,Interface graphique,Dessiner la fenêtre principale du programme,"Supprimer la 2D, espace de log",,,Révision de l'interface,1,,1,,,Réintégrer la fenêtre dans la mainwindow
+11,Afficher le MNT,Personnaliser l'affichage,Avoir un menu me permettant de sélectionner le mode d'affichage,3D ? Et/Ou Couleurs ? Reliés (triangles) ?,6,,,,,,,
+24,Créer le chemin,Afficher le chemin,Personnaliser l'affichage,"Couleur, épaisseur, … via un menu",4,,,,,,,
+13,Créer le chemin,Afficher le chemin,Affichage progressif (animation),,13,,,,3,,,
+14,Lâcher la goutte,Paramétrer le point de départ,j'écris les coordonnées dans des champs,"Imposer un système de coordonnées, Format de nombre (point décimal, précision, …), Vérifier les bornes (coordonnées limites)",1,,,,,,,
+15,Interface graphique,Dessiner la fenêtre principale du programme,Caisson avec l'historique des calculs,,8,,,,1,,,
+15,Interface graphique,Dessiner la fenêtre principale du programme,Caisson avec l'historique des calculs,,,Y afficher un chemin,4,A,"0,5","0,5",OK,
+15,Interface graphique,Dessiner la fenêtre principale du programme,Caisson avec l'historique des calculs,,,Editer le chemin,4,A,"0,5","0,5",EC,Supprimer (Menu contextuel)
+16,Créer le chemin,Exporter le chemin,je veux toutes les coordonnées dans un fichier,,5,,,,1,,,
+17,Lâcher la goutte,Paramétrer le point de départ,je charge un fichier,"Avec un menu, puis boîte de dialogue, format de fichier ?",8,,,,2,,,
+18,Créer le chemin,Exporter le chemin,je veux une image du chemin,,3,Export image,3,I,1,1,EC,
+19,Interface graphique,Fermeture du programme,Proposer l'enregistrement,,3,,,,"0,5",,,
