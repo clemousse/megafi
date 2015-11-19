@@ -221,7 +221,7 @@ unsigned long DTM::computeIndex(Point mouse_world) const
         {
             index=j;
         }
-        else if ( m_vertices.size()-m_lineLength
+        else if (j < m_vertices.size()-m_lineLength
                  && (m_vertices[j+m_lineLength].y < mouse_world.y) && (mouse_world.y < m_vertices[j].y) )
         {
             if ( std::abs(m_vertices[j+m_lineLength].y - mouse_world.y)  <  std::abs(mouse_world.y - m_vertices[j].y) )
