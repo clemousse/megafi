@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //create a connexion on the push button "btnComputation" to calculate the flow path in mainwindow
     connect(ui->btnComputation, SIGNAL(clicked()), this, SLOT(startComputation()));
     //create a connexion on the push button "pushButton_CL" to clear the log
-    connect(ui->pushButton_CL, SIGNAL(clicked()), ui->log, SLOT(clear()));
+    connect(ui->clearLogButton, SIGNAL(clicked()), ui->log, SLOT(clear()));
 
     // Initialize progress bar
     m_progressBar->setWindowModality(Qt::NonModal);
@@ -144,6 +144,7 @@ void MainWindow::enableDTMWidgets()
 {
     ui->infosLbl          ->setEnabled(true);
     ui->selectionModeBtn  ->setEnabled(true);
+    ui->coordinatesLbl    ->setEnabled(true);
     ui->coordinatesLblX   ->setEnabled(true);
     ui->coordinatesLblY   ->setEnabled(true);
     ui->coordinatesLblZ   ->setEnabled(true);
@@ -151,12 +152,15 @@ void MainWindow::enableDTMWidgets()
     ui->bxYcoord          ->setEnabled(true);
     ui->bxZcoord          ->setEnabled(true);
     ui->btnComputation    ->setEnabled(true);
+    ui->clearLogButton    ->setEnabled(true);
+    ui->dockWidget_His    ->setEnabled(true);
 }
 
 void MainWindow::disableDTMWidgets()
 {
     ui->infosLbl          ->setEnabled(false);
     ui->selectionModeBtn  ->setEnabled(false);
+    ui->coordinatesLbl    ->setEnabled(false);
     ui->coordinatesLblX   ->setEnabled(false);
     ui->coordinatesLblY   ->setEnabled(false);
     ui->coordinatesLblZ   ->setEnabled(false);
@@ -164,6 +168,9 @@ void MainWindow::disableDTMWidgets()
     ui->bxYcoord          ->setEnabled(false);
     ui->bxZcoord          ->setEnabled(false);
     ui->btnComputation    ->setEnabled(false);
+    ui->clearLogButton    ->setEnabled(false);
+    ui->dockWidget_His    ->setEnabled(false);
+
 }
 
 void MainWindow::updateFlowWidgets()

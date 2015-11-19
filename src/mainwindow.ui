@@ -134,7 +134,7 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QLabel" name="label_8">
+       <widget class="QLabel" name="coordinatesLbl">
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -148,7 +148,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_11">
+     <layout class="QHBoxLayout" name="coordinatesLabelHL">
       <item>
        <widget class="QLabel" name="coordinatesLblX">
         <property name="font">
@@ -366,7 +366,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_CL">
+       <widget class="QPushButton" name="clearLogButton">
         <property name="font">
          <font>
           <pointsize>9</pointsize>

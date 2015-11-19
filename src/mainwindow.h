@@ -75,7 +75,6 @@ signals:
     void buildFlow(const megafi::DTM*, unsigned long) const;
     void DTMHasChanged() const;
     void flowsHaveChanged() const;
-    //void closeAll() const;
     void computeIndex(megafi::Point) const;
 
 private:
