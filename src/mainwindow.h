@@ -37,7 +37,7 @@ private:
 protected:
     // Windows
     FlowPathView*    const m_flowPathViewDefaultWindow;
-    const glDisplay* const m_glDisplay;
+    glDisplay* const m_glDisplay;
     QProgressBar*    const m_progressBar;
 
     // Properties
@@ -53,7 +53,7 @@ public:
 public slots:
     // GUI slots
     void openDialog();
-    void close();
+    bool closeQuestion();
     void changeFlowPathProperties();
     void startComputation();
     void lockInterface();
@@ -68,7 +68,7 @@ signals:
     void buildFlow(const megafi::DTM*, unsigned long) const;
     void DTMHasChanged() const;
     void flowsHaveChanged() const;
-    void closeAll() const;
+    //void closeAll() const;
     void computeIndex(megafi::Point) const;
 
 private:

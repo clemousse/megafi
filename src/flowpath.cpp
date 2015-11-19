@@ -32,6 +32,8 @@ float FlowPath::getLineWidth() const { return m_props->lineWidth; }
 
 void FlowPath::computePath(const DTM *dtm, unsigned long startIndex)
 {
+    int countPoints_FP = 0;
+
     m_minIndices.push_back(startIndex);
 
     dtm->lock.lockForRead();
@@ -94,6 +96,7 @@ void FlowPath::computePath(const DTM *dtm, unsigned long startIndex)
         {
 
             qDebug() << "End flow path\n";
+            qWarning()<< "Flow path is computed! It has"<< countPoints_FP+1 <<".\n";
             break;
         }
         else
@@ -107,6 +110,8 @@ void FlowPath::computePath(const DTM *dtm, unsigned long startIndex)
                      << "\nx = " << m_vertices.back().x
                      << "\ny = " << m_vertices.back().y
                      << "\nz = " << m_vertices.back().z << "\n";
+
+            countPoints_FP++;
         }
     }
 

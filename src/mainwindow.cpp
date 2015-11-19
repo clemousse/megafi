@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "logwidget.h"
 
 #include <QFileDialog>
 #include <QString>
@@ -9,6 +10,7 @@
 #include <QDebug>
 #include <QTextBlock>
 #include <QTextCursor>
+#include <limits>
 
 using namespace megafi;
 
@@ -21,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_flowPathViewDefaultWindow(new FlowPathView(this)),
     m_glDisplay(new glDisplay(&m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>* >(&m_flows))),
     m_progressBar(new QProgressBar())
+
 {
     qRegisterMetaType<megafi::Point>("megafi::Point");
     qRegisterMetaType<QTextBlock>("QTextBlock");
@@ -42,29 +45,25 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionOpen_DTM_file, SIGNAL(triggered()),this, SLOT(openDialog()));
     //create a connexion on the menu View-> New DTM Path via show slot
     connect(ui->actionNew_DTM_Window, SIGNAL(triggered()), m_glDisplay, SLOT(show()));
-    //create a connexion ont the menu View -> Customize paths
+    //create a connexion ont the menu View-> Customize paths
     connect(ui->actionCustomize_paths, SIGNAL(triggered()), this, SLOT(changeFlowPathProperties()));
-    //create a connexion on the cross of the m_gl_display window to close it
-    connect(ui->actionQuit, SIGNAL(triggered()),m_glDisplay, SLOT(close()));
-    //create a connexion on the menu View-> Historic via showHis slot
+    //create close connexions
+    connect(ui->actionQuit, SIGNAL(triggered()),this, SLOT(close()));
+    //create a connexion on the menu View-> History via showHis slot
     connect(ui->actionView_history, SIGNAL(triggered()),ui->dockWidget_His, SLOT(show()));
-    //create a connexion on the menu File-> Quit via close slot (or cross)
-    connect(ui->actionQuit, SIGNAL(triggered()),this, SIGNAL(closeAll()));
-    connect(this, SIGNAL(closeAll()), this, SLOT(close()));
-    connect(this, SIGNAL(closeAll()), m_glDisplay, SLOT(close()));
-    //create a connexion on the radio button in calculating the flow path in mainwindow
+    //create a connexion on the push button in calculating the flow path in mainwindow
     connect(ui->pushButton_Mouse, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
-
-    //create a connexion on the radio button "btnQDebug" to redirect QDebug in QTextEdit
-
+    //create a connexion on the button "btnComputation" to activate the calcul of the flow path
     connect(ui->btnComputation, SIGNAL(clicked()), this, SLOT(startComputation()));
+    //create a connexion on the push button to clear the log
+    connect(ui->pushButton_CL, SIGNAL(clicked()), ui->log, SLOT(clear()));
 
     // Initialize progress bar
     m_progressBar->setWindowModality(Qt::NonModal);
     m_progressBar->setWindowTitle("Be patient please, file is being read!");
     m_progressBar->setFormat("Be patient please, file is being read!");
     m_progressBar->setTextVisible(true);
-    m_progressBar->setGeometry(0,0,500,20);
+    m_progressBar->setGeometry(0,0,500,25);
 }
 
 
@@ -80,20 +79,32 @@ MainWindow::~MainWindow()
 }
 
 
-
+//close with cross button
 void MainWindow::closeEvent(QCloseEvent* event)
-
 {
-    event->accept();
-    emit closeAll();
+       if(MainWindow::closeQuestion())
+       {
+           event->accept();
+           m_glDisplay->close();
+           MainWindow::close();
+       }
+       else
+       {
+           event->ignore();
+       }
 }
 
-void MainWindow::close()
+//close question called in slot close() already implemented
+bool MainWindow::closeQuestion()
 {
     int rep = QMessageBox::question(this,"Quit ?","Do you really want to quit ?",QMessageBox::Yes | QMessageBox::No);
     if (rep == QMessageBox::Yes)
     {
-        QMainWindow::close();
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
 
@@ -168,20 +179,25 @@ void MainWindow::openDialog() // Open a dialog to choose a file
                 emit buildDTM(file);
             }
             catch(const std::bad_alloc&)
-            {
+            {int rep = QMessageBox::question(this,"Quit ?","Do you really want to quit ?",QMessageBox::Yes | QMessageBox::No);
+                if (rep == QMessageBox::Yes)
+                {
                 m_dtm = NULL;
+                }
             }
         }
     }
 }
-
 
 void MainWindow::setClickedCoordinates(qglviewer::Vec mouse_world)
 {
     ui->bxXcoord->setValue(mouse_world.x);
     ui->bxYcoord->setValue(mouse_world.y);
     ui->bxZcoord->setValue(mouse_world.z);
+
+    qWarning()<<"Congrats, you selected a point! You can now run the computation.\n";
 }
+
 
 void MainWindow::startComputation()
 {
@@ -192,17 +208,28 @@ void MainWindow::startComputation()
     emit computeIndex(coords);
 }
 
+
 void MainWindow::addFlow(unsigned long startIndex)
 {
    if(m_dtm)
     {
-        megafi::FlowPath* const newFP =
-                new megafi::FlowPath(&m_flowPathDefaults, m_dtm->getMode());
-        newFP->computePath(m_dtm, startIndex);
-        m_flows.push_back(newFP);
-        connect(this, SIGNAL(buildFlow(const megafi::DTM*, unsigned long)), newFP, SLOT(buildArrays()));
-        connect(newFP, SIGNAL(arrayRebuilt()), this, SIGNAL(flowsHaveChanged()));
-        emit buildFlow(m_dtm, startIndex);
+        if(startIndex != std::numeric_limits<unsigned long>::max())
+
+        {
+            megafi::FlowPath* const newFP =
+                    new megafi::FlowPath(&m_flowPathDefaults, m_dtm->getMode());
+            newFP->computePath(m_dtm, startIndex);
+            m_flows.push_back(newFP);
+            connect(this, SIGNAL(buildFlow(const megafi::DTM*, unsigned long)), newFP, SLOT(buildArrays()));
+            connect(newFP, SIGNAL(arrayRebuilt()), this, SIGNAL(flowsHaveChanged()));
+            emit buildFlow(m_dtm, startIndex);
+        }
+
+        else
+
+        {
+            qWarning()<< "Sorry, calcul isn't possible : there's no point belonging to the DTM with theses coordinates.\n";
+        }
     }
 }
 
