@@ -50,32 +50,27 @@ public:
 
     void closeEvent(QCloseEvent *);
 
-public slots:
-    // GUI slots
-    void openDialog();
-    bool closeQuestion();
-    void changeFlowPathProperties();
-    void changeFlowPathProperties(QListWidgetItem* item);
-    void startComputation();
-    void lockInterface();
-    void unlockInterface();
-    void updateDTMWidgets();
-    void enableDTMWidgets();
-    void disableDTMWidgets();
-    void updateFlowWidgets();
-    void enableFlowWidgets();
-    void disableFlowWidgets();
-
-    // Application slots
-    void setClickedCoordinates(qglviewer::Vec mouse_world);
-    void addFlow(unsigned long startIndex);
-
 signals:
+    void lockDTMWidgets(bool) const;
     void buildDTM(QString) const;
     void buildFlow(const megafi::DTM*, unsigned long) const;
     void DTMHasChanged() const;
     void flowsHaveChanged() const;
+    void beFlows(bool) const;
     void computeIndex(megafi::Point) const;
+
+public slots:
+    // GUI slots
+    void openDialog();
+    void startComputation();
+    bool closeQuestion();
+    void changeFlowPathProperties();
+    void changeFlowPathProperties(QListWidgetItem* item);
+    void unlockDTMWidgets();
+
+    // Application slots
+    void setClickedCoordinates(qglviewer::Vec mouse_world);
+    void addFlow(unsigned long startIndex);
 
 private:
     void deleteDTM();
