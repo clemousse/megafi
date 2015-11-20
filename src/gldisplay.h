@@ -10,6 +10,7 @@
 #include <QCursor>
 
 #include <QGLViewer/qglviewer.h>
+#include <QFileDialog>
 
 namespace megafi
 {
@@ -46,6 +47,8 @@ public slots:
     void reinit();
     void reshapeWindow(int width, int height);
     void rbClick(bool chckD);
+    void saveSnapshot();
+
 
 signals:
     void windowHasChanged() const;

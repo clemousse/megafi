@@ -158,6 +158,14 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
         QGLViewer::mousePressEvent(event);
     }
 
+
 }
 
 
+void glDisplay::saveSnapshot( )
+{
+    QString fileName = QFileDialog::getSaveFileName(this,"Save as...",QDir::homePath(),"Images (*.png *.jpeg *.jpg)");
+    setSnapshotFileName(fileName);
+    QGLViewer:: saveSnapshot(fileName);
+
+}

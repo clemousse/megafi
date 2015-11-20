@@ -3,12 +3,14 @@
 
 #include <limits>
 
+
 #include <QFileDialog>
 #include <QString>
 #include <QMessageBox>
 #include <QDebug>
 #include <QTextBlock>
 #include <QTextCursor>
+#include <QTextStream>
 
 using namespace megafi;
 
@@ -40,6 +42,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionNew_DTM_Window, SIGNAL(triggered()), m_glDisplay, SLOT(show()));
     //create a connexion on the push button "selectionModeBtn" to activate the mode selection
     connect(ui->selectionModeBtn, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
+    //create a connexion on the export picture
+    connect(ui->actionExport_picture, SIGNAL(triggered()),m_glDisplay, SLOT(saveSnapshot()));
+
+    //create a connexion on the menu File-> Export Paths
+
+    // Application signals
     // refresh draw
     connect(this, SIGNAL(DTMHasChanged()), m_glDisplay, SLOT(reinit()));
     connect(this, SIGNAL(flowsHaveChanged()), m_glDisplay, SLOT(updateGL()));
@@ -59,6 +67,12 @@ MainWindow::MainWindow(QWidget *parent) :
         m_contextMenu.addActions(actions);
     }
 }
+
+
+
+
+
+
 
 
 
@@ -313,4 +327,43 @@ void MainWindow::deleteFlows()
     ui->pathList->clear();
     m_flows.clear();
     emit beFlows(false);
+}
+
+void MainWindow::exportFlowPaths()
+{
+    QString flows = QFileDialog::getSaveFileName(this, "Save the flow paths", QString());
+
+            //creating of a file to export path in the release of the poject
+            QFile file(flows);
+
+            //openning the file in "read only" and checking the good opening
+            if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+            return;
+
+            //creating a stream "flux" to write in the file
+            QTextStream stream(&file);
+
+            //choosing the UTF-8 codec
+            stream.setCodec("UTF-8");
+
+            //Enter in the Qlist "m_flows" which contains the list of the flows
+            for(QList<megafi::FlowPath*>::iterator flow = m_flows.begin() ; flow != m_flows.end() ; ++flow)
+            {
+                //append the name of each flow of m_flows
+                stream <<(*flow)->QListWidgetItem::text();
+                stream <<"\n";
+
+                //append the coordinates of each flow of m_flows
+                 for (int i=0 ; i <(int)(*flow)->getNbVertices() ; i++)
+                 {
+                    const Point* const vertices =(*flow)->getVertices();
+                    stream << vertices[i].x;
+                    stream << " ";
+                    stream << vertices[i].y;
+                    stream << " ";
+                    stream << vertices[i].z;
+                    stream << "\n";
+                 }
+            }
+     qWarning()<< "Paths exported!\n";
 }

@@ -431,6 +431,7 @@
      <string>File</string>
     </property>
     <addaction name="actionOpen_DTM_file"/>
+    <addaction name="actionExport_paths"/>
     <addaction name="actionExport_picture"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -524,7 +525,7 @@
   </action>
   <action name="actionExport_picture">
    <property name="text">
-    <string>Export path picture</string>
+    <string>Save snapshot</string>
    </property>
   </action>
   <action name="actionQuit">
@@ -661,6 +662,11 @@
    </property>
    <property name="shortcut">
     <string>Del</string>
+   </property>
+  </action>
+  <action name="actionExport_paths">
+   <property name="text">
+    <string>Export paths</string>
    </property>
   </action>
  </widget>
@@ -995,46 +1001,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionCMRename</sender>
+   <sender>actionExport_paths</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>editFlowPath()</slot>
+   <slot>exportFlowPaths()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>378</x>
-     <y>234</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionCMCustomize</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>customizeFlowPath()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>378</x>
-     <y>234</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionCMDelete</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>deleteFlowPath()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
+     <x>481</x>
+     <y>235</y>
     </hint>
     <hint type="destinationlabel">
      <x>378</x>
@@ -1054,5 +1028,6 @@
   <slot>editFlowPath()</slot>
   <slot>customizeFlowPath()</slot>
   <slot>deleteFlowPath()</slot>
+  <slot>exportFlowPaths()</slot>
  </slots>
 </ui>

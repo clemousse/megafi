@@ -10,6 +10,7 @@
 #include <QFile>
 #include <QDir>
 #include <fstream>
+#include <QFileDialog>
 
 using namespace megafi;
 
@@ -58,26 +59,6 @@ void  FlowPath::setProperties(const FlowPathProps* newProps)
 void FlowPath::computePath(const DTM *dtm, unsigned long startIndex)
 {
     int countPoints_FP = 0;
-
-//for the export of the paths:
-
-     //creating of a file to export path in the release of the poject
-     QFile file(QDir::currentPath() + "/export_paths");
-
-     //openning the file in "read only" and checking the good opening
-     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-     return;
-
-     //creating a stream "flux" ti write in the file
-     QTextStream flux(&file);
-
-     //choosing the UTF-8 codec
-     flux.setCodec("UTF-8");
-
-     //write the title;
-     flux << "Path :\n";
-
-//end
 
     m_minIndices.push_back(startIndex);
 
@@ -141,8 +122,16 @@ void FlowPath::computePath(const DTM *dtm, unsigned long startIndex)
         {
 
             qDebug() << "End flow path.\n";
-            qWarning()<< "Flow path is computed! It has"<< countPoints_FP+1 <<"steps.\n";
-            flux << "End flowpath.\n" << "Flow path is computed! It has "<< countPoints_FP+1 <<" steps.\n";
+
+            if (countPoints_FP<2)
+            {
+                 qWarning()<< "Flow path. It has"<< countPoints_FP <<"section.\n";
+            }
+            else
+            {
+                qWarning()<< "Flow path. It has"<< countPoints_FP <<"sections.\n";
+            }
+
             break;
         }
         else
@@ -152,23 +141,19 @@ void FlowPath::computePath(const DTM *dtm, unsigned long startIndex)
             m_minIndices.push_back(argMin);
             m_vertices.push_back(p);
 
+
             qDebug() << "Next point's coordinates :"
                      << "\nx = " << m_vertices.back().x
                      << "\ny = " << m_vertices.back().y
                      << "\nz = " << m_vertices.back().z << "\n";
 
             countPoints_FP++;
-
-            //write in the file at each step of the path
-            flux <<  "Next point's coordinates :"
-                 << "\nx = " << m_vertices.back().x
-                 << "\ny = " << m_vertices.back().y
-                 << "\nz = " << m_vertices.back().z << "\n";
         }
     }
 
     dtm->lock.unlock();
 }
+
 
 
 #define BUILD for(unsigned long i = 0; \

@@ -73,6 +73,7 @@ public slots:
     void deleteFlowPath(FlowPath* flow);
     void changeFlowPathProperties(QListWidgetItem* item);
     void unlockDTMWidgets();
+    void exportFlowPaths();
 
     // Application slots
     void setClickedCoordinates(qglviewer::Vec mouse_world);
