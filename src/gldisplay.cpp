@@ -106,47 +106,6 @@ void glDisplay::draw()
             glDisableClientState(GL_VERTEX_ARRAY);
         }
     }
-#ifdef IMANE
-    for(long i = 0 ; i < m_minIndices.length()-1 ; ++i)
-    {
-
-        glBegin(GL_LINES);
-        glColor3d(1,0,0);
-        const Point& p1 = m_vertices[m_minIndices[i]],
-                p2 = m_vertices[m_minIndices[i+1]];
-
-        glVertex3d(p1.x, p1.y, p1.z);
-        glVertex3d(p2.x, p2.y, p2.z);
-
-        glEnd();
-    }
-#endif
-
-  /*  double interv = (m_dataSizeMax.z-m_dataSizeMin.z)/3;
-        if(m_vertices[index].z <= (interv+m_dataSizeMin.z) && m_vertices[index].z >= m_dataSizeMin.z)
-        {
-            double B=((m_vertices[index].z-m_dataSizeMin.z)/((interv+m_dataSizeMin.z)-m_dataSizeMin.z));
-            glColor3d(0,1-B,B);
-        }
-
-        else if(interv+m_dataSizeMin.z < m_vertices[index].z  && m_vertices[index].z <= (2*interv)+m_dataSizeMin.z )
-        {
-            double G=((m_vertices[index].z-(interv+m_dataSizeMin.z))/((2*interv)+m_dataSizeMin.z-interv+m_dataSizeMin.z));
-            glColor3d(0,G,1-G);
-
-        }
-
-        else if(m_vertices[index].z <= m_dataSizeMax.z && m_vertices[index].z > (2*interv)+m_dataSizeMin.z)
-        {
-            double R=((m_vertices[index].z-(2*interv)+m_dataSizeMin.z)/(m_dataSizeMax.z-(2*interv)+m_dataSizeMin.z));
-            glColor3d(R,1-R,0);
-
-        }
-        else{
-            glColor3d(1,1,1);
-        }*/
-
-
 }
 
 
