@@ -3,6 +3,7 @@
 
 #include <limits>
 
+
 #include <QFileDialog>
 #include <QString>
 #include <QMessageBox>
@@ -41,6 +42,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionNew_DTM_Window, SIGNAL(triggered()), m_glDisplay, SLOT(show()));
     //create a connexion on the push button "selectionModeBtn" to activate the mode selection
     connect(ui->selectionModeBtn, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
+    //create a connexion on the export picture
+    connect(ui->actionExport_picture, SIGNAL(triggered()),m_glDisplay, SLOT(saveSnapshot()));
+
     //create a connexion on the menu File-> Export Paths
 
     // Application signals
@@ -63,6 +67,12 @@ MainWindow::MainWindow(QWidget *parent) :
         m_contextMenu.addActions(actions);
     }
 }
+
+
+
+
+
+
 
 
 
@@ -202,6 +212,11 @@ void MainWindow::addFlow(unsigned long startIndex)
     {
         if(startIndex != std::numeric_limits<unsigned long>::max())
         {
+            // Reset boxes
+            ui->bxXcoord->clear();
+            ui->bxYcoord->clear();
+            ui->bxZcoord->clear();
+
             megafi::FlowPath* const newFP =
                     new megafi::FlowPath(&m_flowPathDefaults, ui->pathList, m_dtm->getMode());
             newFP->computePath(m_dtm, startIndex);
