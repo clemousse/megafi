@@ -33,7 +33,6 @@ public:
 
     float getLineWidth() const;
     void  setProperties(const FlowPathProps* newProps);  
-    float getm_VerticesX(int i);
 
 public slots:
     void buildArrays();

@@ -482,7 +482,7 @@
   </action>
   <action name="actionExport_picture">
    <property name="text">
-    <string>Export path picture</string>
+    <string>Save snapshot</string>
    </property>
   </action>
   <action name="actionQuit">

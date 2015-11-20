@@ -368,10 +368,9 @@ void MainWindow::deleteFlows()
 
 void MainWindow::exportFlowPaths()
 {
-    QString filter;
-    QString flows = QFileDialog::getSaveFileName(this, "Save the flow paths", QString(),
-                                                 "Text files (*.txt);;XML files (*.xml)", &filter);
-    if(filter == "Text files (*.txt)")
+    //QString filter;
+    QString flows = QFileDialog::getSaveFileName(this, "Save the flow paths", QString());
+    /*if(filter == "Text files (*.txt)")
     {
          flows += ".txt";
     }
@@ -379,7 +378,7 @@ void MainWindow::exportFlowPaths()
     else
     {
          flows += ".xml";
-    }
+    }*/
 
          //creating of a file to export path in the release of the poject
             QFile file(flows);
@@ -388,13 +387,29 @@ void MainWindow::exportFlowPaths()
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
             return;
 
-            //creating a stream "flux" ti write in the file
+            //creating a stream "flux" to write in the file
             QTextStream stream(&file);
 
             //choosing the UTF-8 codec
             stream.setCodec("UTF-8");
 
-            stream << "test";
 
-            //flux << this->megafi::FlowPath::getm_VerticesX(1);
+
+            for(QList<megafi::FlowPath*>::iterator flow = m_flows.begin() ; flow != m_flows.end() ; ++flow)
+            {
+                stream <<(*flow)->QListWidgetItem::text();
+                stream <<"\n";
+
+                 for (int i=0 ; i <(*flow)->getNbVertices() ; i++)
+                 {
+                    const Point* const vertices =(*flow)->getVertices();
+                    stream << vertices[i].x;
+                    stream << " ";
+                    stream << vertices[i].y;
+                    stream << " ";
+                    stream << vertices[i].z;
+                    stream << "\n";
+                 }
+            }
+
 }

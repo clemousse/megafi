@@ -46,8 +46,6 @@ FlowPath::~FlowPath()
 
 float FlowPath::getLineWidth() const { return m_props->lineWidth; }
 
-float FlowPath::getm_VerticesX(int i) { return m_vertices[i].x; }
-
 void  FlowPath::setProperties(const FlowPathProps* newProps)
 {
     if(newProps)
