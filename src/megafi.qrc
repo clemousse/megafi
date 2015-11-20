@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/cursor">
+        <file>select.png</file>
+    </qresource>
+</RCC>

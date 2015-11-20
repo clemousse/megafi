@@ -2,6 +2,7 @@
 #include "gldisplay.inl"
 
 #include <QDebug>
+#include <QPixmap>
 
 using namespace megafi;
 
@@ -11,7 +12,7 @@ glDisplay::glDisplay(const megafi::DTM* const* dtm,
     m_flows(flows),
     m_initialized(false),
     m_windowSize(400, 300),
-    m_departureSelection(false)
+    m_departureSelection(false), m_selectCursor(QPixmap(":/cursor/select.png")), m_moveCursor(Qt::OpenHandCursor)
 
 {
     resize(m_windowSize);
@@ -19,6 +20,9 @@ glDisplay::glDisplay(const megafi::DTM* const* dtm,
 
     //In order to make MouseGrabber react to mouse events
     setMouseTracking(true);
+
+    // set default cursor
+    setCursor(m_moveCursor);
 }
 
 glDisplay::~glDisplay()
@@ -113,6 +117,7 @@ void glDisplay::draw()
 void glDisplay::rbClick (bool chckD)
 {
     m_departureSelection = chckD;
+    setCursor(chckD ? m_selectCursor : m_moveCursor);
 }
 
 

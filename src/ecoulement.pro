@@ -45,3 +45,6 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui \
     flowpathview.ui
+
+RESOURCES += \
+    megafi.qrc
