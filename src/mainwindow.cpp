@@ -198,6 +198,11 @@ void MainWindow::addFlow(unsigned long startIndex)
     {
         if(startIndex != std::numeric_limits<unsigned long>::max())
         {
+            // Reset boxes
+            ui->bxXcoord->clear();
+            ui->bxYcoord->clear();
+            ui->bxZcoord->clear();
+
             megafi::FlowPath* const newFP =
                     new megafi::FlowPath(&m_flowPathDefaults, ui->pathList, m_dtm->getMode());
             newFP->computePath(m_dtm, startIndex);
