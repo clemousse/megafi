@@ -1,0 +1,10 @@
+Le groupe du projet megafi se compose de trois personnes aux profils très différents : 
+Ihmane, ingénieur réseaux et télécoms ;
+Alban, ingénieur de l'ENSG féru d'informatique ! ;
+Clémentine, géographe-géomarketeuse ayant déja éprouvé la vie professionnelle en entreprise quelques années.
+
+Naturellement, Alban s'est imposé comme chef de projet : son niveau avancé en programmation et son expérience en réalisation de projets informatiques ont justifié cette position. 
+Ces mêmes qualités associées à sa patience et sa pédagogie ont permis de guider le groupe sereinement vers l'achèvement du projet.
+
+La compréhension du sujet par la reformulation des besoins en fonctionnalités s'est faite conjointement entre les membres du groupe à chaque étape du projet. Chacun s'est montré force de proposition (et d'acceptation), autant dans le choix de ces fonctionnalités que dans leur mise en oeuvre. Les développements ont été attribués en concertation collective en fonction des compétences de chacun et des volontés d'apprentissage. L'oeil avisé d'Alban a été d'une aide précieuse à Ihmane et Clémentine pour appréhender en toute autonomie les nouveaux langages de programmation et outils utilisés.
+
