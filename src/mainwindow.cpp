@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+
 #include <QFileDialog>
 #include <QString>
 #include <QMessageBox>
@@ -64,7 +65,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //create a connexion on the radio button "btnQDebug" to redirect QDebug in QTextEdit
 
-    connect(ui->btnComputation, SIGNAL(clicked()), this, SLOT(startComputation()));
+    connect(ui->btnComputation, SIGNAL(clicked()), m_glDisplay, SLOT(startComputation()));
+
+
+    //create a connexion on the export picture
+    connect(ui->actionExport_picture, SIGNAL(triggered()),m_glDisplay, SLOT(saveSnapshot()));
+
 
     // Initialize progress bar
     m_progressBar->setWindowModality(Qt::NonModal);
@@ -73,6 +79,12 @@ MainWindow::MainWindow(QWidget *parent) :
     m_progressBar->setTextVisible(true);
     m_progressBar->setGeometry(0,0,500,20);
 }
+
+
+
+
+
+
 
 
 
@@ -103,6 +115,7 @@ void MainWindow::close()
         QMainWindow::close();
     }
 }
+
 
 
 void MainWindow::lockInterface()
