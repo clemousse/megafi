@@ -20,8 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_dtmThread(),
     m_flowPathViewDefaultWindow(new FlowPathView(this)),
     m_glDisplay(new glDisplay(&m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>* >(&m_flows))),
-    m_progressBar(new QProgressBar())
-
+    m_progressBar(),
+    m_contextMenu()
 {
     qRegisterMetaType<megafi::Point>("megafi::Point");
     qRegisterMetaType<QTextBlock>("QTextBlock");
@@ -35,22 +35,29 @@ MainWindow::MainWindow(QWidget *parent) :
     //load interface .ui created  with QT Designer
     ui->setupUi(this);
 
+    // glDisplay signals
     //create a connexion on the menu View-> New DTM Path via show slot
     connect(ui->actionNew_DTM_Window, SIGNAL(triggered()), m_glDisplay, SLOT(show()));
     //create a connexion on the push button "selectionModeBtn" to activate the mode selection
     connect(ui->selectionModeBtn, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
-
-    // Application signals
+    // refresh draw
     connect(this, SIGNAL(DTMHasChanged()), m_glDisplay, SLOT(reinit()));
     connect(this, SIGNAL(flowsHaveChanged()), m_glDisplay, SLOT(updateGL()));
+    // point clicked
     connect(m_glDisplay, SIGNAL(clicked(qglviewer::Vec)), this, SLOT(setClickedCoordinates(qglviewer::Vec)));
 
     // Initialize progress bar
-    m_progressBar->setWindowModality(Qt::NonModal);
-    m_progressBar->setWindowTitle("Be patient please, file is being read!");
-    m_progressBar->setFormat("Be patient please, file is being read!");
-    m_progressBar->setTextVisible(true);
-    m_progressBar->setGeometry(0,0,500,25);
+    m_progressBar.setWindowModality(Qt::NonModal);
+    m_progressBar.setWindowTitle("Be patient please, file is being read!");
+    m_progressBar.setFormat("Be patient please, file is being read!");
+    m_progressBar.setTextVisible(true);
+    m_progressBar.setGeometry(0,0,500,25);
+
+    // Initialize context menu
+    {
+        QList<QAction*> actions = { ui->actionCMDelete, ui->actionCMRename, ui->actionCMCustomize };
+        m_contextMenu.addActions(actions);
+    }
 }
 
 
@@ -61,7 +68,6 @@ MainWindow::~MainWindow()
     delete m_flowPathViewDefaultWindow;
     deleteFlows();
     deleteDTM();
-    delete m_progressBar;
     delete ui;
 }
 
@@ -133,10 +139,10 @@ void MainWindow::openDialog() // Open a dialog to choose a file
 
                 // Initialize progress bar
                 // All at 0 for the "infinite" aspect
-                m_progressBar->setMaximum(0);
-                m_progressBar->setMinimum(0);
-                m_progressBar->setValue(0);
-                m_progressBar->show();
+                m_progressBar.setMaximum(0);
+                m_progressBar.setMinimum(0);
+                m_progressBar.setValue(0);
+                m_progressBar.show();
 
                 m_dtm->moveToThread(&m_dtmThread);
                 // What happen at beginning of thread
@@ -144,7 +150,7 @@ void MainWindow::openDialog() // Open a dialog to choose a file
                 // What happen at end of thread
                 connect(m_dtm, SIGNAL(arrayRebuilt()), this, SLOT(unlockDTMWidgets()));
                 connect(m_dtm, SIGNAL(arrayRebuilt()), this, SIGNAL(DTMHasChanged()));
-                connect(m_dtm, SIGNAL(arrayRebuilt()), m_progressBar, SLOT(close()));
+                connect(m_dtm, SIGNAL(arrayRebuilt()), &m_progressBar, SLOT(close()));
                 // What happen afterwards
                 connect(this, SIGNAL(computeIndex(megafi::Point)), m_dtm, SLOT(computeIndex(megafi::Point)));
                 connect(m_dtm, SIGNAL(indexComputed(unsigned long)), this, SLOT(addFlow(unsigned long)));
@@ -211,6 +217,32 @@ void MainWindow::addFlow(unsigned long startIndex)
     }
 }
 
+
+void MainWindow::deleteFlowPath(FlowPath *flow)
+{
+    disconnect(flow, SIGNAL(arrayRebuilt()), this, SIGNAL(flowsHaveChanged()));
+    disconnect(this, SIGNAL(buildFlow(const megafi::DTM*, unsigned long)), flow, SLOT(computePath(const megafi::DTM*, unsigned long)));
+    delete flow;
+
+    ui->pathList->removeItemWidget(flow);
+    m_flows.removeOne(flow);
+    emit flowsHaveChanged();
+    emit beFlows(!m_flows.isEmpty());
+}
+
+void MainWindow::openContextMenu(QPoint p)
+{
+    QListWidgetItem* selectedItem = ui->pathList->itemAt(p);
+    QAction* const res = m_contextMenu.exec(mapToGlobal(p));
+
+    if(res == ui->actionCMRename)
+        ui->pathList->editItem(selectedItem);
+    else if(res == ui->actionCMCustomize)
+        changeFlowPathProperties(selectedItem);
+    else if(res == ui->actionCMDelete)
+        deleteFlowPath(static_cast<FlowPath*>(selectedItem));
+}
+
 void MainWindow::changeFlowPathProperties(QListWidgetItem* item)
 {
     FlowPath* fpItem = static_cast<FlowPath*>(item);
@@ -251,7 +283,7 @@ void MainWindow::deleteDTM()
         disconnect(this, SIGNAL(buildDTM(QString)), m_dtm, SLOT(buildDTM(QString)));
         disconnect(m_dtm, SIGNAL(arrayRebuilt()), this, SLOT(unlockDTMWidgets()));
         disconnect(m_dtm, SIGNAL(arrayRebuilt()), this, SIGNAL(DTMHasChanged()));
-        disconnect(m_dtm, SIGNAL(arrayRebuilt()), m_progressBar, SLOT(close()));
+        disconnect(m_dtm, SIGNAL(arrayRebuilt()), &m_progressBar, SLOT(close()));
         disconnect(this, SIGNAL(computeIndex(megafi::Point)), m_dtm, SLOT(computeIndex(megafi::Point)));
         disconnect(m_dtm, SIGNAL(indexComputed(unsigned long)), this, SLOT(addFlow(unsigned long)));
         delete m_dtm;

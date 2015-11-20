@@ -13,6 +13,9 @@
 #include <QProgressBar>
 #include <QThread>
 #include <QMutex>
+#include <QPoint>
+#include <QMenu>
+#include <QListWidgetItem>
 
 namespace megafi
 {
@@ -36,9 +39,10 @@ private:
 
 protected:
     // Windows
-    FlowPathView*    const m_flowPathViewDefaultWindow;
-    glDisplay* const m_glDisplay;
-    QProgressBar*    const m_progressBar;
+    FlowPathView* const m_flowPathViewDefaultWindow;
+    glDisplay*    const m_glDisplay;
+    QProgressBar        m_progressBar;
+    QMenu               m_contextMenu;
 
     // Properties
     megafi::FlowPathProps m_flowPathDefaults;
@@ -64,7 +68,9 @@ public slots:
     void openDialog();
     void startComputation();
     bool closeQuestion();
+    void openContextMenu(QPoint p);
     void changeFlowPathProperties();
+    void deleteFlowPath(FlowPath* flow);
     void changeFlowPathProperties(QListWidgetItem* item);
     void unlockDTMWidgets();
 

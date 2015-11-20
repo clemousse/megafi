@@ -498,6 +498,9 @@
        <property name="enabled">
         <bool>false</bool>
        </property>
+       <property name="contextMenuPolicy">
+        <enum>Qt::CustomContextMenu</enum>
+       </property>
       </widget>
      </item>
     </layout>
@@ -509,6 +512,9 @@
    </property>
    <property name="toolTip">
     <string>Open DTM file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="actionExport_coordinates">
@@ -524,6 +530,9 @@
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
    </property>
   </action>
   <action name="actionView_legend">
@@ -543,6 +552,9 @@
    </property>
    <property name="text">
     <string>History</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
    </property>
   </action>
   <action name="actionFullscreen_mode">
@@ -571,6 +583,9 @@
    </property>
    <property name="toolTip">
     <string>New DTM Window</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
    </property>
   </action>
   <action name="action3D">
@@ -618,9 +633,34 @@
     <string>Customize DTM</string>
    </property>
   </action>
-  <action name="actionCustomize_path">
+  <action name="actionCMRename">
    <property name="text">
-    <string>Customize path</string>
+    <string>Rename</string>
+   </property>
+   <property name="toolTip">
+    <string>Rename this path</string>
+   </property>
+   <property name="shortcut">
+    <string>F2</string>
+   </property>
+  </action>
+  <action name="actionCMCustomize">
+   <property name="text">
+    <string>Customize</string>
+   </property>
+   <property name="toolTip">
+    <string>Customize this path</string>
+   </property>
+  </action>
+  <action name="actionCMDelete">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete this path</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
    </property>
   </action>
  </widget>
@@ -743,22 +783,6 @@
     <hint type="destinationlabel">
      <x>581</x>
      <y>371</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>MainWindow</sender>
-   <signal>lockDTMWidgets(bool)</signal>
-   <receiver>actionOpen_DTM_file</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>378</x>
-     <y>234</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
     </hint>
    </hints>
   </connection>
@@ -954,6 +978,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pathList</sender>
+   <signal>customContextMenuRequested(QPoint)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openContextMenu(QPoint)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>102</x>
+     <y>248</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>lockDTMWidgets(bool)</signal>
@@ -962,5 +1002,9 @@
   <slot>changeFlowPathProperties()</slot>
   <slot>changeFlowPathProperties(QListWidgetItem*)</slot>
   <slot>startComputation()</slot>
+  <slot>openContextMenu(QPoint)</slot>
+  <slot>editFlowPath()</slot>
+  <slot>customizeFlowPath()</slot>
+  <slot>deleteFlowPath()</slot>
  </slots>
 </ui>
