@@ -441,7 +441,6 @@
     </property>
     <addaction name="actionNew_DTM_Window"/>
     <addaction name="separator"/>
-    <addaction name="actionCustomize_DTM"/>
     <addaction name="actionCustomize_paths"/>
     <addaction name="separator"/>
     <addaction name="actionView_history"/>
@@ -524,6 +523,9 @@
    </property>
   </action>
   <action name="actionExport_picture">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Save snapshot</string>
    </property>
@@ -665,6 +667,9 @@
    </property>
   </action>
   <action name="actionExport_paths">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Export paths</string>
    </property>
@@ -1007,12 +1012,28 @@
    <slot>exportFlowPaths()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>481</x>
-     <y>235</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>378</x>
      <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>beFlows(bool)</signal>
+   <receiver>actionExport_paths</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
     </hint>
    </hints>
   </connection>

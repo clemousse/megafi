@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // glDisplay signals
     //create a connexion on the menu View-> New DTM Path via show slot
     connect(ui->actionNew_DTM_Window, SIGNAL(triggered()), m_glDisplay, SLOT(show()));
+    connect(m_glDisplay, SIGNAL(visible(bool)), ui->actionExport_picture, SLOT(setEnabled(bool)));
     //create a connexion on the push button "selectionModeBtn" to activate the mode selection
     connect(ui->selectionModeBtn, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
     //create a connexion on the export picture

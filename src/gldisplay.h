@@ -8,9 +8,10 @@
 #include <QList>
 #include <QMouseEvent>
 #include <QCursor>
+#include <QFileDialog>
+#include <QCloseEvent>
 
 #include <QGLViewer/qglviewer.h>
-#include <QFileDialog>
 
 namespace megafi
 {
@@ -44,6 +45,7 @@ public:
     void mousePressEvent(QMouseEvent* const event);
 
 public slots:
+    void show();
     void reinit();
     void reshapeWindow(int width, int height);
     void rbClick(bool chckD);
@@ -53,11 +55,15 @@ public slots:
 signals:
     void windowHasChanged() const;
     void clicked(qglviewer::Vec) const;
+    void visible(bool) const;
+    void opened() const;
+    void closed() const;
 
 private:
     void init(); // Contains initialization code which cannot be executed before the window has been shown
     void draw(); // Drawing function
     template<class Datatype> void drawData(const Datatype&) const;
+    void closeEvent(QCloseEvent *) override;
 };
 
 }
