@@ -12,8 +12,7 @@ Priorité,Feature,"User story : En tant qu'utilisateur, je voudrais",User story
 24,Créer le chemin,Afficher le chemin,Personnaliser l'affichage,"Couleur, épaisseur, … via un menu",4,,,,,,,
 13,Créer le chemin,Afficher le chemin,Affichage progressif (animation),,13,,,,3,,,
 14,Lâcher la goutte,Paramétrer le point de départ,j'écris les coordonnées dans des champs,"Imposer un système de coordonnées, Format de nombre (point décimal, précision, …), Vérifier les bornes (coordonnées limites)",1,,,,,,,
-15,Interface graphique,Dessiner la fenêtre principale du programme,Caisson avec l'historique des calculs,,8,,,,1,,,
-15,Interface graphique,Dessiner la fenêtre principale du programme,Caisson avec l'historique des calculs,,,Y afficher un chemin,4,A,"0,5","0,5",OK,
+15,Interface graphique,Dessiner la fenêtre principale du programme,Caisson avec l'historique des calculs,,4,,,,1,,,
 15,Interface graphique,Dessiner la fenêtre principale du programme,Caisson avec l'historique des calculs,,,Editer le chemin,4,A,"0,5","0,5",EC,Supprimer (Menu contextuel)
 16,Créer le chemin,Exporter le chemin,je veux toutes les coordonnées dans un fichier,,5,,,,1,,,
 17,Lâcher la goutte,Paramétrer le point de départ,je charge un fichier,"Avec un menu, puis boîte de dialogue, format de fichier ?",8,,,,2,,,

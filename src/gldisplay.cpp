@@ -2,6 +2,7 @@
 #include "gldisplay.inl"
 
 #include <QDebug>
+#include <QPixmap>
 
 using namespace megafi;
 
@@ -11,7 +12,7 @@ glDisplay::glDisplay(const megafi::DTM* const* dtm,
     m_flows(flows),
     m_initialized(false),
     m_windowSize(400, 300),
-    m_departureSelection(false)
+    m_departureSelection(false), m_selectCursor(QPixmap(":/cursor/select.png")), m_moveCursor(Qt::OpenHandCursor)
 
 {
     resize(m_windowSize);
@@ -19,6 +20,9 @@ glDisplay::glDisplay(const megafi::DTM* const* dtm,
 
     //In order to make MouseGrabber react to mouse events
     setMouseTracking(true);
+
+    // set default cursor
+    setCursor(m_moveCursor);
 }
 
 glDisplay::~glDisplay()
@@ -106,47 +110,6 @@ void glDisplay::draw()
             glDisableClientState(GL_VERTEX_ARRAY);
         }
     }
-#ifdef IMANE
-    for(long i = 0 ; i < m_minIndices.length()-1 ; ++i)
-    {
-
-        glBegin(GL_LINES);
-        glColor3d(1,0,0);
-        const Point& p1 = m_vertices[m_minIndices[i]],
-                p2 = m_vertices[m_minIndices[i+1]];
-
-        glVertex3d(p1.x, p1.y, p1.z);
-        glVertex3d(p2.x, p2.y, p2.z);
-
-        glEnd();
-    }
-#endif
-
-  /*  double interv = (m_dataSizeMax.z-m_dataSizeMin.z)/3;
-        if(m_vertices[index].z <= (interv+m_dataSizeMin.z) && m_vertices[index].z >= m_dataSizeMin.z)
-        {
-            double B=((m_vertices[index].z-m_dataSizeMin.z)/((interv+m_dataSizeMin.z)-m_dataSizeMin.z));
-            glColor3d(0,1-B,B);
-        }
-
-        else if(interv+m_dataSizeMin.z < m_vertices[index].z  && m_vertices[index].z <= (2*interv)+m_dataSizeMin.z )
-        {
-            double G=((m_vertices[index].z-(interv+m_dataSizeMin.z))/((2*interv)+m_dataSizeMin.z-interv+m_dataSizeMin.z));
-            glColor3d(0,G,1-G);
-
-        }
-
-        else if(m_vertices[index].z <= m_dataSizeMax.z && m_vertices[index].z > (2*interv)+m_dataSizeMin.z)
-        {
-            double R=((m_vertices[index].z-(2*interv)+m_dataSizeMin.z)/(m_dataSizeMax.z-(2*interv)+m_dataSizeMin.z));
-            glColor3d(R,1-R,0);
-
-        }
-        else{
-            glColor3d(1,1,1);
-        }*/
-
-
 }
 
 
@@ -154,6 +117,7 @@ void glDisplay::draw()
 void glDisplay::rbClick (bool chckD)
 {
     m_departureSelection = chckD;
+    setCursor(chckD ? m_selectCursor : m_moveCursor);
 }
 
 
@@ -185,7 +149,7 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
         }
         else
         {
-            qWarning() << "There's no point belonging to the DTM under mouses's cursor.\n";
+            qWarning() << "No point under mouse's cursor.\n";
         }
     }
     else

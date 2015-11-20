@@ -7,6 +7,7 @@
 
 #include <QList>
 #include <QMouseEvent>
+#include <QCursor>
 
 #include <QGLViewer/qglviewer.h>
 
@@ -31,6 +32,8 @@ private:
 protected:
     QSize m_windowSize;
     bool m_departureSelection;
+    QCursor m_selectCursor;
+    QCursor m_moveCursor;
 
 public:
     glDisplay(const megafi::DTM* const* dtm,

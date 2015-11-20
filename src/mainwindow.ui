@@ -68,6 +68,9 @@
      <layout class="QHBoxLayout" name="infosHL">
       <item>
        <widget class="QLabel" name="infosLbl">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -97,6 +100,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="selectionModeBtn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -135,6 +141,9 @@
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QLabel" name="coordinatesLbl">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -151,6 +160,9 @@
      <layout class="QHBoxLayout" name="coordinatesLabelHL">
       <item>
        <widget class="QLabel" name="coordinatesLblX">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -169,6 +181,9 @@
       </item>
       <item>
        <widget class="QLabel" name="coordinatesLblY">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -187,6 +202,9 @@
       </item>
       <item>
        <widget class="QLabel" name="coordinatesLblZ">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -206,6 +224,9 @@
      <layout class="QHBoxLayout" name="coordinatesHL">
       <item>
        <widget class="QDoubleSpinBox" name="bxXcoord">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -236,6 +257,9 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="bxYcoord">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -269,6 +293,9 @@
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="bxZcoord">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -316,6 +343,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="btnComputation">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -460,9 +490,19 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_8">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QListWidget" name="pathList"/>
+      <widget class="QListWidget" name="pathList">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="contextMenuPolicy">
+        <enum>Qt::CustomContextMenu</enum>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -473,6 +513,9 @@
    </property>
    <property name="toolTip">
     <string>Open DTM file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="actionExport_coordinates">
@@ -488,6 +531,9 @@
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
    </property>
   </action>
   <action name="actionView_legend">
@@ -507,6 +553,9 @@
    </property>
    <property name="text">
     <string>History</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
    </property>
   </action>
   <action name="actionFullscreen_mode">
@@ -535,6 +584,9 @@
    </property>
    <property name="toolTip">
     <string>New DTM Window</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
    </property>
   </action>
   <action name="action3D">
@@ -582,9 +634,34 @@
     <string>Customize DTM</string>
    </property>
   </action>
-  <action name="actionCustomize_path">
+  <action name="actionCMRename">
    <property name="text">
-    <string>Customize path</string>
+    <string>Rename</string>
+   </property>
+   <property name="toolTip">
+    <string>Rename this path</string>
+   </property>
+   <property name="shortcut">
+    <string>F2</string>
+   </property>
+  </action>
+  <action name="actionCMCustomize">
+   <property name="text">
+    <string>Customize</string>
+   </property>
+   <property name="toolTip">
+    <string>Customize this path</string>
+   </property>
+  </action>
+  <action name="actionCMDelete">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete this path</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
    </property>
   </action>
   <action name="actionExport_paths">
@@ -602,5 +679,355 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionOpen_DTM_file</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCustomize_paths</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>changeFlowPathProperties()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionQuit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionView_history</sender>
+   <signal>triggered()</signal>
+   <receiver>dockWidget_His</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>102</x>
+     <y>235</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pathList</sender>
+   <signal>itemActivated(QListWidgetItem*)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>changeFlowPathProperties(QListWidgetItem*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>72</x>
+     <y>376</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>81</x>
+     <y>473</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnComputation</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>startComputation()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>475</x>
+     <y>296</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>485</x>
+     <y>478</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>clearLogButton</sender>
+   <signal>clicked()</signal>
+   <receiver>log</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>666</x>
+     <y>376</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>581</x>
+     <y>371</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>actionExport_picture</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>infosLbl</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>481</x>
+     <y>117</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>selectionModeBtn</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>481</x>
+     <y>173</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>coordinatesLbl</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>481</x>
+     <y>203</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>coordinatesLblX</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>303</x>
+     <y>228</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>coordinatesLblY</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>481</x>
+     <y>228</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>coordinatesLblZ</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>660</x>
+     <y>228</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>bxXcoord</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>303</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>bxYcoord</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>481</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>bxZcoord</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>660</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>btnComputation</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>482</x>
+     <y>293</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>beFlows(bool)</signal>
+   <receiver>pathList</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>102</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pathList</sender>
+   <signal>customContextMenuRequested(QPoint)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openContextMenu(QPoint)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>102</x>
+     <y>248</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionExport_paths</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exportFlowPaths()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>481</x>
+     <y>235</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <signal>lockDTMWidgets(bool)</signal>
+  <signal>beFlows(bool)</signal>
+  <slot>openDialog()</slot>
+  <slot>changeFlowPathProperties()</slot>
+  <slot>changeFlowPathProperties(QListWidgetItem*)</slot>
+  <slot>startComputation()</slot>
+  <slot>openContextMenu(QPoint)</slot>
+  <slot>editFlowPath()</slot>
+  <slot>customizeFlowPath()</slot>
+  <slot>deleteFlowPath()</slot>
+  <slot>exportFlowPaths()</slot>
+ </slots>
 </ui>
