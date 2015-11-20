@@ -178,7 +178,7 @@ void MainWindow::setClickedCoordinates(qglviewer::Vec mouse_world)
     ui->bxYcoord->setValue(mouse_world.y);
     ui->bxZcoord->setValue(mouse_world.z);
 
-    qWarning()<<"Congrats, you selected a point! You can now run the computation.\n";
+    qWarning()<<"Point selected.";
 }
 
 
@@ -212,7 +212,7 @@ void MainWindow::addFlow(unsigned long startIndex)
 
         else
         {
-            qWarning()<< "Sorry, calcul isn't possible : there's no point belonging to the DTM with theses coordinates.\n";
+            qWarning()<< "No point with theses coordinates.";
         }
     }
 }

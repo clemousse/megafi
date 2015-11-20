@@ -149,7 +149,7 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
         }
         else
         {
-            qWarning() << "There's no point belonging to the DTM under mouses's cursor.\n";
+            qWarning() << "No point under mouse's cursor.\n";
         }
     }
     else
