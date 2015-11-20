@@ -122,7 +122,16 @@ void FlowPath::computePath(const DTM *dtm, unsigned long startIndex)
         {
 
             qDebug() << "End flow path.\n";
-            qWarning()<< "Flow path is computed! It has"<< countPoints_FP+1 <<"steps.\n";
+
+            if (countPoints_FP<2)
+            {
+                 qWarning()<< "Flow path. It has"<< countPoints_FP <<"section.\n";
+            }
+            else
+            {
+                qWarning()<< "Flow path. It has"<< countPoints_FP <<"sections.\n";
+            }
+
             break;
         }
         else
