@@ -1,0 +1,42 @@
+INTRODUCTION
+	- une phrase sur le projet
+	- présentation du contenu du rapport
+
+I Présentation du projet
+	1. le sujet : 
+		- quelle compréhension du sujet ?
+		- quels besoins ?
+		- quelles fonctionnalités correspondantes ?
+	2. les contraintes de réalisation :
+		- C++
+		- QT
+		- OpenGl
+		-> librairie qglViewer => pourquoi?
+	3. les données :
+		- quelles données d'entrée ?
+		- quelles données de sortie ?
+
+II Partie Technique (en anglais)
+	1. les choix techniques 
+		- quels choix techniques ont été faits ?
+		- pourquoi ?
+		- quelle mise en oeuvre ?
+	2. diagramme de classe
+		
+
+III Gestion de projet
+	1. le profil du groupe
+		- présentation des membres du groupe
+		- l'organisation entre les membres
+	2. la gestion selon la méthode Agile
+		- sprints, user stories, product owner et tutti quanti !
+	3. bilan
+		- vélocité etc
+
+CONCLUSION
+	- objectifs atteints ?
+
+
+
+				
+				
