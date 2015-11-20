@@ -19,9 +19,9 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_9">
+     <layout class="QHBoxLayout" name="titleHL">
       <item>
-       <widget class="QLabel" name="label_7">
+       <widget class="QLabel" name="titleLbl">
         <property name="font">
          <font>
           <pointsize>15</pointsize>
@@ -65,27 +65,28 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <layout class="QHBoxLayout" name="infosHL">
       <item>
-       <widget class="QLabel" name="label_6">
+       <widget class="QLabel" name="infosLbl">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
          </font>
         </property>
         <property name="text">
-         <string>Click on the button below to switch on selection mode.
-It will allow you to select a point of the DTM directly on the screen.
-To run the computing of the flow path and see it on screen, push the &quot;Calcul&quot; button.</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click on the button below &amp;quot;&lt;span style=&quot; font-weight:600;&quot;&gt;Selection Mode&lt;/span&gt;&amp;quot; to switch on selection mode.&lt;br/&gt;It will allow you to select a point of the DTM directly on screen.&lt;br/&gt;To run the computing of the flow path from this point and see it on screen, push the &amp;quot;&lt;span style=&quot; font-weight:600;&quot;&gt;Calcul&lt;/span&gt;&amp;quot; button.&lt;br/&gt;If you want to resume handling the DTM, you have to release the selection mode button.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
       </item>
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <layout class="QHBoxLayout" name="selectionModeHL">
       <item>
-       <spacer name="horizontalSpacer">
+       <spacer name="leftSelectionModeHSpc">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -98,14 +99,17 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_Mouse">
+       <widget class="QPushButton" name="selectionModeBtn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
          </font>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;This button allows you to switch on selection mode in order to choose a point of the DTM with your mouse, directly on the screen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;This button allows you to switch on selection mode in order to choose a point of the DTM with your mouse, directly on screen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="toolTipDuration">
          <number>5000</number>
@@ -119,7 +123,7 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer_4">
+       <spacer name="rightSelectionModeHSpc">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -134,16 +138,38 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_11">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="coordinatesLbl">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can enter coordinates below instead of choosing a point thanks to selection mode.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="coordinatesLabelHL">
+      <item>
+       <widget class="QLabel" name="coordinatesLblX">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
          </font>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string/>
         </property>
         <property name="text">
          <string>X</string>
@@ -154,7 +180,10 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="coordinatesLblY">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -172,7 +201,10 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="coordinatesLblZ">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
@@ -189,91 +221,103 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <layout class="QHBoxLayout" name="coordinatesHL">
       <item>
        <widget class="QDoubleSpinBox" name="bxXcoord">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
          </font>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Coordinate X of the selected point.&lt;br/&gt;Projection system is Lambert II etendu.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Coordinate X of the selected point.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="toolTipDuration">
          <number>5000</number>
         </property>
         <property name="readOnly">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="decimals">
          <number>2</number>
         </property>
         <property name="minimum">
-         <double>900000.000000000000000</double>
+         <double>0.000000000000000</double>
         </property>
         <property name="maximum">
-         <double>999975.000000000000000</double>
+         <double>1200000.000000000000000</double>
         </property>
         <property name="singleStep">
-         <double>25.000000000000000</double>
+         <double>0.010000000000000</double>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="bxYcoord">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
          </font>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Coordinate Y of the selected point.&lt;br/&gt;Projection system is Lambert II etendu.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Coordinate Y of the selected point.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="toolTipDuration">
          <number>5000</number>
         </property>
         <property name="readOnly">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="decimals">
          <number>2</number>
         </property>
         <property name="minimum">
-         <double>1900020.000000000000000</double>
+         <double>0.000000000000000</double>
         </property>
         <property name="maximum">
-         <double>1944980.000000000000000</double>
+         <double>2700000.000000000000000</double>
         </property>
         <property name="singleStep">
-         <double>25.000000000000000</double>
+         <double>0.010000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QDoubleSpinBox" name="bxZcoord">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
          </font>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Coordinate Z of the selected point.&lt;br/&gt;It represents the elevation of the point.&lt;br/&gt;Projection system is Lambert II etendu.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Coordinate Z of the selected point.&lt;br/&gt;It represents the elevation of the point.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="toolTipDuration">
          <number>5000</number>
         </property>
         <property name="readOnly">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="decimals">
          <number>2</number>
         </property>
         <property name="minimum">
-         <double>318.800000000000011</double>
+         <double>0.000000000000000</double>
         </property>
         <property name="maximum">
-         <double>3270.300000000000182</double>
+         <double>4810.000000000000000</double>
         </property>
         <property name="singleStep">
          <double>0.010000000000000</double>
@@ -283,7 +327,7 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QHBoxLayout" name="computationHL">
       <item>
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
@@ -299,10 +343,19 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
       </item>
       <item>
        <widget class="QPushButton" name="btnComputation">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="font">
          <font>
           <pointsize>9</pointsize>
          </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;This button allows you to compute the flow path from the selected point or from the coordinates entered manually above. &lt;br/&gt;Then, the path is drawn on the DTM.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="toolTipDuration">
+         <number>5000</number>
         </property>
         <property name="text">
          <string>Calcul</string>
@@ -325,7 +378,7 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_7">
+     <layout class="QHBoxLayout" name="logHL">
       <item>
        <widget class="megafi::LogWidget" name="log">
         <property name="cursor" stdset="0">
@@ -342,6 +395,24 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="clearLogButton">
+        <property name="font">
+         <font>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This button allows you to clear the log if this one is full.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="toolTipDuration">
+         <number>5000</number>
+        </property>
+        <property name="text">
+         <string>Clear Log</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>
@@ -352,7 +423,7 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
      <x>0</x>
      <y>0</y>
      <width>757</width>
-     <height>19</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -360,6 +431,7 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
      <string>File</string>
     </property>
     <addaction name="actionOpen_DTM_file"/>
+    <addaction name="actionExport_paths"/>
     <addaction name="actionExport_picture"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -369,6 +441,7 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
     </property>
     <addaction name="actionNew_DTM_Window"/>
     <addaction name="separator"/>
+    <addaction name="actionCustomize_DTM"/>
     <addaction name="actionCustomize_paths"/>
     <addaction name="separator"/>
     <addaction name="actionView_history"/>
@@ -416,7 +489,23 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_8"/>
+   <widget class="QWidget" name="dockWidgetContents_8">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QListWidget" name="pathList">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="contextMenuPolicy">
+        <enum>Qt::CustomContextMenu</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <action name="actionOpen_DTM_file">
    <property name="text">
@@ -424,6 +513,9 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
    </property>
    <property name="toolTip">
     <string>Open DTM file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="actionExport_coordinates">
@@ -433,12 +525,15 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
   </action>
   <action name="actionExport_picture">
    <property name="text">
-    <string>Export path picture</string>
+    <string>Save snapshot</string>
    </property>
   </action>
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
    </property>
   </action>
   <action name="actionView_legend">
@@ -457,7 +552,10 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Historic</string>
+    <string>History</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
    </property>
   </action>
   <action name="actionFullscreen_mode">
@@ -486,6 +584,9 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
    </property>
    <property name="toolTip">
     <string>New DTM Window</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
    </property>
   </action>
   <action name="action3D">
@@ -528,6 +629,46 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
     <string>Customize paths</string>
    </property>
   </action>
+  <action name="actionCustomize_DTM">
+   <property name="text">
+    <string>Customize DTM</string>
+   </property>
+  </action>
+  <action name="actionCMRename">
+   <property name="text">
+    <string>Rename</string>
+   </property>
+   <property name="toolTip">
+    <string>Rename this path</string>
+   </property>
+   <property name="shortcut">
+    <string>F2</string>
+   </property>
+  </action>
+  <action name="actionCMCustomize">
+   <property name="text">
+    <string>Customize</string>
+   </property>
+   <property name="toolTip">
+    <string>Customize this path</string>
+   </property>
+  </action>
+  <action name="actionCMDelete">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete this path</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+  </action>
+  <action name="actionExport_paths">
+   <property name="text">
+    <string>Export paths</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -538,5 +679,355 @@ To run the computing of the flow path and see it on screen, push the &quot;Calcu
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionOpen_DTM_file</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCustomize_paths</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>changeFlowPathProperties()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionQuit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionView_history</sender>
+   <signal>triggered()</signal>
+   <receiver>dockWidget_His</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>102</x>
+     <y>235</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pathList</sender>
+   <signal>itemActivated(QListWidgetItem*)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>changeFlowPathProperties(QListWidgetItem*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>72</x>
+     <y>376</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>81</x>
+     <y>473</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnComputation</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>startComputation()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>475</x>
+     <y>296</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>485</x>
+     <y>478</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>clearLogButton</sender>
+   <signal>clicked()</signal>
+   <receiver>log</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>666</x>
+     <y>376</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>581</x>
+     <y>371</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>actionExport_picture</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>infosLbl</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>481</x>
+     <y>117</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>selectionModeBtn</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>481</x>
+     <y>173</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>coordinatesLbl</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>481</x>
+     <y>203</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>coordinatesLblX</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>303</x>
+     <y>228</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>coordinatesLblY</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>481</x>
+     <y>228</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>coordinatesLblZ</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>660</x>
+     <y>228</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>bxXcoord</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>303</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>bxYcoord</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>481</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>bxZcoord</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>660</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>lockDTMWidgets(bool)</signal>
+   <receiver>btnComputation</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>482</x>
+     <y>293</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>beFlows(bool)</signal>
+   <receiver>pathList</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>102</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pathList</sender>
+   <signal>customContextMenuRequested(QPoint)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openContextMenu(QPoint)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>102</x>
+     <y>248</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionExport_paths</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exportFlowPaths()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>481</x>
+     <y>235</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>378</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <signal>lockDTMWidgets(bool)</signal>
+  <signal>beFlows(bool)</signal>
+  <slot>openDialog()</slot>
+  <slot>changeFlowPathProperties()</slot>
+  <slot>changeFlowPathProperties(QListWidgetItem*)</slot>
+  <slot>startComputation()</slot>
+  <slot>openContextMenu(QPoint)</slot>
+  <slot>editFlowPath()</slot>
+  <slot>customizeFlowPath()</slot>
+  <slot>deleteFlowPath()</slot>
+  <slot>exportFlowPaths()</slot>
+ </slots>
 </ui>

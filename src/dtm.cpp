@@ -2,6 +2,7 @@
 #include "dtm.inl"
 
 #include <cmath> // std::abs on doubles
+#include <limits>
 
 #include <QFile>
 #include <QDebug>
@@ -174,9 +175,7 @@ void DTM::computeLineLength()
           {
              if(lineLength_prec != NOT_COMPUTED && m_lineLength != lineLength_prec)
              {
-                 //Q_DebugStream::registerQDebugMessageHandler();
                  qWarning() << "Lines" << i << "and" << i+1 << "don't have the same length.\n";
-                 //qInstallMessageHandler(0);
              }
 
              lineLength_prec = m_lineLength;
@@ -188,23 +187,19 @@ void DTM::computeLineLength()
     m_lineLength = lineLength_prec;
 
     // to append numbres of points in a line and number of lines in the DTM file
-    //Q_DebugStream::registerQDebugMessageHandler();
+    qWarning() << "There are" << m_nbLines << "lines in the DTM.";
     qWarning() << "Lines are" << m_lineLength << "points long.\n";
-    //qInstallMessageHandler(0);
 
-    //Q_DebugStream::registerQDebugMessageHandler();
-    qWarning() << "There are" << m_nbLines << "lines in the file.\n";
-    //qInstallMessageHandler(0);
 }
 
 unsigned long DTM::computeIndex(Point mouse_world) const
 {
     lock.lockForRead();
 
-    unsigned long ix = 0;
-    unsigned long index = 0;
+    unsigned long ix = std::numeric_limits<unsigned long>::max();
+    unsigned long index = std::numeric_limits<unsigned long>::max();
 
-    // Find the index of the point which coordinates are containes in mouse_world
+    // Find the index of the point which coordinates are contained in mouse_world
     for(unsigned long i = 0 ; i < m_lineLength-1; i+=1)
     {
         if (m_vertices[i].x == mouse_world.x)
@@ -220,13 +215,14 @@ unsigned long DTM::computeIndex(Point mouse_world) const
         }
     }
 
-    for(unsigned long j = ix ; j < m_vertices.size()-m_lineLength; j+=m_lineLength)
+    for(unsigned long j = ix ; j < m_vertices.size(); j+=m_lineLength)
     {
         if (m_vertices[j].y == mouse_world.y )
         {
             index=j;
         }
-        else if ( (m_vertices[j+m_lineLength].y < mouse_world.y) && (mouse_world.y < m_vertices[j].y) )
+        else if (j < m_vertices.size()-m_lineLength
+                 && (m_vertices[j+m_lineLength].y < mouse_world.y) && (mouse_world.y < m_vertices[j].y) )
         {
             if ( std::abs(m_vertices[j+m_lineLength].y - mouse_world.y)  <  std::abs(mouse_world.y - m_vertices[j].y) )
                 index=j+m_lineLength;

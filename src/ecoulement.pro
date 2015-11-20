@@ -25,7 +25,7 @@ SOURCES += main.cpp\
         drawable.cpp \
         flowpath.cpp \
     gldisplay.inl \
-    q_debugstream.cpp \
+    debugstream.cpp \
     flowpathview.cpp \
     logwidget.cpp
 
@@ -38,10 +38,13 @@ HEADERS  += mainwindow.h \
             flowpath.h \
             drawable.h \
             draw.h \
-    q_debugstream.h \
+    debugstream.h \
     flowpathview.h \
     logwidget.h
 
 
 FORMS    += mainwindow.ui \
     flowpathview.ui
+
+RESOURCES += \
+    megafi.qrc

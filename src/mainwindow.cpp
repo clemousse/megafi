@@ -1,15 +1,16 @@
 #include "mainwindow.h"
+#include "logwidget.h"
+
+#include <limits>
 
 
 #include <QFileDialog>
 #include <QString>
 #include <QMessageBox>
-#include <QGraphicsSceneMouseEvent>
-#include <iostream>
-#include <QKeySequence>
 #include <QDebug>
 #include <QTextBlock>
 #include <QTextCursor>
+#include <QTextStream>
 
 using namespace megafi;
 
@@ -21,7 +22,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_dtmThread(),
     m_flowPathViewDefaultWindow(new FlowPathView(this)),
     m_glDisplay(new glDisplay(&m_dtm, reinterpret_cast< QList<const megafi::FlowPath*>* >(&m_flows))),
-    m_progressBar(new QProgressBar())
+    m_progressBar(),
+    m_contextMenu()
 {
     qRegisterMetaType<megafi::Point>("megafi::Point");
     qRegisterMetaType<QTextBlock>("QTextBlock");
@@ -32,52 +34,38 @@ MainWindow::MainWindow(QWidget *parent) :
     m_flowPathDefaults.color.g   = 0;
     m_flowPathDefaults.color.b   = 255;
 
-    m_progressBar->setWindowModality(Qt::NonModal);
-    m_progressBar->setWindowTitle("Be patient please, file is being read!");
-    m_progressBar->setFormat("Be patient please, file is being read!");
-    m_progressBar->setTextVisible(true);
-    m_progressBar->setGeometry(0,0,500,20);
-
-
-    connect(this, SIGNAL(DTMHasChanged()), m_glDisplay, SLOT(reinit()));
-    connect(this, SIGNAL(flowsHaveChanged()), m_glDisplay, SLOT(updateGL()));
-    connect(m_glDisplay, SIGNAL(clicked(qglviewer::Vec)), this, SLOT(setClickedCoordinates(qglviewer::Vec)));
-
     //load interface .ui created  with QT Designer
     ui->setupUi(this);
 
-    //create a connexion on the menu File-> Open DTM File via openDialog slot
-    connect(ui->actionOpen_DTM_file, SIGNAL(triggered()),this, SLOT(openDialog()));
+    // glDisplay signals
     //create a connexion on the menu View-> New DTM Path via show slot
     connect(ui->actionNew_DTM_Window, SIGNAL(triggered()), m_glDisplay, SLOT(show()));
-    //create a connexion ont the menu View -> Customize paths
-    connect(ui->actionCustomize_paths, SIGNAL(triggered()), this, SLOT(changeFlowPathProperties()));
-    //create a connexion on the cross of the m_gl_display window to close it
-    connect(ui->actionQuit, SIGNAL(triggered()),m_glDisplay, SLOT(close()));
-    //create a connexion on the menu View-> Historic via showHis slot
-    connect(ui->actionView_history, SIGNAL(triggered()),ui->dockWidget_His, SLOT(show()));
-    //create a connexion on the menu File-> Quit via close slot (or cross)
-    connect(ui->actionQuit, SIGNAL(triggered()),this, SIGNAL(closeAll()));
-    connect(this, SIGNAL(closeAll()), this, SLOT(close()));
-    connect(this, SIGNAL(closeAll()), m_glDisplay, SLOT(close()));
-    //create a connexion on the radio button in calculating the flow path in mainwindow
-    connect(ui->pushButton_Mouse, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
-
-    //create a connexion on the radio button "btnQDebug" to redirect QDebug in QTextEdit
-
-    connect(ui->btnComputation, SIGNAL(clicked()), m_glDisplay, SLOT(startComputation()));
-
-
+    //create a connexion on the push button "selectionModeBtn" to activate the mode selection
+    connect(ui->selectionModeBtn, SIGNAL(toggled(bool)),m_glDisplay, SLOT(rbClick(bool)));
     //create a connexion on the export picture
     connect(ui->actionExport_picture, SIGNAL(triggered()),m_glDisplay, SLOT(saveSnapshot()));
 
+    //create a connexion on the menu File-> Export Paths
+
+    // Application signals
+    // refresh draw
+    connect(this, SIGNAL(DTMHasChanged()), m_glDisplay, SLOT(reinit()));
+    connect(this, SIGNAL(flowsHaveChanged()), m_glDisplay, SLOT(updateGL()));
+    // point clicked
+    connect(m_glDisplay, SIGNAL(clicked(qglviewer::Vec)), this, SLOT(setClickedCoordinates(qglviewer::Vec)));
 
     // Initialize progress bar
-    m_progressBar->setWindowModality(Qt::NonModal);
-    m_progressBar->setWindowTitle("Be patient please, file is being read!");
-    m_progressBar->setFormat("Be patient please, file is being read!");
-    m_progressBar->setTextVisible(true);
-    m_progressBar->setGeometry(0,0,500,20);
+    m_progressBar.setWindowModality(Qt::NonModal);
+    m_progressBar.setWindowTitle("Be patient please, file is being read!");
+    m_progressBar.setFormat("Be patient please, file is being read!");
+    m_progressBar.setTextVisible(true);
+    m_progressBar.setGeometry(0,0,500,25);
+
+    // Initialize context menu
+    {
+        QList<QAction*> actions = { ui->actionCMDelete, ui->actionCMRename, ui->actionCMCustomize };
+        m_contextMenu.addActions(actions);
+    }
 }
 
 
@@ -90,7 +78,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    delete m_progressBar;
     delete m_glDisplay;
     delete m_flowPathViewDefaultWindow;
     deleteFlows();
@@ -99,33 +86,33 @@ MainWindow::~MainWindow()
 }
 
 
-
+//close with cross button
 void MainWindow::closeEvent(QCloseEvent* event)
-
 {
-    event->accept();
-    emit closeAll();
+       if(MainWindow::closeQuestion())
+       {
+           event->accept();
+           m_glDisplay->close();
+           MainWindow::close();
+       }
+       else
+       {
+           event->ignore();
+       }
 }
 
-void MainWindow::close()
+//close question called in slot close() already implemented
+bool MainWindow::closeQuestion()
 {
     int rep = QMessageBox::question(this,"Quit ?","Do you really want to quit ?",QMessageBox::Yes | QMessageBox::No);
     if (rep == QMessageBox::Yes)
     {
-        QMainWindow::close();
+        return true;
     }
-}
-
-
-
-void MainWindow::lockInterface()
-{
-    setEnabled(false);
-}
-
-void MainWindow::unlockInterface()
-{
-    setEnabled(true);
+    else
+    {
+        return false;
+    }
 }
 
 
@@ -166,19 +153,18 @@ void MainWindow::openDialog() // Open a dialog to choose a file
 
                 // Initialize progress bar
                 // All at 0 for the "infinite" aspect
-                m_progressBar->setMaximum(0);
-                m_progressBar->setMinimum(0);
-                m_progressBar->setValue(0);
-                m_progressBar->show();
-                lockInterface();
+                m_progressBar.setMaximum(0);
+                m_progressBar.setMinimum(0);
+                m_progressBar.setValue(0);
+                m_progressBar.show();
 
                 m_dtm->moveToThread(&m_dtmThread);
                 // What happen at beginning of thread
                 connect(this, SIGNAL(buildDTM(QString)), m_dtm, SLOT(buildDTM(QString)));
                 // What happen at end of thread
-                connect(m_dtm, SIGNAL(arrayRebuilt()), this, SLOT(unlockInterface()));
+                connect(m_dtm, SIGNAL(arrayRebuilt()), this, SLOT(unlockDTMWidgets()));
                 connect(m_dtm, SIGNAL(arrayRebuilt()), this, SIGNAL(DTMHasChanged()));
-                connect(m_dtm, SIGNAL(arrayRebuilt()), m_progressBar, SLOT(close()));
+                connect(m_dtm, SIGNAL(arrayRebuilt()), &m_progressBar, SLOT(close()));
                 // What happen afterwards
                 connect(this, SIGNAL(computeIndex(megafi::Point)), m_dtm, SLOT(computeIndex(megafi::Point)));
                 connect(m_dtm, SIGNAL(indexComputed(unsigned long)), this, SLOT(addFlow(unsigned long)));
@@ -195,13 +181,20 @@ void MainWindow::openDialog() // Open a dialog to choose a file
     }
 }
 
+void MainWindow::unlockDTMWidgets()
+{
+    emit lockDTMWidgets(false);
+}
 
 void MainWindow::setClickedCoordinates(qglviewer::Vec mouse_world)
 {
     ui->bxXcoord->setValue(mouse_world.x);
     ui->bxYcoord->setValue(mouse_world.y);
     ui->bxZcoord->setValue(mouse_world.z);
+
+    qWarning()<<"Point selected.";
 }
+
 
 void MainWindow::startComputation()
 {
@@ -212,20 +205,69 @@ void MainWindow::startComputation()
     emit computeIndex(coords);
 }
 
+
 void MainWindow::addFlow(unsigned long startIndex)
 {
-   if(m_dtm)
+    if(m_dtm)
     {
-        megafi::FlowPath* const newFP =
-                new megafi::FlowPath(&m_flowPathDefaults, m_dtm->getMode());
-        newFP->computePath(m_dtm, startIndex);
-        m_flows.push_back(newFP);
-        connect(this, SIGNAL(buildFlow(const megafi::DTM*, unsigned long)), newFP, SLOT(buildArrays()));
-        connect(newFP, SIGNAL(arrayRebuilt()), this, SIGNAL(flowsHaveChanged()));
-        emit buildFlow(m_dtm, startIndex);
+        if(startIndex != std::numeric_limits<unsigned long>::max())
+        {
+            megafi::FlowPath* const newFP =
+                    new megafi::FlowPath(&m_flowPathDefaults, ui->pathList, m_dtm->getMode());
+            newFP->computePath(m_dtm, startIndex);
+            m_flows.push_back(newFP);
+            connect(this, SIGNAL(buildFlow(const megafi::DTM*, unsigned long)), newFP, SLOT(buildArrays()));
+            connect(newFP, SIGNAL(arrayRebuilt()), this, SIGNAL(flowsHaveChanged()));
+            emit buildFlow(m_dtm, startIndex);
+
+            ui->pathList->addItem(newFP);
+            emit beFlows(true);
+        }
+
+        else
+        {
+            qWarning()<< "No point with theses coordinates.";
+        }
     }
 }
 
+
+void MainWindow::deleteFlowPath(FlowPath *flow)
+{
+    disconnect(flow, SIGNAL(arrayRebuilt()), this, SIGNAL(flowsHaveChanged()));
+    disconnect(this, SIGNAL(buildFlow(const megafi::DTM*, unsigned long)), flow, SLOT(computePath(const megafi::DTM*, unsigned long)));
+    delete flow;
+
+    ui->pathList->removeItemWidget(flow);
+    m_flows.removeOne(flow);
+    emit flowsHaveChanged();
+    emit beFlows(!m_flows.isEmpty());
+}
+
+void MainWindow::openContextMenu(QPoint p)
+{
+    QListWidgetItem* selectedItem = ui->pathList->itemAt(p);
+    QAction* const res = m_contextMenu.exec(mapToGlobal(p));
+
+    if(res == ui->actionCMRename)
+        ui->pathList->editItem(selectedItem);
+    else if(res == ui->actionCMCustomize)
+        changeFlowPathProperties(selectedItem);
+    else if(res == ui->actionCMDelete)
+        deleteFlowPath(static_cast<FlowPath*>(selectedItem));
+}
+
+void MainWindow::changeFlowPathProperties(QListWidgetItem* item)
+{
+    FlowPath* fpItem = static_cast<FlowPath*>(item);
+
+    FlowPathProps* newProps = new FlowPathProps(m_flowPathDefaults);
+    m_flowPathViewDefaultWindow->changeProps(*newProps);
+
+    fpItem->setProperties(newProps);
+    fpItem->buildArrays();
+    fpItem->buildIcon();
+}
 
 void MainWindow::changeFlowPathProperties()
 {
@@ -240,6 +282,7 @@ void MainWindow::changeFlowPathProperties()
                 ++flow)
             {
                 (*flow)->buildArrays();
+                (*flow)->buildIcon();
             }
         }
     }
@@ -251,14 +294,17 @@ void MainWindow::deleteDTM()
     {
         m_dtmThread.quit();
         m_dtmThread.wait();
-        disconnect(m_dtm, SIGNAL(indexComputed(unsigned long)), this, SLOT(addFlow(unsigned long)));
-        disconnect(this, SIGNAL(computeIndex(megafi::Point)), m_dtm, SLOT(computeIndex(megafi::Point)));
-        disconnect(m_dtm, SIGNAL(arrayRebuilt()), this, SIGNAL(DTMHasChanged()));
-        disconnect(m_dtm, SIGNAL(arrayRebuilt()), this, SLOT(unlockInterface()));
         disconnect(this, SIGNAL(buildDTM(QString)), m_dtm, SLOT(buildDTM(QString)));
+        disconnect(m_dtm, SIGNAL(arrayRebuilt()), this, SLOT(unlockDTMWidgets()));
+        disconnect(m_dtm, SIGNAL(arrayRebuilt()), this, SIGNAL(DTMHasChanged()));
+        disconnect(m_dtm, SIGNAL(arrayRebuilt()), &m_progressBar, SLOT(close()));
+        disconnect(this, SIGNAL(computeIndex(megafi::Point)), m_dtm, SLOT(computeIndex(megafi::Point)));
+        disconnect(m_dtm, SIGNAL(indexComputed(unsigned long)), this, SLOT(addFlow(unsigned long)));
         delete m_dtm;
         m_dtm = NULL;
     }
+
+    emit lockDTMWidgets(true);
 }
 
 void MainWindow::deleteFlows()
@@ -273,5 +319,46 @@ void MainWindow::deleteFlows()
         delete *flow;
         *flow = NULL;
     }
+    ui->pathList->clear();
     m_flows.clear();
+    emit beFlows(false);
+}
+
+void MainWindow::exportFlowPaths()
+{
+    QString flows = QFileDialog::getSaveFileName(this, "Save the flow paths", QString());
+
+            //creating of a file to export path in the release of the poject
+            QFile file(flows);
+
+            //openning the file in "read only" and checking the good opening
+            if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+            return;
+
+            //creating a stream "flux" to write in the file
+            QTextStream stream(&file);
+
+            //choosing the UTF-8 codec
+            stream.setCodec("UTF-8");
+
+            //Enter in the Qlist "m_flows" which contains the list of the flows
+            for(QList<megafi::FlowPath*>::iterator flow = m_flows.begin() ; flow != m_flows.end() ; ++flow)
+            {
+                //append the name of each flow of m_flows
+                stream <<(*flow)->QListWidgetItem::text();
+                stream <<"\n";
+
+                //append the coordinates of each flow of m_flows
+                 for (int i=0 ; i <(int)(*flow)->getNbVertices() ; i++)
+                 {
+                    const Point* const vertices =(*flow)->getVertices();
+                    stream << vertices[i].x;
+                    stream << " ";
+                    stream << vertices[i].y;
+                    stream << " ";
+                    stream << vertices[i].z;
+                    stream << "\n";
+                 }
+            }
+     qWarning()<< "Paths exported!\n";
 }

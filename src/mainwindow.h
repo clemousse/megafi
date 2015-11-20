@@ -13,6 +13,9 @@
 #include <QProgressBar>
 #include <QThread>
 #include <QMutex>
+#include <QPoint>
+#include <QMenu>
+#include <QListWidgetItem>
 
 namespace megafi
 {
@@ -36,9 +39,10 @@ private:
 
 protected:
     // Windows
-    FlowPathView*    const m_flowPathViewDefaultWindow;
-    const glDisplay* const m_glDisplay;
-    QProgressBar*    const m_progressBar;
+    FlowPathView* const m_flowPathViewDefaultWindow;
+    glDisplay*    const m_glDisplay;
+    QProgressBar        m_progressBar;
+    QMenu               m_contextMenu;
 
     // Properties
     megafi::FlowPathProps m_flowPathDefaults;
@@ -50,26 +54,30 @@ public:
 
     void closeEvent(QCloseEvent *);
 
-public slots:
-    // GUI slots
-    void openDialog();
-    void close();
-    void changeFlowPathProperties();
-    void startComputation();
-    void lockInterface();
-    void unlockInterface();
-
-    // Application slots
-    void setClickedCoordinates(qglviewer::Vec mouse_world);
-    void addFlow(unsigned long startIndex);
-
 signals:
+    void lockDTMWidgets(bool) const;
     void buildDTM(QString) const;
     void buildFlow(const megafi::DTM*, unsigned long) const;
     void DTMHasChanged() const;
     void flowsHaveChanged() const;
-    void closeAll() const;
+    void beFlows(bool) const;
     void computeIndex(megafi::Point) const;
+
+public slots:
+    // GUI slots
+    void openDialog();
+    void startComputation();
+    bool closeQuestion();
+    void openContextMenu(QPoint p);
+    void changeFlowPathProperties();
+    void deleteFlowPath(FlowPath* flow);
+    void changeFlowPathProperties(QListWidgetItem* item);
+    void unlockDTMWidgets();
+    void exportFlowPaths();
+
+    // Application slots
+    void setClickedCoordinates(qglviewer::Vec mouse_world);
+    void addFlow(unsigned long startIndex);
 
 private:
     void deleteDTM();

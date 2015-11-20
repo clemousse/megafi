@@ -1,5 +1,5 @@
-#ifndef Q_DEBUGSTREAM_H
-#define Q_DEBUGSTREAM_H
+#ifndef DEBUGSTREAM_H
+#define DEBUGSTREAM_H
 
 #include <streambuf>
 #include <string>
@@ -36,6 +36,6 @@ protected:
 };
 
 }
-#endif // Q_DEBUGSTREAM_H
+#endif // DEBUGSTREAM_H
 
 

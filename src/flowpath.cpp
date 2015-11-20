@@ -1,20 +1,36 @@
 #include "flowpath.h"
 
 #include <QDebug>
+#include <QSize>
+#include <QPoint>
+#include <QRect>
+#include <QColor>
+#include <QPixmap>
+#include <QPainter>
+#include <QFile>
+#include <QDir>
+#include <fstream>
+#include <QFileDialog>
 
 using namespace megafi;
 
+unsigned int FlowPath::m_number = 0;
 
-FlowPath::FlowPath(const FlowPathProps* defaultProps, Mode mode)
+FlowPath::FlowPath(const FlowPathProps* defaultProps, QListWidget *parent, Mode mode)
     : Drawable(mode, TRILINE),
+      QListWidgetItem(parent),
       m_minIndices(),
       m_defaultProps(defaultProps),
       m_props(m_defaultProps)
 {
+    ++m_number;
+    setFlags(flags() | Qt::ItemIsEditable);
+    setName(QString("Path #%1").arg(m_number));
+    buildIcon();
 }
 
 FlowPath::FlowPath(const FlowPath &other)
-    : Drawable(other),
+    : Drawable(other), QListWidgetItem(other),
       m_minIndices(other.m_minIndices),
       m_defaultProps(other.m_defaultProps)
 {
@@ -30,8 +46,20 @@ FlowPath::~FlowPath()
 
 float FlowPath::getLineWidth() const { return m_props->lineWidth; }
 
+void  FlowPath::setProperties(const FlowPathProps* newProps)
+{
+    if(newProps)
+    {
+        if(m_props != m_defaultProps)
+            delete m_props;
+        m_props = newProps;
+    }
+}
+
 void FlowPath::computePath(const DTM *dtm, unsigned long startIndex)
 {
+    int countPoints_FP = 0;
+
     m_minIndices.push_back(startIndex);
 
     dtm->lock.lockForRead();
@@ -93,7 +121,17 @@ void FlowPath::computePath(const DTM *dtm, unsigned long startIndex)
         if(argMin == i)
         {
 
-            qDebug() << "End flow path\n";
+            qDebug() << "End flow path.\n";
+
+            if (countPoints_FP<2)
+            {
+                 qWarning()<< "Flow path. It has"<< countPoints_FP <<"section.\n";
+            }
+            else
+            {
+                qWarning()<< "Flow path. It has"<< countPoints_FP <<"sections.\n";
+            }
+
             break;
         }
         else
@@ -103,15 +141,19 @@ void FlowPath::computePath(const DTM *dtm, unsigned long startIndex)
             m_minIndices.push_back(argMin);
             m_vertices.push_back(p);
 
+
             qDebug() << "Next point's coordinates :"
                      << "\nx = " << m_vertices.back().x
                      << "\ny = " << m_vertices.back().y
                      << "\nz = " << m_vertices.back().z << "\n";
+
+            countPoints_FP++;
         }
     }
 
     dtm->lock.unlock();
 }
+
 
 
 #define BUILD for(unsigned long i = 0; \
@@ -141,5 +183,57 @@ void FlowPath::buildLegacy() const
         glBegin(GL_LINE_STRIP);
         BUILD
         glEnd();
+    }
+}
+
+void FlowPath::setName(const QString &newName)
+{
+    setText(newName);
+}
+
+void FlowPath::buildIcon()
+{
+    if(m_props)
+    {
+        // Standard dimension
+        const QSize drawingSize(32, 32), margins(1,1);
+
+        // Bounds
+        const QPoint left(0 + margins.width(), drawingSize.height()/2 - m_props->lineWidth/2);
+        const QSize  extend(drawingSize.width() - margins.width(), m_props->lineWidth);
+
+        // Define the rectangle to be drawn
+        const QRect  line(left, extend);
+
+        // Color
+        QColor qcolor;
+        {
+            Color color(m_props->color);
+            qcolor.setRed(color.r);
+            qcolor.setGreen(color.g);
+            qcolor.setBlue(color.b);
+            qcolor.setAlpha(255);
+        }
+
+        // Surface to be drawn
+        QPixmap drawing(drawingSize);
+
+        // Background
+        {
+            QColor background(0, 0, 0, 0);
+            drawing.fill(background);
+        }
+
+        // Drawing
+        {
+            // Drawer
+            QPainter painter(&drawing);
+            painter.fillRect(line, qcolor);
+        }
+
+        // Transform it to an icon
+        QIcon icon(drawing);
+
+        setIcon(icon);
     }
 }
