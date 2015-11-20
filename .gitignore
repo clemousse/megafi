@@ -35,3 +35,6 @@ build-*/
 
 # Backup files
 *~
+
+# Big data
+data/Ecrins2.xyz

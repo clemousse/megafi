@@ -161,6 +161,19 @@ void glDisplay::mousePressEvent(QMouseEvent* const event)
 
 }
 
+void glDisplay::show()
+{
+    QGLViewer::show();
+    emit opened();
+    emit visible(true);
+}
+
+void glDisplay::closeEvent(QCloseEvent *)
+{
+    emit closed();
+    emit visible(false);
+}
+
 
 void glDisplay::saveSnapshot( )
 {
