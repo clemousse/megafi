@@ -368,19 +368,9 @@ void MainWindow::deleteFlows()
 
 void MainWindow::exportFlowPaths()
 {
-    //QString filter;
     QString flows = QFileDialog::getSaveFileName(this, "Save the flow paths", QString());
-    /*if(filter == "Text files (*.txt)")
-    {
-         flows += ".txt";
-    }
 
-    else
-    {
-         flows += ".xml";
-    }*/
-
-         //creating of a file to export path in the release of the poject
+            //creating of a file to export path in the release of the poject
             QFile file(flows);
 
             //openning the file in "read only" and checking the good opening
@@ -393,14 +383,15 @@ void MainWindow::exportFlowPaths()
             //choosing the UTF-8 codec
             stream.setCodec("UTF-8");
 
-
-
+            //Enter in the Qlist "m_flows" which contains the list of the flows
             for(QList<megafi::FlowPath*>::iterator flow = m_flows.begin() ; flow != m_flows.end() ; ++flow)
             {
+                //append the name of each flow of m_flows
                 stream <<(*flow)->QListWidgetItem::text();
                 stream <<"\n";
 
-                 for (int i=0 ; i <(*flow)->getNbVertices() ; i++)
+                //append the coordinates of each flow of m_flows
+                 for (int i=0 ; i <(int)(*flow)->getNbVertices() ; i++)
                  {
                     const Point* const vertices =(*flow)->getVertices();
                     stream << vertices[i].x;
@@ -411,5 +402,5 @@ void MainWindow::exportFlowPaths()
                     stream << "\n";
                  }
             }
-
+     qWarning()<< "Paths exported!\n";
 }
