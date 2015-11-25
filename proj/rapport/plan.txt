@@ -11,7 +11,6 @@ I Présentation du projet
 		- C++
 		- QT
 		- OpenGl
-		-> librairie qglViewer => pourquoi?
 	3. les données :
 		- quelles données d'entrée ?
 		- quelles données de sortie ?
@@ -21,6 +20,7 @@ II Partie Technique (en anglais)
 		- quels choix techniques ont été faits ?
 		- pourquoi ?
 		- quelle mise en oeuvre ?
+		-> librairie qglViewer => pourquoi?
 	2. diagramme de classe
 		
 
