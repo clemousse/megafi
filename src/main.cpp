@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 #else
 
     megafi::MainWindow w;
-    w.setWindowIcon(QIcon(QCoreApplication::applicationDirPath()+"/goutte.jpg"));
+    w.setWindowIcon(QIcon(":/icon/icon.png"));
     w.setWindowTitle("MEGAFI : Modèle d'Ecoulement d'une Goutte dans les Alpes Franco-Italiennes");
     w.show();
 
